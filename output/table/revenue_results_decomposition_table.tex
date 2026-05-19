@@ -1,0 +1,32 @@
+\begin{tabular}{lccccc}
+\toprule
+ & (1) & (2) & (3) & (4) & (5) \\
+\midrule
+\textbf{Parameters} &  &  &  &  &  \\
+\hspace{1em} Constraint level & No Constraint & Low Constraint & Medium Constraint & High Constraint & Full Constraint \\
+\hspace{1em} Callback delay & $<$10min & $<$1d & 1 to 3d & $>$3d & No Callback \\
+\hspace{1em} Relative success-rate change & 0 (benchmark) & -25.0\% & -67.6\% & -76.1\% & -100.0\% \\
+\midrule
+\textbf{Handling Capacity} &  &  &  &  &  \\
+\hspace{1em} Constant demand &  &  &  &  &  \\
+\hspace{2em} Human immediate (a) & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
+\hspace{1em} Demand spike (3.38x) &  &  &  &  &  \\
+\hspace{2em} Human callback (b) & 338.0 & 253.5 & 109.5 & 80.7 & 0.0 \\
+\hspace{2em} AI immediate (c) & 229.2 & 229.2 & 229.2 & 229.2 & 229.2 \\
+\hspace{1em} Capacity without AI [(C.1)=(a)+(b)] & 438.0 & 353.5 & 209.5 & 180.7 & 100.0 \\
+\hspace{1em} Capacity with AI [(C.2)=(a)+(c)] & 329.2 & 329.2 & 329.2 & 329.2 & 329.2 \\
+\hspace{1em} Capacity enhancement [= (C.2) - (C.1)] & -108.8 & -24.4 & 119.7 & 148.5 & 229.2 \\
+\hspace{2em} Percentage change & -24.8\% & -6.9\% & 57.2\% & 82.1\% & 229.2\% \\
+\hspace{2em} 95\% CI & [-35.6\%, -14.1\%] & [-26.7\%, 12.9\%] & [-4.6\%, 119.0\%] & [-31.9\%, 196.2\%] & [182.0\%, 276.3\%] \\
+\midrule
+\textbf{Total Revenue} &  &  &  &  &  \\
+\hspace{1em} Human immediate [(d)=(a)*129.8] & 12981.88 & 12981.88 & 12981.88 & 12981.88 & 12981.88 \\
+\hspace{1em} Human callback [(e)=(b)*129.8] & 43878.8 & 32914.9 & 14209.2 & 10478.9 & 0.0 \\
+\hspace{1em} AI immediate [(f)=(c)*114.9] & 26324.8 & 26324.8 & 26324.8 & 26324.8 & 26324.8 \\
+\hspace{1em} Revenue without AI [(R.1)=(d)+(e)] & 56860.6 & 45896.8 & 27191.1 & 23460.7 & 12981.9 \\
+\hspace{1em} Revenue with AI [(R.2)=(d)+(f)] & 39306.7 & 39306.7 & 39306.7 & 39306.7 & 39306.7 \\
+\hspace{1em} Revenue enhancement [= (R.2) - (R.1)] & -17553.9 & -6590.1 & 12115.6 & 15846.0 & 26324.8 \\
+\hspace{2em} Percentage change & -30.9\% & -14.4\% & 44.6\% & 67.5\% & 202.8\% \\
+\hspace{2em} 95\% CI & [-42.0\%, -19.7\%] & [-33.6\%, 4.9\%] & [-13.3\%, 102.4\%] & [-38.1\%, 173.2\%] & [154.0\%, 251.6\%] \\
+\bottomrule
+\end{tabular}

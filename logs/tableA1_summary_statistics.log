@@ -1,0 +1,300 @@
+--------------------------------------------------------
+      name:  <unnamed>
+       log:  <REPLICATION_ROOT>/logs/tableA1_summary_statistics.log
+  log type:  text
+ opened on:   9 May 2026, 09:07:07
+
+. 
+. **## Task/raw data level
+. macro drop  variable_list1
+
+. global variable_list1 if_connected if_AI if_call_w_1_min if_call_w_10_min if_call_w_1_hour province_capital gender_customer_num
+
+. 
+. use "$temp/vacation_full_data_no_collapse" , clear
+
+. keep if month_create_time > 5 
+(54,831 observations deleted)
+
+. drop if month_create_time == 10 & day_create_time == 27 // drop this because it might have less refund window compared with other dates. And it will also help to reduce the to sample size to < 10,000
+(2,920 observations deleted)
+
+. cap gen gender_customer_num = ( gender_customer == "Female" )
+
+. 
+. preserve
+
+.         tabstat $variable_list1  ,  stat(N mean sd min max ) save
+
+   Stats |  if_con~d     if_AI  if~1_min  if~0_min
+---------+----------------------------------------
+       N |     98340     98340     75883     75883
+    Mean |  .5579215  .4727273  .7271589  .8911877
+      SD |  .4966363  .4992582  .4454228  .3114056
+     Min |         0         0         0         0
+     Max |         1         1         1         1
+--------------------------------------------------
+
+   Stats |  if_cal~r  provin~l  gender~m
+---------+------------------------------
+       N |     75883     95327     98340
+    Mean |  .8994505  .1988104  .5457494
+      SD |  .3007333  .3991071  .4979051
+     Min |         0         0         0
+     Max |         1         1         1
+----------------------------------------
+
+.         mat A = r(StatTotal)'
+
+.         count 
+  98,340
+
+.         local N_A = r(N)
+
+. restore
+
+. 
+. **## connected call level
+. 
+. global variable_list2 if_succeed bridge_duration_num
+
+. use  "$temp/vacation_connected_call_level"  , clear
+
+. replace if_succeed = if_succeed * 100   // express as percentage to match Table A.1 in the manuscript
+(2,458 real changes made)
+
+. 
+. preserve
+
+.         tabstat $variable_list2  ,  stat( N mean sd min max ) save
+
+   Stats |  if_suc~d  bridge~m
+---------+--------------------
+       N |     74029     74029
+    Mean |   3.32032  121.6279
+      SD |   17.9168  253.1889
+     Min |         0        11
+     Max |       100      3586
+------------------------------
+
+.         mat B = r(StatTotal)'
+
+.         count 
+  74,029
+
+.         local N_B = r(N)
+
+. restore
+
+. 
+. **## succeed call level
+. global variable_list3  bridge_duration_num  n_policy_succeed payment_amt_num payment_amt_per if_refund scale_premium_num ins_amt_num
+
+. use  "$temp/vacation_connected_call_level"  , clear
+
+. keep if if_succeed
+(71,571 observations deleted)
+
+. gen payment_amt_per = total_payment_amt_num / bridge_duration_num
+
+. replace ins_amt_num = ins_amt_num / 10000
+(2,458 real changes made)
+
+. preserve
+
+.         tabstat $variable_list3  ,  stat(N mean sd min max ) save
+
+   Stats |  bridge~m  n_po~eed  paymen~m  paymen~r
+---------+----------------------------------------
+       N |      2458      2458      2458      2458
+    Mean |  709.7307  1.235151  122.0004  1.016476
+      SD |  740.6618  .6264042  131.4503  2.696193
+     Min |        11         1         0         0
+     Max |      3582        10       968  39.96923
+--------------------------------------------------
+
+   Stats |  if_ref~d  scale_~m  ins_am~m
+---------+------------------------------
+       N |      2458      2458      2458
+    Mean |  .1879577  547.5478  574.6447
+      SD |  .3907579  436.3853   163.183
+     Min |         0       1.2         5
+     Max |         1    3849.6      1585
+----------------------------------------
+
+.         mat C = r(StatTotal)'
+
+.         count 
+  2,458
+
+.         local N_C = r(N)
+
+. restore
+
+. 
+. **## Human agent level
+. use "$temp/vacation_full_data_no_collapse" , clear
+
+. keep if !if_AI 
+(49,993 observations deleted)
+
+. sort crm_user_id date_create_time hour_create_time minute_create_time
+
+. bys crm_user_id date_create_time: gen task_order = _n
+
+. bys crm_user_id date_create_time  (task_order): egen cumulative_payment = sum(payment_amt_num)
+
+. gen gender_cno_num = ( gender_cno == "Female" )
+
+. replace gender_cno_num = . if gender_cno == "Unknown" | missing(gender_cno)
+(53,880 real changes made, 53,880 to missing)
+
+. replace working_hours = . if working_hours == 0
+(20,557 real changes made, 20,557 to missing)
+
+. 
+. collapse (mean) start_working_hour work_month_num cumulative_payment (max) task_order gender_cno_num, by(crm_user_id)
+
+. 
+. global variable_list4 start_working_hour work_month_num task_order cumulative_payment gender_cno_num 
+
+. preserve
+
+.         tabstat $variable_list4  ,  stat(N mean sd min max ) save
+
+   Stats |  start_~r  work_m~m  task_o~r  cumula~t
+---------+----------------------------------------
+       N |       539       539       539       539
+    Mean |  9.871927  6.402201  52.27644   154.105
+      SD |  1.306277  8.786214  30.91594  334.0719
+     Min |         9         0         1         0
+     Max |        18        50       272   4296.84
+--------------------------------------------------
+
+   Stats |  gender~m
+---------+----------
+       N |       154
+    Mean |   .525974
+      SD |   .500954
+     Min |         0
+     Max |         1
+--------------------
+
+.         mat D = r(StatTotal)'
+
+.         count 
+  539
+
+.         local N_D = r(N)
+
+. restore
+
+. 
+. 
+. **# Output 
+. mat temp_A = [.,.,.,.,.]
+
+. matrix rownames temp_A = "\textbf{Panel A. All Customer Calls}"
+
+. matrix rownames A = "Connected" "AI" "Call within 1 min" "Call within 10 min" "Call within 1 hour"  "Capital cities" "Female customer"
+
+. 
+. mat temp_B = [.,.,.,.,.]
+
+. matrix rownames temp_B = "\textbf{Panel B. Connected Calls}"
+
+. matrix rownames B = "Success rate, \%" "Duration, (s)"
+
+. 
+. mat temp_C = [.,.,.,.,.]
+
+. matrix rownames temp_C = "\textbf{Panel C. Success Calls}"
+
+. matrix rownames C = "Duration, (s)"  "Number of Transcations" "Payment amount (CNY)" "Payment per seconds (CNY/s)" "Refund" "Scale premium (CNY)" "Insurance amount (10,000 CNY)"
+
+.  
+. mat temp_D = [.,.,.,.,.]
+
+. matrix rownames temp_D = "\textbf{Panel D. Human Representatives}"
+
+. matrix rownames D = "Starting working hour"  "Working experiences (month)" "Total task per day" "Cumulative revenue (CNY)" "Female representative"
+
+.  
+. mat E = temp_A\A\temp_B\B\temp_C\C\temp_D\D
+
+. mat list E , format(%9.2f)
+
+E[25,5]
+                    c1        c2        c3        c4
+\textbf{Pa~a         .         .         .         .
+   Connected  98340.00      0.56      0.50      0.00
+          AI  98340.00      0.47      0.50      0.00
+Call withi~n  75883.00      0.73      0.45      0.00
+Call withi~n  75883.00      0.89      0.31      0.00
+Call withi~r  75883.00      0.90      0.30      0.00
+Capital ci~s  95327.00      0.20      0.40      0.00
+Female cus~r  98340.00      0.55      0.50      0.00
+\textbf{Pa~s         .         .         .         .
+Success ra~%  74029.00      3.32     17.92      0.00
+Duration, ~)  74029.00    121.63    253.19     11.00
+\textbf{Pa~}         .         .         .         .
+Duration, ~)   2458.00    709.73    740.66     11.00
+Number of ~s   2458.00      1.24      0.63      1.00
+Payment am~)   2458.00    122.00    131.45      0.00
+Payment pe~)   2458.00      1.02      2.70      0.00
+      Refund   2458.00      0.19      0.39      0.00
+Scale prem~)   2458.00    547.55    436.39      1.20
+Insurance ~)   2458.00    574.64    163.18      5.00
+\textbf{Pa~t         .         .         .         .
+Starting w~r    539.00      9.87      1.31      9.00
+Working ex~)    539.00      6.40      8.79      0.00
+Total task~y    539.00     52.28     30.92      1.00
+Cumulative~)    539.00    154.11    334.07      0.00
+Female rep~e    154.00      0.53      0.50      0.00
+
+                    c5
+\textbf{Pa~a         .
+   Connected      1.00
+          AI      1.00
+Call withi~n      1.00
+Call withi~n      1.00
+Call withi~r      1.00
+Capital ci~s      1.00
+Female cus~r      1.00
+\textbf{Pa~s         .
+Success ra~%    100.00
+Duration, ~)   3586.00
+\textbf{Pa~}         .
+Duration, ~)   3582.00
+Number of ~s     10.00
+Payment am~)    968.00
+Payment pe~)     39.97
+      Refund      1.00
+Scale prem~)   3849.60
+Insurance ~)   1585.00
+\textbf{Pa~t         .
+Starting w~r     18.00
+Working ex~)     50.00
+Total task~y    272.00
+Cumulative~)   4296.84
+Female rep~e      1.00
+
+. 
+. estadd matrix E, replace
+
+added matrix:
+                  e(E) :  25 x 5
+
+. esttab e(E, fmt(2)) using "$table_overleaf/table_summary_statistics.tex", ///    replace booktabs  noobs nonotes nonumber nomtitle nolabel fragment ///    alignment(D{.}{.}{-1}) ///    collabel("Obs" "Mean" "SD" "Min" "Max", lhs("Variables")) 
+(output written to <REPLICATION_ROOT>/output/table/table_summary_statistics.tex)
+
+. 
+. file open myfile using "$table_overleaf/table_summary_statistics.tex", write append
+
+. // file write myfile "\bottomrule" _n
+. file close myfile       
+
+. 
+. 
+. 
+. capture log close

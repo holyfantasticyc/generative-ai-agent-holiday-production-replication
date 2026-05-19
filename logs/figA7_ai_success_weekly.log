@@ -1,0 +1,199 @@
+--------------------------------------------------------
+      name:  <unnamed>
+       log:  <REPLICATION_ROOT>/logs/figA7_ai_success_weekly.log
+  log type:  text
+ opened on:   9 May 2026, 09:10:05
+
+. 
+. * date: April, 2, 2026
+. *============================================================*
+. * AI performance over time: weekly deviation relative to base week
+. * Keep sample from 2024 week 30 onward
+. *============================================================*
+. 
+. use "$temp/vacation_connected_call_level", clear
+
+. 
+. replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
+(0 real changes made)
+
+. keep if vacation == 1
+(0 observations deleted)
+
+. 
+. cap gen gender_customer_num = (gender_customer == "Female")
+
+. replace province_capital = 1 if missing(province_capital)
+(2,405 real changes made)
+
+. 
+. * outcome
+. gen success_rate = if_succeed * 100
+
+. 
+. * week variable in Stata weekly-date format
+. gen week = wofd(date_create_time)
+
+. format week %tw
+
+. 
+. * keep only 2024 week 30 onward
+. keep if week >= yw(2024,30)
+(30,065 observations deleted)
+
+. 
+. * set base week = first week in retained sample
+. summ week, meanonly
+
+. local baseweek = r(min)
+
+. 
+. display "Base week used in regression: " %tw `baseweek'
+Base week used in regression: 2024w30
+
+. 
+. *============================================================*
+. * Regression: AI interacted with week dummies
+. *============================================================*
+. reghdfe success_rate i.if_AI##ib`baseweek'.week province_capital gender_customer_num, ///    absorb(hour_create_time) vce(cluster crm_user_id)
+(MWFE estimator converged in 1 iterations)
+warning: missing F statistic; dropped variables due to collinearity or too few clusters
+
+HDFE Linear regression                            Number of obs                                                         =     43,964
+Absorbing 1 HDFE group                            F(  27,    268)                                                       =          .
+Statistics robust to heteroskedasticity           Prob > F                                                              =          .
+                                                  R-squared                                                             =     0.0038
+                                                  Adj R-squared                                                         =     0.0030
+                                                  Within R-sq.                                                          =     0.0033
+Number of clusters (crm_user_id) =        269     Root MSE                                                              =    16.9085
+
+                          (Std. err. adjusted for 269 clusters in crm_user_id)
+------------------------------------------------------------------------------
+             |               Robust
+success_rate | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
+-------------+----------------------------------------------------------------
+     1.if_AI |  -1.046065     .59913    -1.75   0.082    -2.225665                                                           .133535
+             |
+        week |
+       3358  |   .3991189   .8342355     0.48   0.633     -1.24337                                                          2.041608
+       3359  |   .5725001   .8670731     0.66   0.510    -1.134641                                                          2.279642
+       3360  |   -.299302    .752978    -0.40   0.691    -1.781807                                                          1.183203
+       3361  |  -.8315606   .6947095    -1.20   0.232    -2.199343                                                          .5362219
+       3362  |   .3478267   1.028485     0.34   0.735     -1.67711                                                          2.372764
+       3363  |   .1275311   .7917235     0.16   0.872    -1.431258                                                           1.68632
+       3364  |  -.5848049   .7104472    -0.82   0.411    -1.983573                                                          .8139627
+       3365  |  -1.787289   .7019742    -2.55   0.011    -3.169374                                                         -.4052031
+       3367  |  -.7479626   .8264515    -0.91   0.366    -2.375126                                                          .8792006
+       3368  |  -.3510747   1.597965    -0.22   0.826    -3.497237                                                          2.795088
+       3369  |  -.0889096   .7660936    -0.12   0.908    -1.597237                                                          1.419418
+       3370  |  -.5396532   .8073631    -0.67   0.504    -2.129234                                                          1.049928
+             |
+  if_AI#week |
+     1 3358  |  -.2338978   .8356103    -0.28   0.780    -1.879093                                                          1.411298
+     1 3359  |  -.8068992   .8775941    -0.92   0.359    -2.534755                                                          .9209565
+     1 3360  |      .0934    .751589     0.12   0.901     -1.38637                                                           1.57317
+     1 3361  |    1.12627   .6921038     1.63   0.105    -.2363818                                                          2.488923
+     1 3362  |   .5355489   1.028427     0.52   0.603    -1.489274                                                          2.560372
+     1 3363  |   1.536655   .7926986     1.94   0.054    -.0240536                                                          3.097364
+     1 3364  |  -.5567418   .7180339    -0.78   0.439    -1.970447                                                           .856963
+     1 3365  |   .7180217   .7185676     1.00   0.319    -.6967338                                                          2.132777
+     1 3367  |  -.5969513   .8456532    -0.71   0.481     -2.26192                                                          1.068017
+     1 3368  |  -.5498306   1.606988    -0.34   0.733    -3.713757                                                          2.614096
+     1 3369  |  -.7651332     .77082    -0.99   0.322    -2.282766                                                          .7524997
+     1 3370  |  -.2993922    .807093    -0.37   0.711    -1.888441                                                          1.289657
+             |
+province_c~l |   .4115839   .1862224     2.21   0.028      .044939                                                          .7782288
+gender_cus~m |  -.4376553   .1501883    -2.91   0.004    -.7333543                                                         -.1419563
+       _cons |   4.051874   .5834444     6.94   0.000     2.903157                                                          5.200592
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+----------------------------------------------------------+
+      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+------------------+---------------------------------------|
+ hour_create_time |        12           0          12                                                           |
+----------------------------------------------------------+
+
+. 
+. eststo ai_week_interact
+
+. 
+. * Optional regression table
+. esttab ai_week_interact using "$table_overleaf/ai_success_week_interact.tex", ///    replace se star(* 0.10 ** 0.05 *** 0.01) ///    b(%9.3f) se(%9.3f) ///    title("AI-week interaction in success rate")
+(output written to <REPLICATION_ROOT>/output/table/ai_success_week_interact.tex)
+
+. 
+. *============================================================*
+. * Extract week-specific deviations relative to base week
+. * base week = 0 by construction
+. *============================================================*
+. tempname B
+
+. matrix `B' = J(1,4,.)   // placeholder row
+
+. 
+. levelsof week, local(weeks)
+3357 3358 3359 3360 3361 3362 3363 3364 3365 3367 3368 3369 3370
+
+. 
+. foreach w of local weeks {
+  2. 
+.     if `w' == `baseweek' {
+  3.         matrix `B' = `B' \ (`w', 0, 0, 0)
+  4.     }
+  5.     else {
+  6.         quietly lincom 1.if_AI#`w'.week
+  7.         matrix `B' = `B' \ (`w', r(estimate), r(lb), r(ub))
+  8.     }
+  9. }
+
+. 
+. * drop placeholder row
+. matrix `B' = `B'[2...,1...]
+
+. 
+. clear
+
+. svmat `B', names(col)
+number of observations will be reset to 13
+Press any key to continue, or Break to abort
+Number of observations (_N) was 0, now 13.
+
+. 
+. rename c1 week
+
+. rename c2 coef
+
+. rename c3 lb
+
+. rename c4 ub
+
+. 
+. format week %tw
+
+. gen zero = 0
+
+. 
+. *============================================================*
+. * Plot week-specific deviations relative to omitted week
+. *============================================================*
+. twoway ///    (rarea lb ub week, sort color(gs12%35) lcolor(gs12%35)) ///    (connected coef week, sort msymbol(O) mcolor(black) ///        lcolor(black) lwidth(medthick)) ///    (line zero week, sort lpattern(dash) lcolor(black) lwidth(medium)), ///    xtitle("Week") ///    ytitle("Change in human–AI success-rate gap relative to base week") ///    legend(off) ///    xlabel(`=yw(2024,30)'(2)`=yw(2024,43)', format(%tw) nogrid) ///    ylabel(, nogrid) ///    graphregion(color(white)) ///    plotregion(color(white))
+
+. graph export "$figure_overleaf/ai_success_week_interaction_relative.pdf", replace
+file
+    /path/to/<user>/Dropbox/AI/PNAS_NEXUS/replica
+    > tion_package/output/figure/ai_success_week_inter
+    > action_relative.pdf saved as PDF format
+
+. 
+. *============================================================*
+. * Save extracted coefficients if needed
+. *============================================================*
+. save "$temp/ai_success_week_interaction_relative.dta", replace
+file
+    /path/to/<user>/Dropbox/AI/PNAS_NEXUS/replica
+    > tion_package_data/temp/ai_success_week_interacti
+    > on_relative.dta saved
+
+. 
+. capture log close

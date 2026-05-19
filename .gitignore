@@ -1,0 +1,47 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Stata auxiliary
+*.smcl
+~$*
+*.aux
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE / editor
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local raw data (proprietary; not redistributed) — committed outputs in output/
+# are intentionally tracked
+data/
+**/raw/
+**/temp/
+
+# Temporary / backup files
+*.tmp
+*.bak
+
+# OS-generated
+.Trashes
+.Spotlight-V100
+.fseventsd

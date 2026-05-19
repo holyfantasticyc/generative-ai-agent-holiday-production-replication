@@ -1,0 +1,158 @@
+--------------------------------------------------------
+      name:  <unnamed>
+       log:  <REPLICATION_ROOT>/logs/fig2_workload_coef.log
+  log type:  text
+ opened on:   9 May 2026, 09:08:51
+
+. 
+. *===================================================================
+. * Panel A: Coef_by_workload.pdf
+. *  source: analysis_data_vacation.do, section "Figure: Results: by workload"
+. *===================================================================
+. **# Figure: Results: by workload
+. use  "$temp/vacation_connected_callcontract_level"  , clear
+
+. keep if gap_creat_lastcallthrough < 3600 // get rid of follow up call the next day
+(9,298 observations deleted)
+
+. 
+. {
+. // append using  "$temp/connected_call_level_2023"  
+. replace if_succeed = if_succeed * 100
+(2,736 real changes made)
+. sort crm_user_id date_create_time hour_create_time minute_create_time
+. bys crm_user_id date_create_time: gen task_order = _n
+. bys crm_user_id date_create_time  (task_order): egen cumulative_payment = sum(payment_amt_num)
+. 
+. // binsreg if_succeed task_order , by(if_AI)  absorb(date_create_time hour_create_time)
+. // reghdfe if_succeed task_order if !if_AI ,  absorb(date_create_time hour_create_time) 
+. 
+. replace task_order = 0 if if_AI 
+(16,237 real changes made)
+. 
+. gen bin_task_order = recode(task_order,0,3,6,10,15,20,30,50,100) // 0 to 0; 1-3 to 3; 4-6 to 6 ...
+. 
+. preserve
+. 
+. gen N = 1
+. collapse (sum) N , by(bin_task_order)
+. drop if bin_task_order == 0
+(1 observation deleted)
+. egen total_N = sum(N)
+. gen fraction = N / total_N
+. gen x = _n
+. tw bar fraction x ,  barwi(0.8) color($control_color)   xlabel( ///                        1 "1-3" 2 "4-6" 3 "7-10" 4 "11-15"  ///                        5 "15-20" 6 "21-30" 7 "31-50" 8 ">51" , nogrid gmax) ///                ylabel( , nogrid labelminlen(3) labsize(small)) ///                                graphregion(margin(small)) ///                ytitle("Fraction") ///                 xtitle("Task's Order", size(medium))  fysize(20) saving(hx, replace)
+(file hx.gph not found)
+file hx.gph saved
+.                 
+. restore
+. 
+. 
+. * If success as Y
+. reghdfe if_succeed ib0.bin_task_order  ///                , absorb(date_create_time hour_create_time)   cl(crm_user_id)
+(MWFE estimator converged in 5 iterations)
+
+HDFE Linear regression                            Number of obs                                                         =     65,309
+Absorbing 2 HDFE groups                           F(   8,    533)                                                       =       5.80
+Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0000
+                                                  R-squared                                                             =     0.0072
+                                                  Adj R-squared                                                         =     0.0065
+                                                  Within R-sq.                                                          =     0.0031
+Number of clusters (crm_user_id) =        534     Root MSE                                                              =    19.9694
+
+                          (Std. err. adjusted for 534 clusters in crm_user_id)
+------------------------------------------------------------------------------
+             |               Robust
+  if_succeed | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
+-------------+----------------------------------------------------------------
+bin_task_o~r |
+          3  |   4.800759   .8691947     5.52   0.000     3.093292                                                          6.508227
+          6  |   2.754648    .621169     4.43   0.000     1.534408                                                          3.974888
+         10  |   1.610166   .5102556     3.16   0.002      .607807                                                          2.612525
+         15  |   .6714981    .438872     1.53   0.127    -.1906329                                                          1.533629
+         20  |   1.367864   .5173215     2.64   0.008     .3516247                                                          2.384103
+         30  |   .9517583   .6141914     1.55   0.122    -.2547744                                                          2.158291
+         50  |   .3797252   .6933017     0.55   0.584    -.9822138                                                          1.741664
+        100  |   -1.08765   1.101431    -0.99   0.324    -3.251328                                                          1.076029
+             |
+       _cons |    2.86082   .2023458    14.14   0.000     2.463327                                                          3.258313
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+----------------------------------------------------------+
+      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+------------------+---------------------------------------|
+ date_create_time |        28           0          28                                                           |
+ hour_create_time |        12           1          11                                                           |
+----------------------------------------------------------+
+.                 
+.                 
+.         coefplot, vertical keep(*.bin_task_order) ///                omitted  scheme(plotplain) ///                recast(connected) lcolor($control_color) ///                mcolor($control_color) ///                msymbol(diamond) msize(small)  ///                ciopt(recast(rcap)  lpattern(dash)      lw(medthick) lcolor($control_color) ) ///                yline(0, lpattern(solid) lcolor(gs12)) ///                xlabel( ///                        1 "1-3" 2 "4-6" 3 "7-10" 4 "11-15"  ///                        5 "15-20" 6 "21-30" 7 "31-50" 8 ">51" ) ///                xsca(alt )  ///                ytitle(" Effects Size: % " , size(small)) ///                 graphregion(margin(small)) ///                saving(effect_by_load, replace)  xlabel(, nogrid) ylabel(, nogrid) fysize(60)
+(file effect_by_load.gph not found)
+file effect_by_load.gph saved
+. 
+.                         graph combine  effect_by_load.gph hx.gph  ///                ,    cols(1)      imargin(0 0 0 0) ///                graphregion(margin(medium))  xsize(4)  ysize(3)
+. 
+.                         
+.                         graph export "$figure_overleaf/Coef_by_workload.png", as(png) name("Graph") replace             
+file
+    /path/to/<user>/Dropbox/AI/PNAS_NEXUS/replica
+    > tion_package/output/figure/Coef_by_workload.png
+    saved as PNG format
+.                         graph export "$figure_overleaf/Coef_by_workload.pdf", as(pdf) name("Graph") replace
+file
+    /path/to/<user>/Dropbox/AI/PNAS_NEXUS/replica
+    > tion_package/output/figure/Coef_by_workload.pdf
+    saved as PDF format
+. }
+
+. 
+. *===================================================================
+. * Panel B: Overtime_rule_panel.pdf  (statutory overtime compensation)
+. *  source: RR1/Figure_overtime_rule.do
+. *===================================================================
+. **# Figure: statutory overtime compensation under Chinese labor law
+. clear
+
+. 
+. *------------------------------------------------------------*
+. * Build plotting dataset manually
+. *------------------------------------------------------------*
+. input ///    x    pay
+
+             x        pay
+  1.     1    100
+  2.     2    150
+  3.     3    200
+  4.     4    300
+  5. end
+
+. 
+. gen str8 pay_label = string(pay) + "%"
+
+. 
+. label define paycat ///    1 "Base" ///    2 "Overtime" ///    3 "Rest day" ///    4 "Holiday"
+
+. label values x paycat
+
+. 
+. *------------------------------------------------------------*
+. * Plot: compact panel version for combining
+. *------------------------------------------------------------*
+. twoway ///    (bar pay x, ///        barw(0.68) ///        color(gs11) ///        lcolor(black) ///        lwidth(medthick)) ///    (scatter pay x, ///        msymbol(none) ///        mlabel(pay_label) ///        mlabposition(12) ///        mlabgap(*0.2) ///        mlabsize(8) ///        mlabcolor(black)) ///    , ///        scheme(plotplain) ///        legend(off) ///        xlabel( ///            1 "Base" ///            2 "Overtime" ///            3 "Rest day" ///            4 "Holiday", ///            nogrid labsize(6) ///        ) ///        ylabel(0 100 200 300, nogrid labsize(6)) ///        ytitle("Pay (% of normal wage)", size(6)) ///        xtitle("Compensation regime", size(10)) ///        yline(100, lpattern(solid) lcolor(gs12)) ///        xscale(range(0.65 4.35)) ///        yscale(range(0 320)) ///        graphregion(margin(zero)) ///        xsize(12) ///        ysize(3) ///        name(overtime_rule, replace)
+
+. 
+. graph export "$figure_overleaf/Overtime_rule_panel.png", as(png) name("overtime_rule") replace
+file
+    /path/to/<user>/Dropbox/AI/PNAS_NEXUS/replica
+    > tion_package/output/figure/Overtime_rule_panel.p
+    > ng saved as PNG format
+
+. graph export "$figure_overleaf/Overtime_rule_panel.pdf", as(pdf) name("overtime_rule") replace
+file
+    /path/to/<user>/Dropbox/AI/PNAS_NEXUS/replica
+    > tion_package/output/figure/Overtime_rule_panel.p
+    > df saved as PDF format
+
+. 
+. capture log close

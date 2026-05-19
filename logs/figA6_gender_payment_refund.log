@@ -1,0 +1,577 @@
+--------------------------------------------------------
+      name:  <unnamed>
+       log:  <REPLICATION_ROOT>/logs/figA6_gender_payment_refund.log
+  log type:  text
+ opened on:   9 May 2026, 09:10:03
+
+. 
+. **## Amount (unconditional)
+. {
+.         
+. use  "$temp/vacation_connected_call_level"  , clear
+. replace province_capital = 1 if missing(province_capital)
+(2,405 real changes made)
+. replace payment_amt_num = 0 if if_succeed == 0 
+(71,571 real changes made)
+. 
+. gen gender_combine = .
+(74,029 missing values generated)
+. replace gender_combine = 0 if if_AI & gender_customer  == "Female" 
+(8,462 real changes made)
+. replace gender_combine = 1 if !if_AI & gender_cno == "Female"  &gender_customer  == "Female"
+(10,148 real changes made)
+. replace gender_combine = 2 if !if_AI & gender_cno == "Male"  &gender_customer  == "Female"
+(4,286 real changes made)
+. replace gender_combine = 4 if if_AI & gender_customer  == "Male"
+(7,239 real changes made)
+. replace gender_combine = 5 if !if_AI & gender_cno == "Female"  &gender_customer  == "Male"
+(8,481 real changes made)
+. replace gender_combine = 6 if !if_AI & gender_cno == "Male"  &gender_customer  == "Male"
+(3,566 real changes made)
+. 
+. // gen gender_combine = 2 if gender_cno == "Female"  &gender_customer  == "Female"
+. // replace gender_combine = 3 if gender_cno == "Female"  &gender_customer  == "Male"
+. // replace gender_combine = 4 if gender_cno == "Male"  &gender_customer  == "Female"
+. // replace gender_combine = 5 if gender_cno == "Male"  &gender_customer  == "Male"
+. // replace gender_combine = 0 if if_AI & gender_customer  == "Female" 
+. // replace gender_combine = 1 if if_AI & gender_customer  == "Male"
+. drop if missing(gender_combine)
+(31,847 observations deleted)
+. 
+. gen gender_cno_redefine = 1 if gender_cno == "Female" 
+(7,852 missing values generated)
+. replace gender_cno_redefine = 2 if gender_cno == "Male" 
+(7,852 real changes made)
+. replace gender_cno_redefine = 0 if if_AI
+(15,701 real changes made)
+. 
+. gen gender_customer_redefine = 1 if gender_customer == "Female" 
+(19,286 missing values generated)
+. replace gender_customer_redefine = 2 if gender_customer == "Male" 
+(19,286 real changes made)
+. replace gender_customer_redefine = 0 if if_AI
+(15,701 real changes made)
+. 
+. local y  payment_amt_num
+. local group_variable gender_combine
+. 
+. // preserve
+. keep if vacation == 1 
+(0 observations deleted)
+. 
+. if "`y'" == "payment_amt_num"{
+.         
+.         global ytitle = "Chinese Yuan (CNY)"
+.         
+. }
+. 
+.         * first tease out fixed effects
+. //      local y if_succeed
+.         cap drop `y'_res
+.         reghdfe `y' province_capital  , absorb(date_create_time hour_create_time)  cl(crm_user_id) res(`y'_res)
+(MWFE estimator converged in 5 iterations)
+
+HDFE Linear regression                            Number of obs                                                         =     42,182
+Absorbing 2 HDFE groups                           F(   1,    152)                                                       =       1.04
+Statistics robust to heteroskedasticity           Prob > F                                                              =     0.3103
+                                                  R-squared                                                             =     0.0099
+                                                  Adj R-squared                                                         =     0.0089
+                                                  Within R-sq.                                                          =     0.0000
+Number of clusters (crm_user_id) =        153     Root MSE                                                              =    30.0997
+
+                          (Std. err. adjusted for 153 clusters in crm_user_id)
+------------------------------------------------------------------------------
+             |               Robust
+payment_am~m | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
+-------------+----------------------------------------------------------------
+province_c~l |  -.3151585   .3096004    -1.02   0.310    -.9268342                                                          .2965172
+       _cons |   3.931041   .4635838     8.48   0.000     3.015141                                                          4.846941
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+----------------------------------------------------------+
+      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+------------------+---------------------------------------|
+ date_create_time |        28           0          28                                                           |
+ hour_create_time |        12           1          11                                                           |
+----------------------------------------------------------+
+.         local mean_control = _b[_cons]
+.         local se_control = _se[_cons]
+. 
+.         replace `y'_res = `y'_res + _b[_cons]
+(42,182 real changes made)
+. 
+. reghdfe `y'_res  i.gender_combine province_capital   ///                , absorb(date_create_time hour_create_time) cl(crm_user_id)
+(MWFE estimator converged in 5 iterations)
+
+HDFE Linear regression                            Number of obs                                                         =     42,182
+Absorbing 2 HDFE groups                           F(   6,    152)                                                       =     167.92
+Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0000
+                                                  R-squared                                                             =     0.0008
+                                                  Adj R-squared                                                         =    -0.0002
+                                                  Within R-sq.                                                          =     0.0008
+Number of clusters (crm_user_id) =        153     Root MSE                                                              =    30.0891
+
+                          (Std. err. adjusted for 153 clusters in crm_user_id)
+------------------------------------------------------------------------------
+             |               Robust
+payment_am~s | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
+-------------+----------------------------------------------------------------
+gender_com~e |
+          1  |   1.793394   .5865397     3.06   0.003     .6345707                                                          2.952217
+          2  |   .5719787   1.108081     0.52   0.606     -1.61725                                                          2.761208
+          4  |   .6040573   .0356775    16.93   0.000     .5335695                                                           .674545
+          5  |   2.679821   .8024062     3.34   0.001     1.094512                                                           4.26513
+          6  |   .4357998   1.006412     0.43   0.666    -1.552562                                                          2.424162
+             |
+province_c~l |  -.0089561   .3100508    -0.03   0.977    -.6215216                                                          .6036093
+       _cons |   2.764066   .4484791     6.16   0.000     1.878008                                                          3.650123
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+----------------------------------------------------------+
+      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+------------------+---------------------------------------|
+ date_create_time |        28           0          28                                                           |
+ hour_create_time |        12           1          11                                                           |
+----------------------------------------------------------+
+. 
+. 
+.         lincom 1.gender_combine 
+
+ ( 1)  1.gender_combine = 0
+
+------------------------------------------------------------------------------
+payment_am~s | Coefficient  Std. err.      t    P>|t|     [95% con                                                      f. interval]
+-------------+----------------------------------------------------------------
+         (1) |   1.793394   .5865397     3.06   0.003     .6345707                                                          2.952217
+------------------------------------------------------------------------------
+.         local coef1 = round(r(estimate),0.001)
+.         lincom 5.gender_combine - 4.gender_combine
+
+ ( 1)  - 4.gender_combine + 5.gender_combine = 0
+
+------------------------------------------------------------------------------
+payment_am~s | Coefficient  Std. err.      t    P>|t|     [95% con                                                      f. interval]
+-------------+----------------------------------------------------------------
+         (1) |   2.075764    .830605     2.50   0.014     .4347429                                                          3.716785
+------------------------------------------------------------------------------
+.         local coef2 = round(r(estimate),0.001)
+.         lincom 5.gender_combine - 4.gender_combine - 1.gender_combine   
+
+ ( 1)  - 1.gender_combine - 4.gender_combine +
+       5.gender_combine = 0
+
+------------------------------------------------------------------------------
+payment_am~s | Coefficient  Std. err.      t    P>|t|     [95% con                                                      f. interval]
+-------------+----------------------------------------------------------------
+         (1) |   .2823705   .5498414     0.51   0.608    -.8039478                                                          1.368689
+------------------------------------------------------------------------------
+.         local coef3 = round(r(estimate),0.001)
+. //      reghdfe `y' if_AI province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id)
+.                 
+.                 
+.         * figure
+.         clear
+.         set obs 6
+Number of observations (_N) was 0, now 6.
+.         
+.         gen gender_combine = 0 in 1
+(5 missing values generated)
+.         replace gender_combine = 1 in 2         
+(1 real change made)
+.         replace gender_combine = 2 in 3         
+(1 real change made)
+.         replace gender_combine = 4 in 4         
+(1 real change made)
+.         replace gender_combine = 5 in 5         
+(1 real change made)
+.         replace gender_combine = 6 in 6         
+(1 real change made)
+. 
+.         gen mean = _b[_cons] if gender_combine == 0 
+(5 missing values generated)
+. 
+.         replace mean = _b[1.gender_combine] + _b[_cons] if gender_combine == 1  
+(1 real change made)
+.         replace mean = _b[2.gender_combine] + _b[_cons] if gender_combine == 2  
+(1 real change made)
+.         replace mean = _b[4.gender_combine] + _b[_cons] if gender_combine == 4  
+(1 real change made)
+.         replace mean = _b[5.gender_combine] + _b[_cons] if gender_combine == 5  
+(1 real change made)
+.         replace mean = _b[6.gender_combine] + _b[_cons] if gender_combine == 6  
+(1 real change made)
+.         gen sem = _se[_cons] if gender_combine == 0 
+(5 missing values generated)
+.         
+.         lincom 1.gender_combine + _cons
+
+ ( 1)  1.gender_combine + _cons = 0
+
+------------------------------------------------------------------------------
+payment_am~s | Coefficient  Std. err.      t    P>|t|     [95% con                                                      f. interval]
+-------------+----------------------------------------------------------------
+         (1) |   4.557459    .695983     6.55   0.000      3.18241                                                          5.932509
+------------------------------------------------------------------------------
+.         local se_treat1 = r(se)
+.         lincom 2.gender_combine + _cons
+
+ ( 1)  2.gender_combine + _cons = 0
+
+------------------------------------------------------------------------------
+payment_am~s | Coefficient  Std. err.      t    P>|t|     [95% con                                                      f. interval]
+-------------+----------------------------------------------------------------
+         (1) |   3.336044   .8233241     4.05   0.000     1.709408                                                          4.962681
+------------------------------------------------------------------------------
+.         local se_treat2 = r(se)
+.         lincom 4.gender_combine + _cons
+
+ ( 1)  4.gender_combine + _cons = 0
+
+------------------------------------------------------------------------------
+payment_am~s | Coefficient  Std. err.      t    P>|t|     [95% con                                                      f. interval]
+-------------+----------------------------------------------------------------
+         (1) |   3.368123   .4400884     7.65   0.000     2.498643                                                          4.237603
+------------------------------------------------------------------------------
+.         local se_treat3 = r(se)
+.         lincom 5.gender_combine + _cons
+
+ ( 1)  5.gender_combine + _cons = 0
+
+------------------------------------------------------------------------------
+payment_am~s | Coefficient  Std. err.      t    P>|t|     [95% con                                                      f. interval]
+-------------+----------------------------------------------------------------
+         (1) |   5.443887   1.018115     5.35   0.000     3.432404                                                           7.45537
+------------------------------------------------------------------------------
+.         local se_treat4 = r(se) 
+.         lincom 6.gender_combine + _cons
+
+ ( 1)  6.gender_combine + _cons = 0
+
+------------------------------------------------------------------------------
+payment_am~s | Coefficient  Std. err.      t    P>|t|     [95% con                                                      f. interval]
+-------------+----------------------------------------------------------------
+         (1) |   3.199865   .6607462     4.84   0.000     1.894433                                                          4.505298
+------------------------------------------------------------------------------
+.         local se_treat5 = r(se)         
+.         
+.         replace sem = `se_treat1' if gender_combine == 1        
+(1 real change made)
+.         replace sem = `se_treat2' if gender_combine == 2        
+(1 real change made)
+.         replace sem = `se_treat3' if gender_combine == 4        
+(1 real change made)
+.         replace sem = `se_treat4' if gender_combine == 5        
+(1 real change made)
+.         replace sem = `se_treat5' if gender_combine == 6                
+(1 real change made)
+.         gen lower_bound = mean - 1.96 * sem
+.         gen upper_bound = mean + 1.96 * sem
+.         
+.         set scheme white_ptol
+. 
+. 
+. twoway (bar mean `group_variable' if `group_variable' == 0 , barwidth(0.7) fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 1, barwidth(0.7) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 2 , barwidth(0.7) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                        (bar mean `group_variable' if `group_variable' == 4 , barwidth(0.7)  fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 5 , barwidth(0.7)  fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 6 , barwidth(0.7)  fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 0, lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 1 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 2 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 4 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 5 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 6 , lw(medium) lcolor(black) lp(dash)) ///                   , legend(off )  ///                    ylabel( 0(2)8 , nogrid )             ///                        xlabel( ///                        0 `"AI (Female-voice)"' 1 `"Female"' 2  `"Male"'  3 " " 4 `"AI (Female-voice)"' 5 `"Female "' 6 `"Male"', nogrid labsize(small)) ///                subtitle("{bf: Female Customer}                                          {bf: Male Customer}")  ///                  xtitle("")  ytitle($ytitle ) title("Payment Amount per Call")    graphregion(margin(zero))
+.                    
+.                 graph export "$figure_overleaf/Coef_by_gender_payment_amt_num.png", as(png) name("Graph") replace       
+file
+    /path/to/<user>/Dropbox/AI/PNAS_NEXUS/replica
+    > tion_package/output/figure/Coef_by_gender_paymen
+    > t_amt_num.png saved as PNG format
+.                 graph export "$figure_overleaf/Coef_by_gender_payment_amt_num.pdf", as(png) name("Graph") replace       
+file
+    /path/to/<user>/Dropbox/AI/PNAS_NEXUS/replica
+    > tion_package/output/figure/Coef_by_gender_paymen
+    > t_amt_num.pdf saved as PNG format
+. 
+. 
+. 
+. // restore
+. 
+. // use  "$temp/vacation_connected_call_level"  , clear
+. // replace province_capital = 1 if missing(province_capital)
+. //
+. // drop if gender_customer == "Unknown" |  gender_cno == "Unknown" 
+. // egen gender_customer_num = group(gender_customer)
+. // egen gender_cno_num = group(gender_cno)
+. //
+. // reghdfe bridge_duration_num i.if_AI##i.gender_customer_num province_capital   ///
+. //              , absorb(date_create_time hour_create_time ) cl(crm_user_id)
+. //              
+.                                         
+. }
+
+.                 
+. **## *Refund
+. {
+.         
+. use  "$temp/vacation_connected_call_level"  , clear
+. replace province_capital = 1 if missing(province_capital)
+(2,405 real changes made)
+. 
+. 
+. gen gender_combine = .
+(74,029 missing values generated)
+. replace gender_combine = 0 if if_AI & gender_customer  == "Female" 
+(8,462 real changes made)
+. replace gender_combine = 1 if !if_AI & gender_cno == "Female"  &gender_customer  == "Female"
+(10,148 real changes made)
+. replace gender_combine = 2 if !if_AI & gender_cno == "Male"  &gender_customer  == "Female"
+(4,286 real changes made)
+. replace gender_combine = 4 if if_AI & gender_customer  == "Male"
+(7,239 real changes made)
+. replace gender_combine = 5 if !if_AI & gender_cno == "Female"  &gender_customer  == "Male"
+(8,481 real changes made)
+. replace gender_combine = 6 if !if_AI & gender_cno == "Male"  &gender_customer  == "Male"
+(3,566 real changes made)
+. 
+. // gen gender_combine = 2 if gender_cno == "Female"  &gender_customer  == "Female"
+. // replace gender_combine = 3 if gender_cno == "Female"  &gender_customer  == "Male"
+. // replace gender_combine = 4 if gender_cno == "Male"  &gender_customer  == "Female"
+. // replace gender_combine = 5 if gender_cno == "Male"  &gender_customer  == "Male"
+. // replace gender_combine = 0 if if_AI & gender_customer  == "Female" 
+. // replace gender_combine = 1 if if_AI & gender_customer  == "Male"
+. drop if missing(gender_combine)
+(31,847 observations deleted)
+. 
+. gen gender_cno_redefine = 1 if gender_cno == "Female" 
+(7,852 missing values generated)
+. replace gender_cno_redefine = 2 if gender_cno == "Male" 
+(7,852 real changes made)
+. replace gender_cno_redefine = 0 if if_AI
+(15,701 real changes made)
+. 
+. gen gender_customer_redefine = 1 if gender_customer == "Female" 
+(19,286 missing values generated)
+. replace gender_customer_redefine = 2 if gender_customer == "Male" 
+(19,286 real changes made)
+. replace gender_customer_redefine = 0 if if_AI
+(15,701 real changes made)
+. 
+. local y  if_refund
+. local group_variable gender_combine
+. 
+. // preserve
+. keep if vacation == 1 
+(0 observations deleted)
+. keep if if_succeed
+(40,707 observations deleted)
+. 
+. if "`y'" == "if_refund"{
+.         
+.         global ytitle = "%"
+.         
+. }
+. 
+.         replace if_refund = if_refund * 100
+(267 real changes made)
+.         
+.         * first tease out fixed effects
+. //      local y if_succeed
+.         cap drop `y'_res
+.         reghdfe `y' province_capital  , absorb(date_create_time hour_create_time)  cl(crm_user_id) res(`y'_res)
+(MWFE estimator converged in 6 iterations)
+
+HDFE Linear regression                            Number of obs                                                         =      1,475
+Absorbing 2 HDFE groups                           F(   1,     96)                                                       =       0.28
+Statistics robust to heteroskedasticity           Prob > F                                                              =     0.5977
+                                                  R-squared                                                             =     0.0395
+                                                  Adj R-squared                                                         =     0.0134
+                                                  Within R-sq.                                                          =     0.0002
+Number of clusters (crm_user_id) =         97     Root MSE                                                              =    38.2580
+
+                           (Std. err. adjusted for 97 clusters in crm_user_id)
+------------------------------------------------------------------------------
+             |               Robust
+   if_refund | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
+-------------+----------------------------------------------------------------
+province_c~l |   -1.23695   2.336494    -0.53   0.598    -5.874855                                                          3.400955
+       _cons |   18.36586   1.189583    15.44   0.000     16.00455                                                          20.72716
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+----------------------------------------------------------+
+      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+------------------+---------------------------------------|
+ date_create_time |        28           0          28                                                           |
+ hour_create_time |        12           1          11                                                           |
+----------------------------------------------------------+
+.         local mean_control = _b[_cons]
+.         local se_control = _se[_cons]
+. 
+.         replace `y'_res = `y'_res + _b[_cons]
+(1,475 real changes made)
+. 
+. reghdfe `y'_res  i.gender_combine province_capital   ///                , absorb(date_create_time hour_create_time) cl(crm_user_id)
+(MWFE estimator converged in 6 iterations)
+
+HDFE Linear regression                            Number of obs                                                         =      1,475
+Absorbing 2 HDFE groups                           F(   6,     96)                                                       =      54.94
+Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0000
+                                                  R-squared                                                             =     0.0078
+                                                  Adj R-squared                                                         =    -0.0227
+                                                  Within R-sq.                                                          =     0.0078
+Number of clusters (crm_user_id) =         97     Root MSE                                                              =    38.1742
+
+                           (Std. err. adjusted for 97 clusters in crm_user_id)
+------------------------------------------------------------------------------
+             |               Robust
+if_refund_~s | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
+-------------+----------------------------------------------------------------
+gender_com~e |
+          1  |  -9.436786   2.784329    -3.39   0.001    -14.96364                                                         -3.909937
+          2  |  -12.91963   3.947235    -3.27   0.001    -20.75483                                                         -5.084435
+          4  |  -8.674441   .5116987   -16.95   0.000    -9.690155                                                         -7.658727
+          5  |  -12.42127   2.456115    -5.06   0.000    -17.29661                                                         -7.545915
+          6  |  -16.18833   3.592416    -4.51   0.000    -23.31922                                                         -9.057446
+             |
+province_c~l |    .402379   2.266801     0.18   0.859    -4.097186                                                          4.901944
+       _cons |    28.5678   1.746019    16.36   0.000     25.10198                                                          32.03362
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+----------------------------------------------------------+
+      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+------------------+---------------------------------------|
+ date_create_time |        28           0          28                                                           |
+ hour_create_time |        12           1          11                                                           |
+----------------------------------------------------------+
+. 
+.                 
+.                 
+. //      reghdfe `y' if_AI province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id)
+.                 
+.                 
+.         * figure
+.         clear
+.         set obs 6
+Number of observations (_N) was 0, now 6.
+.         
+.         gen gender_combine = 0 in 1
+(5 missing values generated)
+.         replace gender_combine = 1 in 2         
+(1 real change made)
+.         replace gender_combine = 2 in 3         
+(1 real change made)
+.         replace gender_combine = 4 in 4         
+(1 real change made)
+.         replace gender_combine = 5 in 5         
+(1 real change made)
+.         replace gender_combine = 6 in 6         
+(1 real change made)
+. 
+.         gen mean = _b[_cons] if gender_combine == 0 
+(5 missing values generated)
+. 
+.         replace mean = _b[1.gender_combine] + _b[_cons] if gender_combine == 1  
+(1 real change made)
+.         replace mean = _b[2.gender_combine] + _b[_cons] if gender_combine == 2  
+(1 real change made)
+.         replace mean = _b[4.gender_combine] + _b[_cons] if gender_combine == 4  
+(1 real change made)
+.         replace mean = _b[5.gender_combine] + _b[_cons] if gender_combine == 5  
+(1 real change made)
+.         replace mean = _b[6.gender_combine] + _b[_cons] if gender_combine == 6  
+(1 real change made)
+.         gen sem = _se[_cons] if gender_combine == 0 
+(5 missing values generated)
+.         
+.         lincom 1.gender_combine + _cons
+
+ ( 1)  1.gender_combine + _cons = 0
+
+------------------------------------------------------------------------------
+if_refund_~s | Coefficient  Std. err.      t    P>|t|     [95% con                                                      f. interval]
+-------------+----------------------------------------------------------------
+         (1) |   19.13101   1.837649    10.41   0.000     15.48331                                                          22.77872
+------------------------------------------------------------------------------
+.         local se_treat1 = r(se)
+.         lincom 2.gender_combine + _cons
+
+ ( 1)  2.gender_combine + _cons = 0
+
+------------------------------------------------------------------------------
+if_refund_~s | Coefficient  Std. err.      t    P>|t|     [95% con                                                      f. interval]
+-------------+----------------------------------------------------------------
+         (1) |   15.64817   3.355673     4.66   0.000     8.987208                                                          22.30912
+------------------------------------------------------------------------------
+.         local se_treat2 = r(se)
+.         lincom 4.gender_combine + _cons
+
+ ( 1)  4.gender_combine + _cons = 0
+
+------------------------------------------------------------------------------
+if_refund_~s | Coefficient  Std. err.      t    P>|t|     [95% con                                                      f. interval]
+-------------+----------------------------------------------------------------
+         (1) |   19.89336   1.637411    12.15   0.000     16.64312                                                          23.14359
+------------------------------------------------------------------------------
+.         local se_treat3 = r(se)
+.         lincom 5.gender_combine + _cons
+
+ ( 1)  5.gender_combine + _cons = 0
+
+------------------------------------------------------------------------------
+if_refund_~s | Coefficient  Std. err.      t    P>|t|     [95% con                                                      f. interval]
+-------------+----------------------------------------------------------------
+         (1) |   16.14653   1.684093     9.59   0.000     12.80364                                                          19.48943
+------------------------------------------------------------------------------
+.         local se_treat4 = r(se) 
+.         lincom 6.gender_combine + _cons
+
+ ( 1)  6.gender_combine + _cons = 0
+
+------------------------------------------------------------------------------
+if_refund_~s | Coefficient  Std. err.      t    P>|t|     [95% con                                                      f. interval]
+-------------+----------------------------------------------------------------
+         (1) |   12.37946    2.75938     4.49   0.000     6.902139                                                          17.85679
+------------------------------------------------------------------------------
+.         local se_treat5 = r(se)         
+.         
+.         replace sem = `se_treat1' if gender_combine == 1        
+(1 real change made)
+.         replace sem = `se_treat2' if gender_combine == 2        
+(1 real change made)
+.         replace sem = `se_treat3' if gender_combine == 4        
+(1 real change made)
+.         replace sem = `se_treat4' if gender_combine == 5
+(1 real change made)
+.         replace sem = `se_treat5' if gender_combine == 6                
+(1 real change made)
+.         gen lower_bound = mean - 1.96 * sem
+.         gen upper_bound = mean + 1.96 * sem
+.         
+.         set scheme white_ptol
+. 
+. 
+. 
+. twoway (bar mean `group_variable' if `group_variable' == 0 , barwidth(0.7) fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 1, barwidth(0.7) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 2 , barwidth(0.7) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                        (bar mean `group_variable' if `group_variable' == 4 , barwidth(0.7)  fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 5 , barwidth(0.7)  fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 6 , barwidth(0.7)  fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 0, lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 1 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 2 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 4 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 5 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 6 , lw(medium) lcolor(black) lp(dash)) ///                   , legend(off )  ///                        ylabel(,nogrid) ///                        xlabel( ///                        0 `"AI (Female-voice)"' 1 `"Female"' 2  `"Male"'  3 " " 4 `"AI (Female-voice)"' 5 `"Female "' 6 `"Male"', nogrid labsize(small)) ///                xtitle("")  ytitle($ytitle ) title("Refund Rate")        graphregion(margin(zero)) ///                 subtitle("{bf: Female Customer}                                          {bf: Male Customer}")  
+.                 graph export "$figure_overleaf/Coef_by_gender_if_refund.png", as(png) name("Graph") replace     
+file
+    /path/to/<user>/Dropbox/AI/PNAS_NEXUS/replica
+    > tion_package/output/figure/Coef_by_gender_if_ref
+    > und.png saved as PNG format
+.                 graph export "$figure_overleaf/Coef_by_gender_if_refund.pdf", as(png) name("Graph") replace     
+file
+    /path/to/<user>/Dropbox/AI/PNAS_NEXUS/replica
+    > tion_package/output/figure/Coef_by_gender_if_ref
+    > und.pdf saved as PNG format
+. 
+. 
+. // restore
+. 
+. // use  "$temp/vacation_connected_call_level"  , clear
+. // replace province_capital = 1 if missing(province_capital)
+. //
+. // drop if gender_customer == "Unknown" |  gender_cno == "Unknown" 
+. // egen gender_customer_num = group(gender_customer)
+. // egen gender_cno_num = group(gender_cno)
+. //
+. // reghdfe bridge_duration_num i.if_AI##i.gender_customer_num province_capital   ///
+. //              , absorb(date_create_time hour_create_time ) cl(crm_user_id)
+. //              
+.                                         
+. }
+
+. 
+. capture log close
