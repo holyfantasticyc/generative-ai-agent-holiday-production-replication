@@ -1,5 +1,8 @@
 # Replication Package
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20289041.svg)](https://doi.org/10.5281/zenodo.20289041)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 > **Manuscript**
 > *Generative AI as Backup Production Under Labor Constraints: System-Level Gains Despite Inferior Task Performance.*
 > *PNAS Nexus*, submitted May 2026.
@@ -7,7 +10,10 @@
 > **Created by**
 > Yucheng Wang, School of Economics, University of Sydney.
 >
-> **Last updated:** 8 May 2026
+> **Last updated:** 19 May 2026
+>
+> **How to cite this replication package:**
+> Wang, Y. (2026). *Replication package for: Generative AI as Backup Production Under Labor Constraints: System-Level Gains Despite Inferior Task Performance* (v1.0.0) [Software]. Zenodo. https://doi.org/10.5281/zenodo.20289041
 
 This package contains the analysis code that produced every figure and table in the manuscript and the supplementary materials. The input data are proprietary and **are not redistributed with this package**; you must obtain access separately (see the [Data](#data) section). The `logs/` and `output/` folders contain the captured Stata output and the generated figure / table files from the authors' run on the proprietary data, so an editor or referee can verify the numbers in the manuscript without needing the data themselves.
 
