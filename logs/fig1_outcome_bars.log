@@ -1,8 +1,9 @@
---------------------------------------------------------
+-------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  <REPLICATION_ROOT>/logs/fig1_outcome_bars.log
+       log:  <REPLICATION_ROOT>/log
+> s/fig1_outcome_bars.log
   log type:  text
- opened on:   9 May 2026, 09:08:48
+ opened on:  27 May 2026, 10:14:19
 
 . 
 . **# Figure 1: Main Results 
@@ -10,11 +11,10 @@
 . 
 . **## Figure: Main Results: Succeed
 . * Connect data, 电话(通)-合同 level
-. // use  "$temp/vacation_connected_callcontract_level"  , clear
 . use  "$temp/vacation_connected_call_level"  , clear
 . cap gen gender_customer_num = ( gender_customer == "Female" )
 . replace province_capital = 1 if missing(province_capital)
-(2,405 real changes made)
+(1,352 real changes made)
 . 
 . sum bridge_duration_num , de
 
@@ -23,20 +23,16 @@
       Percentiles      Smallest
  1%           11             11
  5%           13             11
-10%           16             11       Obs              74,029
-25%           24             11       Sum of wgt.      74,029
+10%           16             11       Obs              42,537
+25%           24             11       Sum of wgt.      42,537
 
-50%           44                      Mean           121.6279
-                        Largest       Std. dev.      253.1889
-75%          101           3547
-90%          269           3574       Variance        64104.6
-95%          484           3582       Skewness       5.762148
-99%         1351           3586       Kurtosis       47.80441
+50%           43                      Mean           108.7215
+                        Largest       Std. dev.      222.0175
+75%           93           3469
+90%          237           3487       Variance       49291.77
+95%          414           3493       Skewness       6.269393
+99%         1158           3582       Kurtosis       58.33996
 . 
-. // gen ln_gap_create_first_call = ln(gap_create_first_call)
-. // reghdfe if_succeed if_AI ln_gap_create_first_call  if vacation == 1 , a(date_create_time hour_create_time) cl(crm_user_id)
-. 
-. // reghdfe if_succeed if_AI ln_gap_create_first_call if hour_create_time == 20 , a(date_create_time hour_create_time) cl(crm_user_id)
 . 
 . {
 . local y  if_succeed
@@ -50,77 +46,76 @@
 .         
 .         global ytitle = "%"
 .         replace `y' = `y' * 100
-(2,458 real changes made)
+(1,255 real changes made)
 .         
 . }
 . 
 .         
 .         * first tease out fixed effects
-. //      local y if_succeed
 .         cap drop `y'_res
-.         reghdfe `y' province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id) res(`y'_res)
+.         reghdfe `y' province_capital gender_customer_num , absorb(date_create
+> _time hour_create_time)  cl(crm_user_id) res(`y'_res)
 (MWFE estimator converged in 5 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =     74,029
-Absorbing 2 HDFE groups                           F(   2,    533)                                                       =       5.40
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0048
-                                                  R-squared                                                             =     0.0036
-                                                  Adj R-squared                                                         =     0.0030
-                                                  Within R-sq.                                                          =     0.0001
-Number of clusters (crm_user_id) =        534     Root MSE                                                              =    17.8896
+HDFE Linear regression                            Number of obs   =     42,537
+Absorbing 2 HDFE groups                           F(   2,    262) =       5.43
+Statistics robust to heteroskedasticity           Prob > F        =     0.0049
+                                                  R-squared       =     0.0032
+                                                  Adj R-squared   =     0.0024
+                                                  Within R-sq.    =     0.0003
+Number of clusters (crm_user_id) =        263     Root MSE        =    16.9010
 
-                          (Std. err. adjusted for 534 clusters in crm_user_id)
+                          (Std. err. adjusted for 263 clusters in crm_user_id)
 ------------------------------------------------------------------------------
              |               Robust
-  if_succeed | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
+  if_succeed | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-province_c~l |   .1226729   .1212211     1.01   0.312    -.1154568                                                          .3608026
-gender_cus~m |  -.4218036   .1350003    -3.12   0.002    -.6870016                                                         -.1566056
-       _cons |   3.514303   .2680252    13.11   0.000     2.987788                                                          4.040818
+province_c~l |   .3989957   .1872166     2.13   0.034     .0303551    .7676363
+gender_cus~m |  -.4716031    .159005    -2.97   0.003    -.7846935   -.1585127
+       _cons |   3.109935   .2965184    10.49   0.000     2.526073    3.693798
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
- hour_create_time |        12           1          11                                                           |
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
 ----------------------------------------------------------+
-. //      local mean_control = _b[_cons]
-. //      local se_control = _se[_cons]
 . 
 .         replace `y'_res = `y'_res + _b[_cons]
-(74,029 real changes made)
+(42,537 real changes made)
 .         
 .         * regression coefficent with fixed effects
-.         reghdfe `y' if_AI province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id)
+.         reghdfe `y' if_AI province_capital gender_customer_num , absorb(date_
+> create_time hour_create_time)  cl(crm_user_id)
 (MWFE estimator converged in 5 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =     74,029
-Absorbing 2 HDFE groups                           F(   3,    533)                                                       =       6.55
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0002
-                                                  R-squared                                                             =     0.0039
-                                                  Adj R-squared                                                         =     0.0034
-                                                  Within R-sq.                                                          =     0.0005
-Number of clusters (crm_user_id) =        534     Root MSE                                                              =    17.8867
+HDFE Linear regression                            Number of obs   =     42,537
+Absorbing 2 HDFE groups                           F(   3,    262) =       7.38
+Statistics robust to heteroskedasticity           Prob > F        =     0.0001
+                                                  R-squared       =     0.0038
+                                                  Adj R-squared   =     0.0030
+                                                  Within R-sq.    =     0.0009
+Number of clusters (crm_user_id) =        263     Root MSE        =    16.8961
 
-                          (Std. err. adjusted for 534 clusters in crm_user_id)
+                          (Std. err. adjusted for 263 clusters in crm_user_id)
 ------------------------------------------------------------------------------
              |               Robust
-  if_succeed | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
+  if_succeed | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-       if_AI |  -1.216366   .3057333    -3.98   0.000    -1.816956                                                         -.6157755
-province_c~l |   .1219745   .1213149     1.01   0.315    -.1163395                                                          .3602885
-gender_cus~m |  -.4176518   .1345189    -3.10   0.002     -.681904                                                         -.1533997
-       _cons |   3.777799     .29882    12.64   0.000     3.190789                                                          4.364808
+       if_AI |  -1.230473   .3279628    -3.75   0.000    -1.876252   -.5846951
+province_c~l |   .3975954   .1873129     2.12   0.035     .0287652    .7664257
+gender_cus~m |  -.4645601   .1583266    -2.93   0.004    -.7763146   -.1528056
+       _cons |   3.546903   .3521026    10.07   0.000     2.853592    4.240214
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
- hour_create_time |        12           1          11                                                           |
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
 ----------------------------------------------------------+
 .         local coe = round(_b[if_AI],0.001)
 .         local mean_treat = _b[if_AI] + _b[_cons]
@@ -131,9 +126,9 @@ Absorbed degrees of freedom:
  ( 1)  if_AI + _cons = 0
 
 ------------------------------------------------------------------------------
-  if_succeed | Coefficient  Std. err.      t    P>|t|     [95% con                                                      f. interval]
+  if_succeed | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-         (1) |   2.561433   .1767427    14.49   0.000     2.214236                                                          2.908631
+         (1) |    2.31643   .1355558    17.09   0.000     2.049512    2.583347
 ------------------------------------------------------------------------------
 .         local se_treat = r(se)
 . 
@@ -157,47 +152,54 @@ Number of observations (_N) was 0, now 2.
 .         gen upper_bound = mean + 1.96 * sem
 .         
 .         set scheme white_ptol
-.         twoway (bar mean `group_variable' if `group_variable' == 0 , barwidth(0.5) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 1 , barwidth(0.5) fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 0, lw(medium) lcolor($control_color) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 1 , lw(medium) lcolor($treat_color) lp(dash)) ///                   (scatteri 4.8 0 4.8 1,  recast(line) lw(medthin)  mc(none) lc(black) lp("-")) ///                   (scatteri 4.8 0 4.8 1,  recast(dropline) base(4.5) lw(medthin) mc(none) lc(black) lp(solid)) ///                   , legend(off ) xlabel( 0 "Human Representative " 1 "AI Representative "  , nogrid ) ///                    ylabel(1(1)5, nogrid )                      text(4.95 0.5 "diff = `coe', p{superscript:***} < 0.01") ///                   xtitle("")   ytitle($ytitle ) title("Success Rate")   graphregion(margin(zero))
-.                   graph export "$figure_overleaf/Bar_plot_outcome_`y'_FE.png", as(png) name("Graph") replace
+.         twoway (bar mean `group_variable' if `group_variable' == 0 , barwidth
+> (0.5) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///
+>                    (bar mean `group_variable' if `group_variable' == 1 , barw
+> idth(0.5) fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///
+>                    (rcap lower_bound upper_bound `group_variable' if `group_v
+> ariable' == 0, lw(medium) lcolor($control_color) lp(dash)) ///
+>                    (rcap lower_bound upper_bound `group_variable' if `group_v
+> ariable' == 1 , lw(medium) lcolor($treat_color) lp(dash)) ///
+>                    (scatteri 4.8 0 4.8 1,  recast(line) lw(medthin)  mc(none)
+>  lc(black) lp("-")) ///
+>                    (scatteri 4.8 0 4.8 1,  recast(dropline) base(4.5) lw(medt
+> hin) mc(none) lc(black) lp(solid)) ///
+>                    , legend(off ) xlabel( 0 "Human Representative " 1 "AI Rep
+> resentative "  , nogrid ) ///
+>                     ylabel(1(1)5, nogrid )                      text(4.95 0.5
+>  "diff = `coe', p{superscript:***} < 0.01") ///
+>                    xtitle("")   ytitle($ytitle ) title("Success Rate")   grap
+> hregion(margin(zero))
+.                   graph export "$figure_overleaf/Bar_plot_outcome_`y'_FE.png"
+> , as(png) name("Graph") replace
+file <REPLICATION_ROOT>/output/figu
+> re/Bar_plot_outcome_if_succeed_FE.png written in PNG format
+.                   graph export "$figure_overleaf/Bar_plot_outcome_`y'_FE.pdf"
+> , as(pdf) name("Graph") replace
 file
-    /path/to/<user>/Dropbox/AI/PNAS_NEXUS/replica
-    > tion_package/output/figure/Bar_plot_outcome_if_s
-    > ucceed_FE.png saved as PNG format
-.                   graph export "$figure_overleaf/Bar_plot_outcome_`y'_FE.pdf", as(pdf) name("Graph") replace
-file
-    /path/to/<user>/Dropbox/AI/PNAS_NEXUS/replica
-    > tion_package/output/figure/Bar_plot_outcome_if_s
-    > ucceed_FE.pdf saved as PDF format
+    <REPLICATION_ROOT>/output/fig
+    > ure/Bar_plot_outcome_if_succeed_FE.pdf saved as PDF format
 . 
-. //                         name("Fig_`y'_vacation",replace ) 
 .                         
-. // gr_edit .plotregion1.plot2.style.editstyle marker(size(huge))                
-. 
 . restore
 . 
 . }
 .         
-. //      graph export "$figure_overleaf/Bar_plot_`y'.png", as(png) name("Graph") replace
 . 
 . **## Figure: Main Results: Amount
 . * Connect data, 电话(通) level
 . 
-. // use  "$temp/vacation_connected_call_level"  , clear
 . use  "$temp/vacation_connected_call_level"  , clear
 . cap gen gender_customer_num = ( gender_customer == "Female" )
 . replace province_capital = 1 if missing(province_capital)
-(2,405 real changes made)
+(1,352 real changes made)
 . keep if if_succeed
-(71,571 observations deleted)
+(41,282 observations deleted)
 . 
-. 
-. // gen ln_payment_amt_num = log(payment_amt_num) 
-. // reghdfe ln_payment_amt_num if_AI if vacation == 1  , a(date_create_time hour_create_time) cl(crm_user_id)
 . 
 . {
 .         
 . 
-.         
 . foreach var in  payment_amt_num {
   2.         
 .         cap drop  ln_`var'
@@ -216,7 +218,6 @@ file
   9. 
 . if "`var'" == "payment_amt_num"{
  10.         
-. //      global ytitle = "Payment Amount (CNY)"
 .         global ytitle = "Chinese Yuan (CNY)"
  11. 
 . }
@@ -240,16 +241,15 @@ file
  20.         keep if vacation == 1 
  21.         
 .         * first tease out fixed effects
-. //      local y if_succeed
 .         cap drop `y'_res
- 22.         reghdfe `y' province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id) res(`y'_res)
- 23. //      local mean_control = _b[_cons]
-. //      local se_control = _se[_cons]
-. 
+ 22.         reghdfe `y' province_capital gender_customer_num , absorb(date_cre
+> ate_time hour_create_time)  cl(crm_user_id) res(`y'_res)
+ 23. 
 .         replace `y'_res = `y'_res + _b[_cons]
  24.         
 .         * regression coefficent with fixed effects
-.         reghdfe `y' if_AI province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id)
+.         reghdfe `y' if_AI province_capital gender_customer_num , absorb(date_
+> create_time hour_create_time)  cl(crm_user_id)
  25.         local coe = round(_b[if_AI],0.001)
  26.         local mean_treat = _b[if_AI] + _b[_cons]
  27.         local mean_control = _b[_cons]
@@ -270,85 +270,100 @@ file
  40.         gen upper_bound = mean + 1.96 * sem
  41. 
 . 
-. //      set scheme s1mono
 .         set scheme white_ptol
  42. 
 . 
-.                 twoway (bar mean `group_variable' if `group_variable' == 0 , barwidth(0.5) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 1 , barwidth(0.5) fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 0, lw(medium) lcolor($control_color) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 1 , lw(medium) lcolor($treat_color) lp(dash)) ///                   (scatteri 148 0 148 1,  recast(line) lw(medthin)  mc(none) lc(black) lp("-")) ///                   (scatteri 148 0 148 1,  recast(dropline) base(142) lw(medthin) mc(none) lc(black) lp(solid)) ///                   , legend(off ) xlabel( 0 "Human Representative " 1 "AI Representative " , nogrid) title(" Payment Amount per Transcations ") ///                   xtitle("")   ytitle( $ytitle ) ///                     ylabel(60(20)153, nogrid )          text(152 0.5 "diff = `coe', p{superscript:***} < 0.01") graphregion(margin(zero))
- 43.                   graph export "$figure_overleaf/Bar_plot_outcome_`var'_FE.png", as(png) name("Graph") replace
- 44.                   graph export "$figure_overleaf/Bar_plot_outcome_`var'_FE.pdf", as(pdf) name("Graph") replace
+.                 twoway (bar mean `group_variable' if `group_variable' == 0 , 
+> barwidth(0.5) fcolor($control_color) lcolor($control_color) lwidth(medium)) /
+> //
+>                    (bar mean `group_variable' if `group_variable' == 1 , barw
+> idth(0.5) fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///
+>                    (rcap lower_bound upper_bound `group_variable' if `group_v
+> ariable' == 0, lw(medium) lcolor($control_color) lp(dash)) ///
+>                    (rcap lower_bound upper_bound `group_variable' if `group_v
+> ariable' == 1 , lw(medium) lcolor($treat_color) lp(dash)) ///
+>                    (scatteri 148 0 148 1,  recast(line) lw(medthin)  mc(none)
+>  lc(black) lp("-")) ///
+>                    (scatteri 148 0 148 1,  recast(dropline) base(142) lw(medt
+> hin) mc(none) lc(black) lp(solid)) ///
+>                    , legend(off ) xlabel( 0 "Human Representative " 1 "AI Rep
+> resentative " , nogrid) title(" Payment Amount per Transcations ") ///
+>                    xtitle("")   ytitle( $ytitle ) /// 
+>                     ylabel(60(20)153, nogrid )          text(152 0.5 "diff = 
+> `coe', p{superscript:***} < 0.01") graphregion(margin(zero))
+ 43.                   graph export "$figure_overleaf/Bar_plot_outcome_`var'_FE
+> .png", as(png) name("Graph") replace
+ 44.                   graph export "$figure_overleaf/Bar_plot_outcome_`var'_FE
+> .pdf", as(pdf) name("Graph") replace
  45. 
 . restore
  46. 
-.  /////                 name("Fig_`var'_vacation",replace ) 
-.         
 .         
 . }
-(1 missing value generated)
 (0 observations deleted)
 (MWFE estimator converged in 5 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =      2,458
-Absorbing 2 HDFE groups                           F(   2,    286)                                                       =       2.01
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.1358
-                                                  R-squared                                                             =     0.0988
-                                                  Adj R-squared                                                         =     0.0839
-                                                  Within R-sq.                                                          =     0.0016
-Number of clusters (crm_user_id) =        287     Root MSE                                                              =   125.8177
+HDFE Linear regression                            Number of obs   =      1,255
+Absorbing 2 HDFE groups                           F(   2,    128) =       0.22
+Statistics robust to heteroskedasticity           Prob > F        =     0.8019
+                                                  R-squared       =     0.0768
+                                                  Adj R-squared   =     0.0518
+                                                  Within R-sq.    =     0.0005
+Number of clusters (crm_user_id) =        129     Root MSE        =    86.9639
 
-                          (Std. err. adjusted for 287 clusters in crm_user_id)
+                          (Std. err. adjusted for 129 clusters in crm_user_id)
 ------------------------------------------------------------------------------
              |               Robust
-payment_am~m | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
+payment_am~m | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-province_c~l |  -8.266321    5.74452    -1.44   0.151    -19.57322                                                          3.040578
-gender_cus~m |  -7.856725   4.779656    -1.64   0.101    -17.26449                                                           1.55104
-       _cons |   127.8846   3.746627    34.13   0.000     120.5102                                                          135.2591
+province_c~l |   .1141102   5.610582     0.02   0.984    -10.98738    11.21561
+gender_cus~m |  -3.723777   6.050417    -0.62   0.539    -15.69556    8.248007
+       _cons |   93.77066   3.694872    25.38   0.000     86.45972    101.0816
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
- hour_create_time |        12           1          11                                                           |
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
 ----------------------------------------------------------+
-(2,458 real changes made)
+(1,255 real changes made)
 (MWFE estimator converged in 6 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =      2,458
-Absorbing 2 HDFE groups                           F(   3,    286)                                                       =       2.87
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0367
-                                                  R-squared                                                             =     0.0994
-                                                  Adj R-squared                                                         =     0.0842
-                                                  Within R-sq.                                                          =     0.0023
-Number of clusters (crm_user_id) =        287     Root MSE                                                              =   125.7968
+HDFE Linear regression                            Number of obs   =      1,255
+Absorbing 2 HDFE groups                           F(   3,    128) =       4.11
+Statistics robust to heteroskedasticity           Prob > F        =     0.0080
+                                                  R-squared       =     0.0795
+                                                  Adj R-squared   =     0.0538
+                                                  Within R-sq.    =     0.0034
+Number of clusters (crm_user_id) =        129     Root MSE        =    86.8720
 
-                          (Std. err. adjusted for 287 clusters in crm_user_id)
+                          (Std. err. adjusted for 129 clusters in crm_user_id)
 ------------------------------------------------------------------------------
              |               Robust
-payment_am~m | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
+payment_am~m | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-       if_AI |  -14.94936    6.70475    -2.23   0.027    -28.14627                                                         -1.752442
-province_c~l |   -8.41923    5.77181    -1.46   0.146    -19.77984                                                          2.941384
-gender_cus~m |  -7.856207     4.8037    -1.64   0.103     -17.3113                                                          1.598883
-       _cons |   129.8188   4.094225    31.71   0.000     121.7602                                                          137.8775
+       if_AI |  -15.77753   4.859247    -3.25   0.001    -25.39238    -6.16268
+province_c~l |  -.1623712   5.753754    -0.03   0.978    -11.54716    11.22241
+gender_cus~m |  -3.651579   6.088198    -0.60   0.550    -15.69812    8.394961
+       _cons |   97.42616   4.851236    20.08   0.000     87.82716    107.0252
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
- hour_create_time |        12           1          11                                                           |
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
 ----------------------------------------------------------+
 
  ( 1)  if_AI + _cons = 0
 
 ------------------------------------------------------------------------------
-payment_am~m | Coefficient  Std. err.      t    P>|t|     [95% con                                                      f. interval]
+payment_am~m | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-         (1) |   114.8695   6.356324    18.07   0.000     102.3584                                                          127.3806
+         (1) |   81.64863   4.336858    18.83   0.000     73.06741    90.22984
 ------------------------------------------------------------------------------
 Number of observations (_N) was 0, now 2.
 (1 missing value generated)
@@ -357,39 +372,29 @@ Number of observations (_N) was 0, now 2.
 (1 real change made)
 (1 missing value generated)
 (1 real change made)
+file <REPLICATION_ROOT>/output/figu
+> re/Bar_plot_outcome_payment_amt_num_FE.png written in PNG format
 file
-    /path/to/<user>/Dropbox/AI/PNAS_NEXUS/replica
-    > tion_package/output/figure/Bar_plot_outcome_paym
-    > ent_amt_num_FE.png saved as PNG format
-file
-    /path/to/<user>/Dropbox/AI/PNAS_NEXUS/replica
-    > tion_package/output/figure/Bar_plot_outcome_paym
-    > ent_amt_num_FE.pdf saved as PDF format
+    <REPLICATION_ROOT>/output/fig
+    > ure/Bar_plot_outcome_payment_amt_num_FE.pdf saved as PDF format
 . 
 . }               
-. 
-. 
 . 
 . 
 . **## Figure: Main Results: Unconditional Amount
 . * Connect data, 电话(通) level
 . 
-. // use  "$temp/vacation_connected_call_level"  , clear
 . use  "$temp/vacation_connected_call_level"  , clear
 . cap gen gender_customer_num = ( gender_customer == "Female" )
 . replace province_capital = 1 if missing(province_capital)
-(2,405 real changes made)
+(1,352 real changes made)
 . replace payment_amt_num = 0 if if_succeed == 0
-(71,571 real changes made)
+(41,282 real changes made)
 . 
-. 
-. // gen ln_payment_amt_num = log(payment_amt_num) 
-. // reghdfe ln_payment_amt_num if_AI if vacation == 1  , a(date_create_time hour_create_time) cl(crm_user_id)
 . 
 . {
 .         
 . 
-.         
 . foreach var in  payment_amt_num {
   2.         
 .         cap drop  ln_`var'
@@ -408,7 +413,6 @@ file
   9. 
 . if "`var'" == "payment_amt_num"{
  10.         
-. //      global ytitle = "Payment Amount (CNY)"
 .         global ytitle = "Chinese Yuan (CNY)"
  11. 
 . }
@@ -432,16 +436,15 @@ file
  20.         keep if vacation == 1 
  21.         
 .         * first tease out fixed effects
-. //      local y if_succeed
 .         cap drop `y'_res
- 22.         reghdfe `y' province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id) res(`y'_res)
- 23. //      local mean_control = _b[_cons]
-. //      local se_control = _se[_cons]
-. 
+ 22.         reghdfe `y' province_capital gender_customer_num , absorb(date_cre
+> ate_time hour_create_time)  cl(crm_user_id) res(`y'_res)
+ 23. 
 .         replace `y'_res = `y'_res + _b[_cons]
  24.         
 .         * regression coefficent with fixed effects
-.         reghdfe `y' if_AI province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id)
+.         reghdfe `y' if_AI province_capital gender_customer_num , absorb(date_
+> create_time hour_create_time)  cl(crm_user_id)
  25.         local coe = round(_b[if_AI],0.001)
  26.         local mean_treat = _b[if_AI] + _b[_cons]
  27.         local mean_control = _b[_cons]
@@ -462,84 +465,102 @@ file
  40.         gen upper_bound = mean + 1.96 * sem
  41. 
 . 
-. //      set scheme s1mono
 .         set scheme white_ptol
  42. 
 . 
-.                 twoway (bar mean `group_variable' if `group_variable' == 0 , barwidth(0.5) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 1 , barwidth(0.5) fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 0, lw(medium) lcolor($control_color) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 1 , lw(medium) lcolor($treat_color) lp(dash)) ///                  (scatteri 5.9 0 5.9 1,  recast(line) lw(medthin)  mc(none) lc(black) lp("-")) ///                  (scatteri 5.9 0 5.9 1,  recast(dropline) base(5.7) lw(medthin) mc(none) lc(black) lp(solid)) //////                   , legend(off ) xlabel( 0 "Human Representative " 1 "AI Representative " , nogrid) title(" Payment Amount per Calling ") ///                   xtitle("")   ytitle( $ytitle ) ///                   ylabel(2(0.5)6 6.2 " ", nogrid )             text(6.08 0.5 "diff = `coe', p{superscript:***} < 0.01") graphregion(margin(zero))
+.                 twoway (bar mean `group_variable' if `group_variable' == 0 , 
+> barwidth(0.5) fcolor($control_color) lcolor($control_color) lwidth(medium)) /
+> //
+>                    (bar mean `group_variable' if `group_variable' == 1 , barw
+> idth(0.5) fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///
+>                    (rcap lower_bound upper_bound `group_variable' if `group_v
+> ariable' == 0, lw(medium) lcolor($control_color) lp(dash)) ///
+>                    (rcap lower_bound upper_bound `group_variable' if `group_v
+> ariable' == 1 , lw(medium) lcolor($treat_color) lp(dash)) ///
+>                   (scatteri 5.9 0 5.9 1,  recast(line) lw(medthin)  mc(none) 
+> lc(black) lp("-")) ///
+>                   (scatteri 5.9 0 5.9 1,  recast(dropline) base(5.7) lw(medth
+> in) mc(none) lc(black) lp(solid)) ///
+>                   , legend(off ) xlabel( 0 "Human Representative " 1 "AI Repr
+> esentative " , nogrid) title(" Payment Amount per Calling ") ///
+>                    xtitle("")   ytitle( $ytitle ) ///
+>                    ylabel(2(0.5)6 6.2 " ", nogrid )             text(6.08 0.5
+>  "diff = `coe', p{superscript:***} < 0.01") graphregion(margin(zero))
  43. 
 .                   
-.                   graph export "$figure_overleaf/Bar_plot_outcome_`var'_uncon_FE.png", as(png) name("Graph") replace
- 44.                   graph export "$figure_overleaf/Bar_plot_outcome_`var'_uncon_FE.pdf", as(pdf) name("Graph") replace
+.                   graph export "$figure_overleaf/Bar_plot_outcome_`var'_uncon
+> _FE.png", as(png) name("Graph") replace
+ 44.                   graph export "$figure_overleaf/Bar_plot_outcome_`var'_un
+> con_FE.pdf", as(pdf) name("Graph") replace
  45. 
 . restore
  46. 
 . }
-(71,572 missing values generated)
+(41,282 missing values generated)
 (0 observations deleted)
 (MWFE estimator converged in 5 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =     74,029
-Absorbing 2 HDFE groups                           F(   2,    533)                                                       =       6.44
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0017
-                                                  R-squared                                                             =     0.0055
-                                                  Adj R-squared                                                         =     0.0050
-                                                  Within R-sq.                                                          =     0.0001
-Number of clusters (crm_user_id) =        534     Root MSE                                                              =    32.3431
+HDFE Linear regression                            Number of obs   =     42,537
+Absorbing 2 HDFE groups                           F(   2,    262) =       4.94
+Statistics robust to heteroskedasticity           Prob > F        =     0.0079
+                                                  R-squared       =     0.0043
+                                                  Adj R-squared   =     0.0036
+                                                  Within R-sq.    =     0.0002
+Number of clusters (crm_user_id) =        263     Root MSE        =    21.8095
 
-                          (Std. err. adjusted for 534 clusters in crm_user_id)
+                          (Std. err. adjusted for 263 clusters in crm_user_id)
 ------------------------------------------------------------------------------
              |               Robust
-payment_am~m | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
+payment_am~m | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-province_c~l |  -.3049628   .2624949    -1.16   0.246    -.8206143                                                          .2106888
-gender_cus~m |  -.7324882   .2175799    -3.37   0.001    -1.159907                                                         -.3050689
-       _cons |   4.508177   .3683952    12.24   0.000     3.784492                                                          5.231862
+province_c~l |   .3226624   .2934945     1.10   0.273    -.2552458    .9005706
+gender_cus~m |   -.552737   .1866112    -2.96   0.003    -.9201856   -.1852884
+       _cons |   2.933468   .2793274    10.50   0.000     2.383456     3.48348
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
- hour_create_time |        12           1          11                                                           |
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
 ----------------------------------------------------------+
-(74,029 real changes made)
+(42,537 real changes made)
 (MWFE estimator converged in 5 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =     74,029
-Absorbing 2 HDFE groups                           F(   3,    533)                                                       =      10.70
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0000
-                                                  R-squared                                                             =     0.0056
-                                                  Adj R-squared                                                         =     0.0051
-                                                  Within R-sq.                                                          =     0.0003
-Number of clusters (crm_user_id) =        534     Root MSE                                                              =    32.3413
+HDFE Linear regression                            Number of obs   =     42,537
+Absorbing 2 HDFE groups                           F(   3,    262) =      10.53
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.0048
+                                                  Adj R-squared   =     0.0040
+                                                  Within R-sq.    =     0.0006
+Number of clusters (crm_user_id) =        263     Root MSE        =    21.8052
 
-                          (Std. err. adjusted for 534 clusters in crm_user_id)
+                          (Std. err. adjusted for 263 clusters in crm_user_id)
 ------------------------------------------------------------------------------
              |               Robust
-payment_am~m | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
+payment_am~m | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-       if_AI |  -1.357535   .3006947    -4.51   0.000    -1.948227                                                         -.7668429
-province_c~l |  -.3057422   .2625289    -1.16   0.245    -.8214605                                                           .209976
-gender_cus~m |  -.7278545   .2174347    -3.35   0.001    -1.154989                                                         -.3007203
-       _cons |   4.802254   .3801759    12.63   0.000     4.055427                                                          5.549081
+       if_AI |  -1.322575   .2968842    -4.45   0.000    -1.907158   -.7379925
+province_c~l |   .3211574   .2932803     1.10   0.274    -.2563291    .8986439
+gender_cus~m |  -.5451668   .1863455    -2.93   0.004    -.9120921   -.1782415
+       _cons |   3.403143   .3367796    10.10   0.000     2.740004    4.066282
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
- hour_create_time |        12           1          11                                                           |
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
 ----------------------------------------------------------+
 
  ( 1)  if_AI + _cons = 0
 
 ------------------------------------------------------------------------------
-payment_am~m | Coefficient  Std. err.      t    P>|t|     [95% con                                                      f. interval]
+payment_am~m | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-         (1) |   3.444719   .3220946    10.69   0.000     2.811989                                                           4.07745
+         (1) |   2.080568   .1770794    11.75   0.000     1.731888    2.429248
 ------------------------------------------------------------------------------
 Number of observations (_N) was 0, now 2.
 (1 missing value generated)
@@ -548,14 +569,11 @@ Number of observations (_N) was 0, now 2.
 (1 real change made)
 (1 missing value generated)
 (1 real change made)
+file <REPLICATION_ROOT>/output/figu
+> re/Bar_plot_outcome_payment_amt_num_uncon_FE.png written in PNG format
 file
-    /path/to/<user>/Dropbox/AI/PNAS_NEXUS/replica
-    > tion_package/output/figure/Bar_plot_outcome_paym
-    > ent_amt_num_uncon_FE.png saved as PNG format
-file
-    /path/to/<user>/Dropbox/AI/PNAS_NEXUS/replica
-    > tion_package/output/figure/Bar_plot_outcome_paym
-    > ent_amt_num_uncon_FE.pdf saved as PDF format
+    <REPLICATION_ROOT>/output/fig
+    > ure/Bar_plot_outcome_payment_amt_num_uncon_FE.pdf saved as PDF format
 . 
 . }               
 . 
@@ -565,10 +583,10 @@ file
 . use  "$temp/vacation_connected_call_level"  , clear
 . cap gen gender_customer_num = ( gender_customer == "Female" )
 . replace province_capital = 1 if missing(province_capital)
-(2,405 real changes made)
+(1,352 real changes made)
 . 
 . replace payment_amt_num = 0 if missing(payment_amt_num)
-(71,571 real changes made)
+(41,282 real changes made)
 . replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
 (0 real changes made)
 . * only succeed phone call
@@ -584,76 +602,75 @@ file
 . 
 . preserve
 .         keep if if_succeed 
-(71,571 observations deleted)
+(41,282 observations deleted)
 .         replace if_refund = if_refund * 100
-(462 real changes made)
+(221 real changes made)
 . 
 .         * first tease out fixed effects
-. //      local y if_succeed
 .         cap drop `y'_res
-.         reghdfe `y' province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id) res(`y'_res)
+.         reghdfe `y' province_capital gender_customer_num , absorb(date_create
+> _time hour_create_time)  cl(crm_user_id) res(`y'_res)
 (MWFE estimator converged in 5 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =      2,458
-Absorbing 2 HDFE groups                           F(   2,    286)                                                       =       3.52
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0308
-                                                  R-squared                                                             =     0.0294
-                                                  Adj R-squared                                                         =     0.0133
-                                                  Within R-sq.                                                          =     0.0030
-Number of clusters (crm_user_id) =        287     Root MSE                                                              =    38.8141
+HDFE Linear regression                            Number of obs   =      1,255
+Absorbing 2 HDFE groups                           F(   2,    128) =       2.47
+Statistics robust to heteroskedasticity           Prob > F        =     0.0887
+                                                  R-squared       =     0.0425
+                                                  Adj R-squared   =     0.0166
+                                                  Within R-sq.    =     0.0037
+Number of clusters (crm_user_id) =        129     Root MSE        =    37.7869
 
-                          (Std. err. adjusted for 287 clusters in crm_user_id)
+                          (Std. err. adjusted for 129 clusters in crm_user_id)
 ------------------------------------------------------------------------------
              |               Robust
-   if_refund | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
+   if_refund | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-province_c~l |   .8196831     1.9451     0.42   0.674    -3.008845                                                          4.648211
-gender_cus~m |   4.250156    1.62886     2.61   0.010     1.044083                                                           7.45623
-       _cons |   16.49369   1.121895    14.70   0.000     14.28547                                                          18.70191
+province_c~l |  -.4733952   2.510752    -0.19   0.851    -5.441348    4.494557
+gender_cus~m |   4.522998   2.035764     2.22   0.028     .4948921    8.551104
+       _cons |   15.50984   1.503556    10.32   0.000     12.53479    18.48488
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
- hour_create_time |        12           1          11                                                           |
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
 ----------------------------------------------------------+
-. //      local mean_control = _b[_cons]
-. //      local se_control = _se[_cons]
 . 
 .         replace `y'_res = `y'_res + _b[_cons]
-(2,458 real changes made)
+(1,255 real changes made)
 .         
 .         * regression coefficent with fixed effects
-.         reghdfe `y' if_AI province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id)
+.         reghdfe `y' if_AI province_capital gender_customer_num , absorb(date_
+> create_time hour_create_time)  cl(crm_user_id)
 (MWFE estimator converged in 6 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =      2,458
-Absorbing 2 HDFE groups                           F(   3,    286)                                                       =       4.82
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0027
-                                                  R-squared                                                             =     0.0302
-                                                  Adj R-squared                                                         =     0.0138
-                                                  Within R-sq.                                                          =     0.0038
-Number of clusters (crm_user_id) =        287     Root MSE                                                              =    38.8057
+HDFE Linear regression                            Number of obs   =      1,255
+Absorbing 2 HDFE groups                           F(   3,    128) =       7.48
+Statistics robust to heteroskedasticity           Prob > F        =     0.0001
+                                                  R-squared       =     0.0451
+                                                  Adj R-squared   =     0.0185
+                                                  Within R-sq.    =     0.0064
+Number of clusters (crm_user_id) =        129     Root MSE        =    37.7508
 
-                          (Std. err. adjusted for 287 clusters in crm_user_id)
+                          (Std. err. adjusted for 129 clusters in crm_user_id)
 ------------------------------------------------------------------------------
              |               Robust
-   if_refund | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
+   if_refund | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-       if_AI |   4.910977   1.987653     2.47   0.014     .9986918                                                          8.823262
-province_c~l |   .8699147   1.919063     0.45   0.651    -2.907363                                                          4.647193
-gender_cus~m |   4.249986   1.637178     2.60   0.010     1.027539                                                          7.472433
-       _cons |   15.85829   1.183168    13.40   0.000     13.52947                                                          18.18711
+       if_AI |   6.614296   2.010245     3.29   0.001     2.636682    10.59191
+province_c~l |   -.357488   2.457852    -0.15   0.885    -5.220768    4.505792
+gender_cus~m |   4.492731   2.059944     2.18   0.031     .4167796    8.568682
+       _cons |   13.97737   1.627223     8.59   0.000     10.75763    17.19711
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
- hour_create_time |        12           1          11                                                           |
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
 ----------------------------------------------------------+
 .         local coe = round(_b[if_AI],0.001)
 .         local mean_treat = _b[if_AI] + _b[_cons]
@@ -664,9 +681,9 @@ Absorbed degrees of freedom:
  ( 1)  if_AI + _cons = 0
 
 ------------------------------------------------------------------------------
-   if_refund | Coefficient  Std. err.      t    P>|t|     [95% con                                                      f. interval]
+   if_refund | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-         (1) |   20.76927    1.88353    11.03   0.000     17.06193                                                          24.47661
+         (1) |   20.59167   1.914728    10.75   0.000     16.80305    24.38028
 ------------------------------------------------------------------------------
 .         local se_treat = r(se)
 . 
@@ -690,22 +707,37 @@ Number of observations (_N) was 0, now 2.
 .         gen upper_bound = mean + 1.96 * sem
 . 
 .         set scheme white_ptol
-.         twoway (bar mean `group_variable' if `group_variable' == 0 , barwidth(0.5) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 1 , barwidth(0.5) fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 0, lw(medium) lcolor($control_color) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 1 , lw(medium) lcolor($treat_color) lp(dash)) ///                (scatteri 27.1 0 27.1 1,  recast(line) lw(medthin)  mc(none) lc(black) lp("-")) ///           (scatteri 27.1 0 27.1 1,  recast(dropline) base(25.8) lw(medthin) mc(none) lc(black) lp(solid)) ///                   , legend(off ) xlabel( 0 "Human Representative " 1 "AI Representative " , nogrid)  ///                                 xtitle("")   ytitle( $ytitle ) ///                        ylabel(10(5)25 29 " ", nogrid )                 text(27.8 0.5 "diff = `coe', p{superscript:**} < 0.05") ///                title("Refund Rate") graphregion(margin(zero))
-.                 graph export "$figure_overleaf/Bar_plot2_if_refund_FE.png", as(png) name("Graph") replace               
+.         twoway (bar mean `group_variable' if `group_variable' == 0 , barwidth
+> (0.5) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///
+>                    (bar mean `group_variable' if `group_variable' == 1 , barw
+> idth(0.5) fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///
+>                    (rcap lower_bound upper_bound `group_variable' if `group_v
+> ariable' == 0, lw(medium) lcolor($control_color) lp(dash)) ///
+>                    (rcap lower_bound upper_bound `group_variable' if `group_v
+> ariable' == 1 , lw(medium) lcolor($treat_color) lp(dash)) ///
+>                 (scatteri 27.1 0 27.1 1,  recast(line) lw(medthin)  mc(none) 
+> lc(black) lp("-")) ///
+>            (scatteri 27.1 0 27.1 1,  recast(dropline) base(25.8) lw(medthin) 
+> mc(none) lc(black) lp(solid)) ///
+>                    , legend(off ) xlabel( 0 "Human Representative " 1 "AI Rep
+> resentative " , nogrid)  ///
+>                                  xtitle("")   ytitle( $ytitle ) ///
+>                         ylabel(10(5)25 29 " ", nogrid )                 text(
+> 27.8 0.5 "diff = `coe', p{superscript:***} < 0.01") ///
+>                 title("Refund Rate") graphregion(margin(zero))
+.                 graph export "$figure_overleaf/Bar_plot2_if_refund_FE.png", a
+> s(png) name("Graph") replace               
+file <REPLICATION_ROOT>/output/figu
+> re/Bar_plot2_if_refund_FE.png written in PNG format
+.                 graph export "$figure_overleaf/Bar_plot2_if_refund_FE.pdf", a
+> s(pdf) name("Graph") replace               
 file
-    /path/to/<user>/Dropbox/AI/PNAS_NEXUS/replica
-    > tion_package/output/figure/Bar_plot2_if_refund_F
-    > E.png saved as PNG format
-.                 graph export "$figure_overleaf/Bar_plot2_if_refund_FE.pdf", as(pdf) name("Graph") replace               
-file
-    /path/to/<user>/Dropbox/AI/PNAS_NEXUS/replica
-    > tion_package/output/figure/Bar_plot2_if_refund_F
-    > E.pdf saved as PDF format
+    <REPLICATION_ROOT>/output/fig
+    > ure/Bar_plot2_if_refund_FE.pdf saved as PDF format
 .            
 . restore
 . 
 . //  ///
-. //          name("Fig_if_refund",replace ) 
 .                    
 . 
 . }

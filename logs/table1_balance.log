@@ -1,8 +1,8 @@
---------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/table1_balance.log
   log type:  text
- opened on:   9 May 2026, 09:06:29
+ opened on:  26 May 2026, 18:36:42
 
 . 
 . **# Table: balance test
@@ -11,23 +11,17 @@
 . use "$temp/vacation_full_data_no_collapse" , clear
 
 . keep if month_create_time > 5 
-(54,831 observations deleted)
+(0 observations deleted)
 
 . drop if month_create_time == 10 & day_create_time == 27 // drop this because it might have less refund window compared with other dates. And it will also help to reduce the to sample size to < 10,000
-(2,920 observations deleted)
+(0 observations deleted)
 
 . 
 . cap gen gender_customer_num = ( gender_customer == "Female" )
 
 . 
-. // keep if  if_call_w_1_hour
-. // keep if  if_call_w_10_min
-. // keep if  if_call_w_1_min
 . 
 . // forvalue i = 9(1)20{ // call time is not balance
-. //      
-. //      gen hour_create_time_`i' = ( hour_create_time == `i')
-. //      
 . // }
 . gen if_hang_w_60 =  if_connected * (bridge_duration_num < 60)
 
@@ -46,28 +40,28 @@
 . reghdfe gender_customer_num if_AI   , a(date_create_time ) cl(crm_user_id)
 (MWFE estimator converged in 1 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =     98,340
-Absorbing 1 HDFE group                            F(   1,    267)                                                       =       0.48
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.4880
-                                                  R-squared                                                             =     0.0028
-                                                  Adj R-squared                                                         =     0.0025
-                                                  Within R-sq.                                                          =     0.0000
-Number of clusters (crm_user_id) =        268     Root MSE                                                              =     0.4973
+HDFE Linear regression                            Number of obs   =     98,340
+Absorbing 1 HDFE group                            F(   1,    267) =       0.48
+Statistics robust to heteroskedasticity           Prob > F        =     0.4880
+                                                  R-squared       =     0.0028
+                                                  Adj R-squared   =     0.0025
+                                                  Within R-sq.    =     0.0000
+Number of clusters (crm_user_id) =        268     Root MSE        =     0.4973
 
                           (Std. err. adjusted for 268 clusters in crm_user_id)
 ------------------------------------------------------------------------------
              |               Robust
-gender_cus~m | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
+gender_cus~m | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-       if_AI |   .0035396    .005097     0.69   0.488    -.0064958                                                           .013575
-       _cons |   .5440762    .003097   175.68   0.000     .5379786                                                          .5501738
+       if_AI |   .0035396    .005097     0.69   0.488    -.0064958     .013575
+       _cons |   .5440762    .003097   175.68   0.000     .5379786    .5501738
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        21           0          21                                                           |
+ date_create_time |        21           0          21     |
 ----------------------------------------------------------+
 . estadd local date_fe "Yes" , replace
 
@@ -85,28 +79,28 @@ added macro:
 . reghdfe province_capital if_AI  , a(date_create_time ) cl(crm_user_id)
 (MWFE estimator converged in 1 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =     98,340
-Absorbing 1 HDFE group                            F(   1,    267)                                                       =       1.26
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.2635
-                                                  R-squared                                                             =     0.0047
-                                                  Adj R-squared                                                         =     0.0045
-                                                  Within R-sq.                                                          =     0.0000
-Number of clusters (crm_user_id) =        268     Root MSE                                                              =     0.4156
+HDFE Linear regression                            Number of obs   =     98,340
+Absorbing 1 HDFE group                            F(   1,    267) =       1.26
+Statistics robust to heteroskedasticity           Prob > F        =     0.2635
+                                                  R-squared       =     0.0047
+                                                  Adj R-squared   =     0.0045
+                                                  Within R-sq.    =     0.0000
+Number of clusters (crm_user_id) =        268     Root MSE        =     0.4156
 
                           (Std. err. adjusted for 268 clusters in crm_user_id)
 ------------------------------------------------------------------------------
              |               Robust
-province_c~l | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
+province_c~l | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-       if_AI |  -.0023793   .0021232    -1.12   0.263    -.0065596                                                           .001801
-       _cons |   .2244825    .001804   124.44   0.000     .2209307                                                          .2280343
+       if_AI |  -.0023793   .0021232    -1.12   0.263    -.0065596     .001801
+       _cons |   .2244825    .001804   124.44   0.000     .2209307    .2280343
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        21           0          21                                                           |
+ date_create_time |        21           0          21     |
 ----------------------------------------------------------+
 . estadd local date_fe "Yes" , replace
 
@@ -122,28 +116,28 @@ added macro:
 . reghdfe if_connected if_AI   , a( date_create_time  ) cl(crm_user_id)
 (MWFE estimator converged in 1 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =     98,340
-Absorbing 1 HDFE group                            F(   1,    267)                                                       =       2.01
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.1579
-                                                  R-squared                                                             =     0.0234
-                                                  Adj R-squared                                                         =     0.0232
-                                                  Within R-sq.                                                          =     0.0002
-Number of clusters (crm_user_id) =        268     Root MSE                                                              =     0.4909
+HDFE Linear regression                            Number of obs   =     98,340
+Absorbing 1 HDFE group                            F(   1,    267) =       2.01
+Statistics robust to heteroskedasticity           Prob > F        =     0.1579
+                                                  R-squared       =     0.0234
+                                                  Adj R-squared   =     0.0232
+                                                  Within R-sq.    =     0.0002
+Number of clusters (crm_user_id) =        268     Root MSE        =     0.4909
 
                           (Std. err. adjusted for 268 clusters in crm_user_id)
 ------------------------------------------------------------------------------
              |               Robust
-if_connected | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
+if_connected | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-       if_AI |  -.0154916   .0109381    -1.42   0.158    -.0370275                                                          .0060442
-       _cons |   .5652448   .0081833    69.07   0.000     .5491328                                                          .5813568
+       if_AI |  -.0154916   .0109381    -1.42   0.158    -.0370275    .0060442
+       _cons |   .5652448   .0081833    69.07   0.000     .5491328    .5813568
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        21           0          21                                                           |
+ date_create_time |        21           0          21     |
 ----------------------------------------------------------+
 . estadd local date_fe "Yes" , replace
 
@@ -159,28 +153,28 @@ added macro:
 . reghdfe if_hang_w_10 if_AI   , a( date_create_time  ) cl(crm_user_id)
 (MWFE estimator converged in 1 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =     98,340
-Absorbing 1 HDFE group                            F(   1,    267)                                                       =       1.75
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.1872
-                                                  R-squared                                                             =     0.0010
-                                                  Adj R-squared                                                         =     0.0008
-                                                  Within R-sq.                                                          =     0.0001
-Number of clusters (crm_user_id) =        268     Root MSE                                                              =     0.2134
+HDFE Linear regression                            Number of obs   =     98,340
+Absorbing 1 HDFE group                            F(   1,    267) =       1.75
+Statistics robust to heteroskedasticity           Prob > F        =     0.1872
+                                                  R-squared       =     0.0010
+                                                  Adj R-squared   =     0.0008
+                                                  Within R-sq.    =     0.0001
+Number of clusters (crm_user_id) =        268     Root MSE        =     0.2134
 
                           (Std. err. adjusted for 268 clusters in crm_user_id)
 ------------------------------------------------------------------------------
              |               Robust
-if_hang_w_10 | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
+if_hang_w_10 | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-       if_AI |  -.0065554   .0049572    -1.32   0.187    -.0163157                                                          .0032048
-       _cons |   .0509737   .0039633    12.86   0.000     .0431703                                                           .058777
+       if_AI |  -.0065554   .0049572    -1.32   0.187    -.0163157    .0032048
+       _cons |   .0509737   .0039633    12.86   0.000     .0431703     .058777
 ------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        21           0          21                                                           |
+ date_create_time |        21           0          21     |
 ----------------------------------------------------------+
 . estadd local date_fe "Yes" , replace
 
@@ -196,6 +190,7 @@ added macro:
 . #delimit ; 
 delimiter now ;
 . esttab table_balance_c1  table_balance_c2  table_balance_c3 table_balance_c4        using  "$table_overleaf/table_balance.tex", replace f compressb(%12.3f) se(%12.3f) star(* 0.10 ** 0.05 *** 0.01)  keep( if_AI )   order( if_AI ) coeflabels( if_AI " AI Representative  " ) label booktabs noobs nonotes  collabels(none) alignment(D{.}{.}{-1})  stats( date_fe r2_a obs , labels(  "Date FE" "Adjusted R-squared" "Obs" ) )nogaps mtitles(  "Customer is Female" "Customer is from Major Cities" "If Answered" "Hang up within 10 seconds")  ;
+(file <REPLICATION_ROOT>/output/table/table_balance.tex not found)
 (output written to <REPLICATION_ROOT>/output/table/table_balance.tex)
 .  #delimit cr
 delimiter now cr

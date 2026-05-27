@@ -6,9 +6,13 @@
 *   1. Update $replication below to point to your local copy of this
 *      replication package.
 *   2. Update $data below to point to the folder containing the
-*      cleaned .dta files (vacation_full_data_no_collapse.dta,
-*      vacation_connected_call_level.dta, full_data_no_collapse.dta,
-*      vacation_date_create_time.dta, full_connected_call_level.dta).
+*      cleaned .dta files:
+*        - full_connected_call_level.dta
+*        - full_data_no_collapse.dta
+*        - full_data_no_collapse_w_AI.dta
+*        - vacation_connected_call_level.dta
+*        - vacation_date_create_time.dta
+*        - vacation_full_data_no_collapse.dta
 *-------------------------------------------------------------------
 
 set more off, perm

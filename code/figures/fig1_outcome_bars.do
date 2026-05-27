@@ -17,17 +17,12 @@ log using "$replication_log/fig1_outcome_bars.log", replace text
 
 **## Figure: Main Results: Succeed
 * Connect data, 电话(通)-合同 level
-// use  "$temp/vacation_connected_callcontract_level"  , clear
 use  "$temp/vacation_connected_call_level"  , clear
 cap gen gender_customer_num = ( gender_customer == "Female" )
 replace province_capital = 1 if missing(province_capital)
 
 sum bridge_duration_num , de
 
-// gen ln_gap_create_first_call = ln(gap_create_first_call)
-// reghdfe if_succeed if_AI ln_gap_create_first_call  if vacation == 1 , a(date_create_time hour_create_time) cl(crm_user_id)
-
-// reghdfe if_succeed if_AI ln_gap_create_first_call if hour_create_time == 20 , a(date_create_time hour_create_time) cl(crm_user_id)
 
 {
 local y  if_succeed
@@ -45,11 +40,8 @@ if "`y'" == "if_succeed"{
 
 	
 	* first tease out fixed effects
-// 	local y if_succeed
 	cap drop `y'_res
 	reghdfe `y' province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id) res(`y'_res)
-// 	local mean_control = _b[_cons]
-// 	local se_control = _se[_cons]
 
 	replace `y'_res = `y'_res + _b[_cons]
 	
@@ -87,33 +79,24 @@ if "`y'" == "if_succeed"{
 		  graph export "$figure_overleaf/Bar_plot_outcome_`y'_FE.png", as(png) name("Graph") replace
 		  graph export "$figure_overleaf/Bar_plot_outcome_`y'_FE.pdf", as(pdf) name("Graph") replace
 
-// 			   name("Fig_`y'_vacation",replace ) 
 			
-// gr_edit .plotregion1.plot2.style.editstyle marker(size(huge)) 		
-
 restore
 
 }
 	
-// 	graph export "$figure_overleaf/Bar_plot_`y'.png", as(png) name("Graph") replace
 
 **## Figure: Main Results: Amount
 * Connect data, 电话(通) level
 
-// use  "$temp/vacation_connected_call_level"  , clear
 use  "$temp/vacation_connected_call_level"  , clear
 cap gen gender_customer_num = ( gender_customer == "Female" )
 replace province_capital = 1 if missing(province_capital)
 keep if if_succeed
 
 
-// gen ln_payment_amt_num = log(payment_amt_num) 
-// reghdfe ln_payment_amt_num if_AI if vacation == 1  , a(date_create_time hour_create_time) cl(crm_user_id)
-
 {
 	
 
-	
 foreach var in  payment_amt_num {
 	
 	cap drop  ln_`var'
@@ -132,7 +115,6 @@ if "`var'" == "n_policy_succeed"{
 
 if "`var'" == "payment_amt_num"{
 	
-// 	global ytitle = "Payment Amount (CNY)"
 	global ytitle = "Chinese Yuan (CNY)"
 
 }
@@ -156,11 +138,8 @@ preserve
 	keep if vacation == 1 
 	
 	* first tease out fixed effects
-// 	local y if_succeed
 	cap drop `y'_res
 	reghdfe `y' province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id) res(`y'_res)
-// 	local mean_control = _b[_cons]
-// 	local se_control = _se[_cons]
 
 	replace `y'_res = `y'_res + _b[_cons]
 	
@@ -186,7 +165,6 @@ preserve
 	gen upper_bound = mean + 1.96 * sem
 
 
-// 	set scheme s1mono
 	set scheme white_ptol
 
 
@@ -204,34 +182,24 @@ preserve
 
 restore
 
- ///
-// 		   name("Fig_`var'_vacation",replace ) 
-	
 	
 }
 
 }		
 
 
-
-
 **## Figure: Main Results: Unconditional Amount
 * Connect data, 电话(通) level
 
-// use  "$temp/vacation_connected_call_level"  , clear
 use  "$temp/vacation_connected_call_level"  , clear
 cap gen gender_customer_num = ( gender_customer == "Female" )
 replace province_capital = 1 if missing(province_capital)
 replace payment_amt_num = 0 if if_succeed == 0
 
 
-// gen ln_payment_amt_num = log(payment_amt_num) 
-// reghdfe ln_payment_amt_num if_AI if vacation == 1  , a(date_create_time hour_create_time) cl(crm_user_id)
-
 {
 	
 
-	
 foreach var in  payment_amt_num {
 	
 	cap drop  ln_`var'
@@ -250,7 +218,6 @@ if "`var'" == "n_policy_succeed"{
 
 if "`var'" == "payment_amt_num"{
 	
-// 	global ytitle = "Payment Amount (CNY)"
 	global ytitle = "Chinese Yuan (CNY)"
 
 }
@@ -274,11 +241,8 @@ preserve
 	keep if vacation == 1 
 	
 	* first tease out fixed effects
-// 	local y if_succeed
 	cap drop `y'_res
 	reghdfe `y' province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id) res(`y'_res)
-// 	local mean_control = _b[_cons]
-// 	local se_control = _se[_cons]
 
 	replace `y'_res = `y'_res + _b[_cons]
 	
@@ -304,7 +268,6 @@ preserve
 	gen upper_bound = mean + 1.96 * sem
 
 
-// 	set scheme s1mono
 	set scheme white_ptol
 
 
@@ -314,7 +277,6 @@ preserve
 		   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 1 , lw(medium) lcolor($treat_color) lp(dash)) ///
 		  (scatteri 5.9 0 5.9 1,  recast(line) lw(medthin)  mc(none) lc(black) lp("-")) ///
 		  (scatteri 5.9 0 5.9 1,  recast(dropline) base(5.7) lw(medthin) mc(none) lc(black) lp(solid)) ///
-/// 
 		  , legend(off ) xlabel( 0 "Human Representative " 1 "AI Representative " , nogrid) title(" Payment Amount per Calling ") ///
 		   xtitle("")   ytitle( $ytitle ) ///
 		   ylabel(2(0.5)6 6.2 " ", nogrid ) 		text(6.08 0.5 "diff = `coe', p{superscript:***} < 0.01") graphregion(margin(zero))
@@ -354,11 +316,8 @@ preserve
 	replace if_refund = if_refund * 100
 
 	* first tease out fixed effects
-// 	local y if_succeed
 	cap drop `y'_res
 	reghdfe `y' province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id) res(`y'_res)
-// 	local mean_control = _b[_cons]
-// 	local se_control = _se[_cons]
 
 	replace `y'_res = `y'_res + _b[_cons]
 	
@@ -392,7 +351,7 @@ preserve
 	   (scatteri 27.1 0 27.1 1,  recast(dropline) base(25.8) lw(medthin) mc(none) lc(black) lp(solid)) ///
 		   , legend(off ) xlabel( 0 "Human Representative " 1 "AI Representative " , nogrid)  ///
 				 xtitle("")   ytitle( $ytitle ) ///
-			ylabel(10(5)25 29 " ", nogrid ) 		text(27.8 0.5 "diff = `coe', p{superscript:**} < 0.05") ///
+			ylabel(10(5)25 29 " ", nogrid ) 		text(27.8 0.5 "diff = `coe', p{superscript:***} < 0.01") ///
 		title("Refund Rate") graphregion(margin(zero))
 		graph export "$figure_overleaf/Bar_plot2_if_refund_FE.png", as(png) name("Graph") replace		
 		graph export "$figure_overleaf/Bar_plot2_if_refund_FE.pdf", as(pdf) name("Graph") replace		
@@ -400,7 +359,6 @@ preserve
 restore
 
 //  ///
-// 	    name("Fig_if_refund",replace ) 
 		   
 
 }

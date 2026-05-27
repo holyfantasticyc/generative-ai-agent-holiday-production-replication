@@ -10,7 +10,6 @@ run "$replication/code/00_declare_path.do"
 capture log close
 log using "$replication_log/table2_revenue_decomposition_estimates.log", replace text
 
-* date: April, 2, 2026
 capture log close
 log using "$table_overleaf/delta.log", replace text
 **# Part 1
@@ -42,7 +41,6 @@ if "`y'" == "if_succeed"{
 }
 if "`y'" == "payment_amt_num"{
 	
-// 	global ytitle = "Payment Amount (CNY)"
 	local ytitle = "Chinese Yuan (CNY)"
 
 }
@@ -112,7 +110,6 @@ if "`y'" == "ins_amt_num"{
 	
 restore	
 }	
-	
 	
 	
 }

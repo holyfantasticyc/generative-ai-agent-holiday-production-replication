@@ -1,8 +1,8 @@
---------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA5_by_gender.log
   log type:  text
- opened on:   9 May 2026, 09:07:10
+ opened on:  26 May 2026, 18:37:21
 
 . 
 . **# Appendix Table: gender effects
@@ -12,17 +12,14 @@
 .         
 . use  "$temp/vacation_connected_call_level"  , clear
 . replace province_capital = 1 if missing(province_capital)
-(2,405 real changes made)
+(1,352 real changes made)
 . 
 . drop if gender_customer == "Unknown" |  gender_cno == "Unknown" 
-(6,173 observations deleted)
+(3,829 observations deleted)
 . gen gender_customer_num = (gender_customer == "Female")
-. // egen gender_customer_num = group(gender_customer)
-. // egen gender_cno_num = group(gender_cno)
 . 
 . foreach y in if_succeed  bridge_duration_num bridge_duration_num n_policy_succeed payment_amt_num payment_amt_per if_refund scale_premium_num ins_amt_num {
   2. 
-. // local group_variable gender_combine
 . 
 . keep if vacation == 1 
   3. 
@@ -38,7 +35,6 @@
 . }
  10. if "`y'" == "payment_amt_num"{
  11.         
-. //      global ytitle = "Payment Amount (CNY)"
 .         local ytitle = "Chinese Yuan (CNY)"
  12. 
 . }
@@ -94,7 +90,6 @@
  44. replace gender_group = 3 if !if_AI  & gender_customer == "Male" 
  45. 
 . 
-. // reghdfe `y' i.gender_group##i.gender_customer_num   province_capital gap_create_first_call ///
 . //              , absorb(date_create_time hour_create_time ) cl(crm_user_id)
 . 
 . reghdfe  `y'  i.if_AI##i.gender_customer_num   province_capital  gap_create_first_call ///                , absorb(date_create_time hour_create_time ) cl(crm_user_id)
@@ -111,44 +106,43 @@
 . }       
 (0 observations deleted)
 if_succeed
-(2,194 real changes made)
-(67,856 missing values generated)
-(15,739 real changes made)
-(28,352 real changes made)
-(23,623 real changes made)
+(1,092 real changes made)
+(38,708 missing values generated)
+(14,866 real changes made)
+(13,054 real changes made)
+(10,717 real changes made)
 (MWFE estimator converged in 5 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =     67,856
-Absorbing 2 HDFE groups                           F(   5,    495)                                                       =     106.90
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0000
-                                                  R-squared                                                             =     0.0038
-                                                  Adj R-squared                                                         =     0.0032
-                                                  Within R-sq.                                                          =     0.0005
-Number of clusters (crm_user_id) =        496     Root MSE                                                              =    17.6602
+HDFE Linear regression                            Number of obs   =     38,708
+Absorbing 2 HDFE groups                           F(   5,    226) =     102.26
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.0035
+                                                  Adj R-squared   =     0.0025
+                                                  Within R-sq.    =     0.0010
+Number of clusters (crm_user_id) =        227     Root MSE        =    16.5368
 
-                          (Std. err. adjusted for 496 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-  if_succeed | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
--------------+----------------------------------------------------------------
-     1.if_AI |  -1.382413   .3650003    -3.79   0.000    -2.099554                                                         -.6652726
-1.gender_c~m |  -.4875525   .1661872    -2.93   0.004    -.8140718                                                         -.1610331
-             |
-       if_AI#|
-gender_cus~m |
-        1 1  |   .1888395   .1719124     1.10   0.273    -.1489284                                                          .5266074
-             |
-province_c~l |   .0373671   .1249568     0.30   0.765     -.208144                                                          .2828782
-gap_create~l |   .0006222   .0009645     0.65   0.519    -.0012727                                                          .0025172
-       _cons |    3.75795   .3480814    10.80   0.000     3.074051                                                          4.441849
-------------------------------------------------------------------------------
+                                       (Std. err. adjusted for 227 clusters in crm_user_id)
+-------------------------------------------------------------------------------------------
+                          |               Robust
+               if_succeed | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------------+----------------------------------------------------------------
+                  1.if_AI |   -1.36672   .4299964    -3.18   0.002    -2.214035   -.5194052
+    1.gender_customer_num |  -.6904307   .2035956    -3.39   0.001    -1.091619   -.2892422
+                          |
+if_AI#gender_customer_num |
+                     1 1  |    .391977   .2086904     1.88   0.062    -.0192508    .8032048
+                          |
+         province_capital |   .2252377   .1602748     1.41   0.161    -.0905864    .5410618
+    gap_create_first_call |  -.0010386   .0014205    -0.73   0.465    -.0038377    .0017605
+                    _cons |   3.651167    .416286     8.77   0.000     2.830869    4.471465
+-------------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
- hour_create_time |        12           1          11                                                           |
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
 ----------------------------------------------------------+
 
 added macro:
@@ -164,49 +158,48 @@ added macro:
    e(hour_create_time) : "Yes"
 
 added macro:
-               e(r2_a) : "0.004"
+               e(r2_a) : "0.003"
 
 added macro:
-                  e(N) : "67856"
+                  e(N) : "38708"
 (0 observations deleted)
 bridge_duration_num
-(67,856 missing values generated)
-(15,739 real changes made)
-(28,352 real changes made)
-(23,623 real changes made)
+(38,708 missing values generated)
+(14,866 real changes made)
+(13,054 real changes made)
+(10,717 real changes made)
 (MWFE estimator converged in 5 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =     67,856
-Absorbing 2 HDFE groups                           F(   5,    495)                                                       =    3279.78
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0000
-                                                  R-squared                                                             =     0.0137
-                                                  Adj R-squared                                                         =     0.0131
-                                                  Within R-sq.                                                          =     0.0010
-Number of clusters (crm_user_id) =        496     Root MSE                                                              =   251.0283
+HDFE Linear regression                            Number of obs   =     38,708
+Absorbing 2 HDFE groups                           F(   5,    226) =    3677.86
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.0100
+                                                  Adj R-squared   =     0.0090
+                                                  Within R-sq.    =     0.0021
+Number of clusters (crm_user_id) =        227     Root MSE        =   217.7743
 
-                          (Std. err. adjusted for 496 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-bridge_dur~m | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
--------------+----------------------------------------------------------------
-     1.if_AI |  -12.07328   5.592094    -2.16   0.031    -23.06045                                                         -1.086112
-1.gender_c~m |  -10.06135   2.493984    -4.03   0.000    -14.96145                                                         -5.161248
-             |
-       if_AI#|
-gender_cus~m |
-        1 1  |  -9.005891   2.527731    -3.56   0.000     -13.9723                                                         -4.039487
-             |
-province_c~l |  -3.526488   2.322405    -1.52   0.130    -8.089475                                                          1.036499
-gap_create~l |   .0061241   .0230169     0.27   0.790    -.0390988                                                          .0513469
-       _cons |   131.0581   4.491414    29.18   0.000     122.2335                                                          139.8827
-------------------------------------------------------------------------------
+                                       (Std. err. adjusted for 227 clusters in crm_user_id)
+-------------------------------------------------------------------------------------------
+                          |               Robust
+      bridge_duration_num | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------------+----------------------------------------------------------------
+                  1.if_AI |  -9.403117   6.832828    -1.38   0.170    -22.86732    4.061082
+    1.gender_customer_num |  -9.653735   3.660716    -2.64   0.009    -16.86724   -2.440235
+                          |
+if_AI#gender_customer_num |
+                     1 1  |  -9.286937   3.710176    -2.50   0.013     -16.5979   -1.975974
+                          |
+         province_capital |  -2.266047   2.478432    -0.91   0.362    -7.149838    2.617743
+    gap_create_first_call |  -.0464213    .011812    -3.93   0.000     -.069697   -.0231455
+                    _cons |   121.1084   5.852591    20.69   0.000     109.5758     132.641
+-------------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
- hour_create_time |        12           1          11                                                           |
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
 ----------------------------------------------------------+
 
 added macro:
@@ -222,50 +215,49 @@ added macro:
    e(hour_create_time) : "Yes"
 
 added macro:
-               e(r2_a) : "0.014"
+               e(r2_a) : "0.010"
 
 added macro:
-                  e(N) : "67856"
+                  e(N) : "38708"
 (0 observations deleted)
 bridge_duration_num
-(65,662 observations deleted)
-(2,194 missing values generated)
-(304 real changes made)
-(963 real changes made)
-(920 real changes made)
+(37,616 observations deleted)
+(1,092 missing values generated)
+(282 real changes made)
+(403 real changes made)
+(402 real changes made)
 (MWFE estimator converged in 6 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =      2,194
-Absorbing 2 HDFE groups                           F(   5,    267)                                                       =      20.90
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0000
-                                                  R-squared                                                             =     0.0920
-                                                  Adj R-squared                                                         =     0.0739
-                                                  Within R-sq.                                                          =     0.0266
-Number of clusters (crm_user_id) =        268     Root MSE                                                              =   721.1340
+HDFE Linear regression                            Number of obs   =      1,092
+Absorbing 2 HDFE groups                           F(   5,    111) =      32.95
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.1334
+                                                  Adj R-squared   =     0.1039
+                                                  Within R-sq.    =     0.0537
+Number of clusters (crm_user_id) =        112     Root MSE        =   659.9787
 
-                          (Std. err. adjusted for 268 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-bridge_dur~m | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
--------------+----------------------------------------------------------------
-     1.if_AI |  -454.0223   59.44279    -7.64   0.000    -571.0586                                                         -336.9861
-1.gender_c~m |   21.92493   37.53489     0.58   0.560    -51.97709                                                          95.82696
-             |
-       if_AI#|
-gender_cus~m |
-        1 1  |  -30.58751   38.05762    -0.80   0.422    -105.5187                                                           44.3437
-             |
-province_c~l |   28.17001   41.95792     0.67   0.503    -54.44047                                                          110.7805
-gap_create~l |  -.2792922   .2161373    -1.29   0.197    -.7048425                                                          .1462581
-       _cons |   770.6592   33.03209    23.33   0.000     705.6227                                                          835.6957
-------------------------------------------------------------------------------
+                                       (Std. err. adjusted for 112 clusters in crm_user_id)
+-------------------------------------------------------------------------------------------
+                          |               Robust
+      bridge_duration_num | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------------+----------------------------------------------------------------
+                  1.if_AI |  -429.8898   72.31626    -5.94   0.000    -573.1893   -286.5903
+    1.gender_customer_num |   36.30837   59.66878     0.61   0.544     -81.9293     154.546
+                          |
+if_AI#gender_customer_num |
+                     1 1  |  -45.98007   59.61417    -0.77   0.442    -164.1095    72.14939
+                          |
+         province_capital |   28.73605   52.31818     0.55   0.584    -74.93592     132.408
+    gap_create_first_call |  -.4749006   .2279571    -2.08   0.040    -.9266128   -.0231883
+                    _cons |   721.3675   53.46112    13.49   0.000     615.4307    827.3043
+-------------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
- hour_create_time |        12           1          11                                                           |
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
 ----------------------------------------------------------+
 
 added macro:
@@ -281,226 +273,49 @@ added macro:
    e(hour_create_time) : "Yes"
 
 added macro:
-               e(r2_a) : "0.092"
+               e(r2_a) : "0.133"
 
 added macro:
-                  e(N) : "2194"
+                  e(N) : "1092"
 (0 observations deleted)
 n_policy_succeed
-(65,662 observations deleted)
-(2,194 missing values generated)
-(304 real changes made)
-(963 real changes made)
-(920 real changes made)
+(37,616 observations deleted)
+(1,092 missing values generated)
+(282 real changes made)
+(403 real changes made)
+(402 real changes made)
 (MWFE estimator converged in 6 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =      2,194
-Absorbing 2 HDFE groups                           F(   5,    267)                                                       =      56.23
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0000
-                                                  R-squared                                                             =     0.0181
-                                                  Adj R-squared                                                         =    -0.0016
-                                                  Within R-sq.                                                          =     0.0042
-Number of clusters (crm_user_id) =        268     Root MSE                                                              =     0.6406
+HDFE Linear regression                            Number of obs   =      1,092
+Absorbing 2 HDFE groups                           F(   5,    111) =      34.77
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.0335
+                                                  Adj R-squared   =     0.0005
+                                                  Within R-sq.    =     0.0062
+Number of clusters (crm_user_id) =        112     Root MSE        =     0.6843
 
-                          (Std. err. adjusted for 268 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-n_policy_s~d | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
--------------+----------------------------------------------------------------
-     1.if_AI |  -.0046709   .0413075    -0.11   0.910    -.0860008                                                           .076659
-1.gender_c~m |   .0539335   .0299654     1.80   0.073     -.005065                                                          .1129319
-             |
-       if_AI#|
-gender_cus~m |
-        1 1  |   .0606104   .0317904     1.91   0.058    -.0019813                                                          .1232022
-             |
-province_c~l |   .0629408   .0365046     1.72   0.086    -.0089326                                                          .1348143
-gap_create~l |   .0000126   .0001811     0.07   0.945    -.0003441                                                          .0003692
-       _cons |   1.197171   .0189501    63.17   0.000      1.15986                                                          1.234481
-------------------------------------------------------------------------------
+                                       (Std. err. adjusted for 112 clusters in crm_user_id)
+-------------------------------------------------------------------------------------------
+                          |               Robust
+         n_policy_succeed | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------------+----------------------------------------------------------------
+                  1.if_AI |    .008687   .0435841     0.20   0.842    -.0776778    .0950519
+    1.gender_customer_num |   .0410932   .0500994     0.82   0.414    -.0581821    .1403684
+                          |
+if_AI#gender_customer_num |
+                     1 1  |   .0728403   .0502954     1.45   0.150    -.0268234    .1725041
+                          |
+         province_capital |   .0667103   .0562869     1.19   0.238     -.044826    .1782466
+    gap_create_first_call |   .0003856   .0002347     1.64   0.103    -.0000796    .0008508
+                    _cons |   1.179956   .0293561    40.19   0.000     1.121784    1.238127
+-------------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
- hour_create_time |        12           1          11                                                           |
-----------------------------------------------------------+
-
-added macro:
-             e(mean_y) : "."
-
-added macro:
-            e(date_fe) : "Yes"
-
-added macro:
-            e(control) : "Yes"
-
-added macro:
-   e(hour_create_time) : "Yes"
-
-added macro:
-               e(r2_a) : "0.018"
-
-added macro:
-                  e(N) : "2194"
-(0 observations deleted)
-payment_amt_num
-(67,856 missing values generated)
-(15,739 real changes made)
-(28,352 real changes made)
-(23,623 real changes made)
-(MWFE estimator converged in 6 iterations)
-
-HDFE Linear regression                            Number of obs                                                         =      2,194
-Absorbing 2 HDFE groups                           F(   5,    267)                                                       =      63.76
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0000
-                                                  R-squared                                                             =     0.0974
-                                                  Adj R-squared                                                         =     0.0793
-                                                  Within R-sq.                                                          =     0.0027
-Number of clusters (crm_user_id) =        268     Root MSE                                                              =   126.6915
-
-                          (Std. err. adjusted for 268 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-payment_am~m | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
--------------+----------------------------------------------------------------
-     1.if_AI |  -2.241205   8.543604    -0.26   0.793    -19.06261                                                           14.5802
-1.gender_c~m |  -2.913803   5.759284    -0.51   0.613    -14.25319                                                          8.425586
-             |
-       if_AI#|
-gender_cus~m |
-        1 1  |  -17.84499    6.16764    -2.89   0.004    -29.98839                                                         -5.701597
-             |
-province_c~l |  -9.365976    6.51816    -1.44   0.152    -22.19951                                                          3.467554
-gap_create~l |  -.0289497   .0367789    -0.79   0.432    -.1013633                                                          .0434638
-       _cons |   129.2891   4.587416    28.18   0.000      120.257                                                          138.3212
-------------------------------------------------------------------------------
-
-Absorbed degrees of freedom:
-----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
-------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
- hour_create_time |        12           1          11                                                           |
-----------------------------------------------------------+
-
-added macro:
-             e(mean_y) : "."
-
-added macro:
-            e(date_fe) : "Yes"
-
-added macro:
-            e(control) : "Yes"
-
-added macro:
-   e(hour_create_time) : "Yes"
-
-added macro:
-               e(r2_a) : "0.097"
-
-added macro:
-                  e(N) : "2194"
-(0 observations deleted)
-payment_amt_per
-(65,662 observations deleted)
-(2,194 missing values generated)
-(304 real changes made)
-(963 real changes made)
-(920 real changes made)
-(MWFE estimator converged in 6 iterations)
-
-HDFE Linear regression                            Number of obs                                                         =      2,194
-Absorbing 2 HDFE groups                           F(   5,    267)                                                       =      36.41
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0000
-                                                  R-squared                                                             =     0.0270
-                                                  Adj R-squared                                                         =     0.0075
-                                                  Within R-sq.                                                          =     0.0040
-Number of clusters (crm_user_id) =        268     Root MSE                                                              =     2.6951
-
-                          (Std. err. adjusted for 268 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-payment_am~r | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
--------------+----------------------------------------------------------------
-     1.if_AI |   .5967669   .2149347     2.78   0.006     .1735844                                                          1.019949
-1.gender_c~m |   .0693973   .1058225     0.66   0.513    -.1389553                                                            .27775
-             |
-       if_AI#|
-gender_cus~m |
-        1 1  |  -.6166421   .1222785    -5.04   0.000    -.8573949                                                         -.3758893
-             |
-province_c~l |  -.0501897   .1040541    -0.48   0.630    -.2550606                                                          .1546812
-gap_create~l |   .0014255   .0009402     1.52   0.131    -.0004256                                                          .0032766
-       _cons |   .9091009   .0916713     9.92   0.000     .7286104                                                          1.089591
-------------------------------------------------------------------------------
-
-Absorbed degrees of freedom:
-----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
-------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
- hour_create_time |        12           1          11                                                           |
-----------------------------------------------------------+
-
-added macro:
-             e(mean_y) : "."
-
-added macro:
-            e(date_fe) : "Yes"
-
-added macro:
-            e(control) : "Yes"
-
-added macro:
-   e(hour_create_time) : "Yes"
-
-added macro:
-               e(r2_a) : "0.027"
-
-added macro:
-                  e(N) : "2194"
-(0 observations deleted)
-if_refund
-(420 real changes made)
-(67,856 missing values generated)
-(15,739 real changes made)
-(28,352 real changes made)
-(23,623 real changes made)
-(MWFE estimator converged in 6 iterations)
-
-HDFE Linear regression                            Number of obs                                                         =      2,194
-Absorbing 2 HDFE groups                           F(   5,    267)                                                       =      76.14
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0000
-                                                  R-squared                                                             =     0.0337
-                                                  Adj R-squared                                                         =     0.0144
-                                                  Within R-sq.                                                          =     0.0054
-Number of clusters (crm_user_id) =        268     Root MSE                                                              =    39.0672
-
-                          (Std. err. adjusted for 268 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-   if_refund | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
--------------+----------------------------------------------------------------
-     1.if_AI |   4.051776   2.244161     1.81   0.072    -.3667268                                                          8.470279
-1.gender_c~m |   4.121927    1.87414     2.20   0.029     .4319536                                                          7.811901
-             |
-       if_AI#|
-gender_cus~m |
-        1 1  |   4.449105   1.921209     2.32   0.021     .6664588                                                          8.231751
-             |
-province_c~l |  -.2050278    2.04299    -0.10   0.920    -4.227448                                                          3.817392
-gap_create~l |  -.0119466   .0106598    -1.12   0.263    -.0329345                                                          .0090414
-       _cons |   16.71874   1.394673    11.99   0.000     13.97278                                                          19.46469
-------------------------------------------------------------------------------
-
-Absorbed degrees of freedom:
-----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
-------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
- hour_create_time |        12           1          11                                                           |
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
 ----------------------------------------------------------+
 
 added macro:
@@ -519,46 +334,218 @@ added macro:
                e(r2_a) : "0.034"
 
 added macro:
-                  e(N) : "2194"
+                  e(N) : "1092"
+(0 observations deleted)
+payment_amt_num
+(38,708 missing values generated)
+(14,866 real changes made)
+(13,054 real changes made)
+(10,717 real changes made)
+(MWFE estimator converged in 6 iterations)
+
+HDFE Linear regression                            Number of obs   =      1,092
+Absorbing 2 HDFE groups                           F(   5,    111) =      35.79
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.0886
+                                                  Adj R-squared   =     0.0575
+                                                  Within R-sq.    =     0.0065
+Number of clusters (crm_user_id) =        112     Root MSE        =    86.7915
+
+                                       (Std. err. adjusted for 112 clusters in crm_user_id)
+-------------------------------------------------------------------------------------------
+                          |               Robust
+          payment_amt_num | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------------+----------------------------------------------------------------
+                  1.if_AI |  -3.248339   4.809743    -0.68   0.501    -12.77917    6.282489
+    1.gender_customer_num |   3.724791   7.405229     0.50   0.616    -10.94916    18.39875
+                          |
+if_AI#gender_customer_num |
+                     1 1  |   -21.7205   7.906636    -2.75   0.007    -37.38803   -6.052972
+                          |
+         province_capital |  -5.862478   5.305447    -1.10   0.272    -16.37558     4.65062
+    gap_create_first_call |  -.0080054   .0287232    -0.28   0.781    -.0649223    .0489115
+                    _cons |   95.61392   4.965824    19.25   0.000     85.77381     105.454
+-------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+----------------------------------------------------------+
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
+------------------+---------------------------------------|
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
+----------------------------------------------------------+
+
+added macro:
+             e(mean_y) : "."
+
+added macro:
+            e(date_fe) : "Yes"
+
+added macro:
+            e(control) : "Yes"
+
+added macro:
+   e(hour_create_time) : "Yes"
+
+added macro:
+               e(r2_a) : "0.089"
+
+added macro:
+                  e(N) : "1092"
+(0 observations deleted)
+payment_amt_per
+(37,616 observations deleted)
+(1,092 missing values generated)
+(282 real changes made)
+(403 real changes made)
+(402 real changes made)
+(MWFE estimator converged in 6 iterations)
+
+HDFE Linear regression                            Number of obs   =      1,092
+Absorbing 2 HDFE groups                           F(   5,    111) =      18.98
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.0366
+                                                  Adj R-squared   =     0.0038
+                                                  Within R-sq.    =     0.0053
+Number of clusters (crm_user_id) =        112     Root MSE        =     2.6688
+
+                                       (Std. err. adjusted for 112 clusters in crm_user_id)
+-------------------------------------------------------------------------------------------
+                          |               Robust
+          payment_amt_per | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------------+----------------------------------------------------------------
+                  1.if_AI |   .6385107   .2097867     3.04   0.003     .2228042    1.054217
+    1.gender_customer_num |   .1132118    .146767     0.77   0.442    -.1776168    .4040403
+                          |
+if_AI#gender_customer_num |
+                     1 1  |  -.5824044   .1725351    -3.38   0.001    -.9242942   -.2405147
+                          |
+         province_capital |  -.0676232   .1218197    -0.56   0.580    -.3090171    .1737706
+    gap_create_first_call |   .0008516   .0006498     1.31   0.193     -.000436    .0021392
+                    _cons |   .9050298   .1148017     7.88   0.000     .6775425    1.132517
+-------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+----------------------------------------------------------+
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
+------------------+---------------------------------------|
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
+----------------------------------------------------------+
+
+added macro:
+             e(mean_y) : "."
+
+added macro:
+            e(date_fe) : "Yes"
+
+added macro:
+            e(control) : "Yes"
+
+added macro:
+   e(hour_create_time) : "Yes"
+
+added macro:
+               e(r2_a) : "0.037"
+
+added macro:
+                  e(N) : "1092"
+(0 observations deleted)
+if_refund
+(197 real changes made)
+(38,708 missing values generated)
+(14,866 real changes made)
+(13,054 real changes made)
+(10,717 real changes made)
+(MWFE estimator converged in 6 iterations)
+
+HDFE Linear regression                            Number of obs   =      1,092
+Absorbing 2 HDFE groups                           F(   5,    111) =      55.06
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.0537
+                                                  Adj R-squared   =     0.0214
+                                                  Within R-sq.    =     0.0089
+Number of clusters (crm_user_id) =        112     Root MSE        =    38.0566
+
+                                       (Std. err. adjusted for 112 clusters in crm_user_id)
+-------------------------------------------------------------------------------------------
+                          |               Robust
+                if_refund | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------------+----------------------------------------------------------------
+                  1.if_AI |   5.971895   2.204699     2.71   0.008     1.603137    10.34065
+    1.gender_customer_num |   2.618898   2.563752     1.02   0.309    -2.461348    7.699145
+                          |
+if_AI#gender_customer_num |
+                     1 1  |   5.932316   2.567696     2.31   0.023     .8442563    11.02038
+                          |
+         province_capital |  -1.878111   2.395152    -0.78   0.435    -6.624266    2.868043
+    gap_create_first_call |  -.0207632   .0106762    -1.94   0.054    -.0419188    .0003924
+                    _cons |   15.74771   1.905012     8.27   0.000      11.9728    19.52262
+-------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+----------------------------------------------------------+
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
+------------------+---------------------------------------|
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
+----------------------------------------------------------+
+
+added macro:
+             e(mean_y) : "."
+
+added macro:
+            e(date_fe) : "Yes"
+
+added macro:
+            e(control) : "Yes"
+
+added macro:
+   e(hour_create_time) : "Yes"
+
+added macro:
+               e(r2_a) : "0.054"
+
+added macro:
+                  e(N) : "1092"
 (0 observations deleted)
 scale_premium_num
-(67,856 missing values generated)
-(15,739 real changes made)
-(28,352 real changes made)
-(23,623 real changes made)
+(38,708 missing values generated)
+(14,866 real changes made)
+(13,054 real changes made)
+(10,717 real changes made)
 (MWFE estimator converged in 6 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =      2,194
-Absorbing 2 HDFE groups                           F(   5,    267)                                                       =      15.26
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0000
-                                                  R-squared                                                             =     0.0273
-                                                  Adj R-squared                                                         =     0.0079
-                                                  Within R-sq.                                                          =     0.0015
-Number of clusters (crm_user_id) =        268     Root MSE                                                              =   438.0697
+HDFE Linear regression                            Number of obs   =      1,092
+Absorbing 2 HDFE groups                           F(   5,    111) =      15.28
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.0317
+                                                  Adj R-squared   =    -0.0013
+                                                  Within R-sq.    =     0.0021
+Number of clusters (crm_user_id) =        112     Root MSE        =   447.9570
 
-                          (Std. err. adjusted for 268 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-scale_prem~m | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
--------------+----------------------------------------------------------------
-     1.if_AI |  -4.490411   25.79083    -0.17   0.862    -55.26969                                                          46.28886
-1.gender_c~m |  -21.61108   20.68057    -1.04   0.297    -62.32882                                                          19.10666
-             |
-       if_AI#|
-gender_cus~m |
-        1 1  |  -23.97233   22.22269    -1.08   0.282    -67.72633                                                          19.78166
-             |
-province_c~l |   -9.99436   23.90097    -0.42   0.676    -57.05271                                                          37.06399
-gap_create~l |  -.1257027   .1096539    -1.15   0.253    -.3415991                                                          .0901937
-       _cons |   570.1537    17.5964    32.40   0.000     535.5083                                                           604.799
-------------------------------------------------------------------------------
+                                       (Std. err. adjusted for 112 clusters in crm_user_id)
+-------------------------------------------------------------------------------------------
+                          |               Robust
+        scale_premium_num | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------------+----------------------------------------------------------------
+                  1.if_AI |   7.452085    28.0169     0.27   0.791    -48.06526    62.96944
+    1.gender_customer_num |   .3703067   35.90684     0.01   0.992    -70.78149     71.5221
+                          |
+if_AI#gender_customer_num |
+                     1 1  |  -61.63537   37.23035    -1.66   0.101    -135.4098    12.13906
+                          |
+         province_capital |  -19.54995   29.27011    -0.67   0.506    -77.55064    38.45073
+    gap_create_first_call |  -.0886546   .1287954    -0.69   0.493    -.3438713    .1665622
+                    _cons |   570.4375   26.76043    21.32   0.000     517.4099     623.465
+-------------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
- hour_create_time |        12           1          11                                                           |
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
 ----------------------------------------------------------+
 
 added macro:
@@ -574,50 +561,49 @@ added macro:
    e(hour_create_time) : "Yes"
 
 added macro:
-               e(r2_a) : "0.027"
+               e(r2_a) : "0.032"
 
 added macro:
-                  e(N) : "2194"
+                  e(N) : "1092"
 (0 observations deleted)
 ins_amt_num
-(2,194 real changes made)
-(67,856 missing values generated)
-(15,739 real changes made)
-(28,352 real changes made)
-(23,623 real changes made)
+(1,092 real changes made)
+(38,708 missing values generated)
+(14,866 real changes made)
+(13,054 real changes made)
+(10,717 real changes made)
 (MWFE estimator converged in 6 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =      2,194
-Absorbing 2 HDFE groups                           F(   5,    267)                                                       =       4.01
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0016
-                                                  R-squared                                                             =     0.0304
-                                                  Adj R-squared                                                         =     0.0110
-                                                  Within R-sq.                                                          =     0.0011
-Number of clusters (crm_user_id) =        268     Root MSE                                                              =   162.2649
+HDFE Linear regression                            Number of obs   =      1,092
+Absorbing 2 HDFE groups                           F(   5,    111) =       3.47
+Statistics robust to heteroskedasticity           Prob > F        =     0.0059
+                                                  R-squared       =     0.0357
+                                                  Adj R-squared   =     0.0028
+                                                  Within R-sq.    =     0.0038
+Number of clusters (crm_user_id) =        112     Root MSE        =   160.3436
 
-                          (Std. err. adjusted for 268 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
- ins_amt_num | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
--------------+----------------------------------------------------------------
-     1.if_AI |   14.91542    10.6126     1.41   0.161    -5.979618                                                          35.81045
-1.gender_c~m |   .3135806   8.048612     0.04   0.969    -15.53324                                                           16.1604
-             |
-       if_AI#|
-gender_cus~m |
-        1 1  |   8.257018   8.209273     1.01   0.315    -7.906125                                                          24.42016
-             |
-province_c~l |   5.058201   9.205294     0.55   0.583      -13.066                                                           23.1824
-gap_create~l |   .0072936   .0575467     0.13   0.899    -.1060094                                                          .1205966
-       _cons |   571.9566   6.867094    83.29   0.000     558.4361                                                          585.4771
-------------------------------------------------------------------------------
+                                       (Std. err. adjusted for 112 clusters in crm_user_id)
+-------------------------------------------------------------------------------------------
+                          |               Robust
+              ins_amt_num | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------------+----------------------------------------------------------------
+                  1.if_AI |   18.58969   12.67179     1.47   0.145    -6.520311     43.6997
+    1.gender_customer_num |  -8.727618   13.80392    -0.63   0.529      -36.081    18.62577
+                          |
+if_AI#gender_customer_num |
+                     1 1  |   16.04027   13.80592     1.16   0.248    -11.31709    43.39762
+                          |
+         province_capital |   1.232618   13.89777     0.09   0.929    -26.30674    28.77197
+    gap_create_first_call |  -.1318686   .0604494    -2.18   0.031     -.251653   -.0120842
+                    _cons |    589.652   9.704821    60.76   0.000     570.4212    608.8827
+-------------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
- hour_create_time |        12           1          11                                                           |
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
 ----------------------------------------------------------+
 
 added macro:
@@ -633,10 +619,10 @@ added macro:
    e(hour_create_time) : "Yes"
 
 added macro:
-               e(r2_a) : "0.030"
+               e(r2_a) : "0.036"
 
 added macro:
-                  e(N) : "2194"
+                  e(N) : "1092"
 .         dis `i'
 9
 . 
@@ -644,6 +630,7 @@ added macro:
 . #delimit ; 
 delimiter now ;
 . esttab table_by_gender_c1 table_by_gender_c2 table_by_gender_c3 table_by_gender_c4 table_by_gender_c5 table_by_gender_c6 table_by_gender_c7 table_by_gender_c8  table_by_gender_c9         using  "$table_overleaf/table_by_gender.tex", replace f compressb(%12.3f) se(%12.3f) star(* 0.10 ** 0.05 *** 0.01)  keep( 1.if_AI  1.gender_customer_num 1.if_AI#1.gender_customer_num )   order(  1.gender_customer_num 1.if_AI#1.gender_customer_num  1.if_AI  ) coeflabels(                1.gender_customer_num  " Female Customer "                1.if_AI#1.gender_customer_num "$  \textit{AI} \times $ Female Customer "                1.if_AI "$ \textit{AI} $"  ) label booktabs noobs nonotes collabels(none) alignment(D{.}{.}{-1})  stats( control date_fe hour_create_time r2_a N , labels(  "Controls" "Date FE" "Hour FE" "\hline Adjusted R-squared"  "Obs" ) ) mtitles("Success rate" "Duration" "Duration (success)" "N succeed transcations"  "Payment amount" "Payment per second" "Refund rate" "Scale premium" "Insurance amount") nogaps  ;
+(file <REPLICATION_ROOT>/output/table/table_by_gender.tex not found)
 (output written to <REPLICATION_ROOT>/output/table/table_by_gender.tex)
 .  #delimit cr
 delimiter now cr

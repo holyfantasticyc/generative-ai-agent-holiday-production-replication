@@ -42,7 +42,6 @@ if "`y'" == "if_succeed"{
 }
 if "`y'" == "payment_amt_num"{
 	
-// 	global ytitle = "Payment Amount (CNY)"
 	local ytitle = "Chinese Yuan (CNY)"
 
 }
@@ -108,9 +107,6 @@ restore
 }	
 	
 	
-
-
-
 dis `i'
 
 
@@ -132,7 +128,6 @@ keep( if_AI province_capital gender_customer_num )   order( if_AI province_capit
 }
 
 
- 
  **# Appendix Table: summary statistics
 
 {

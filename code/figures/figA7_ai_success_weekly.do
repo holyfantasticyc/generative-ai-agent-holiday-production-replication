@@ -10,7 +10,6 @@ run "$replication/code/00_declare_path.do"
 capture log close
 log using "$replication_log/figA7_ai_success_weekly.log", replace text
 
-* date: April, 2, 2026
 *============================================================*
 * AI performance over time: weekly deviation relative to base week
 * Keep sample from 2024 week 30 onward

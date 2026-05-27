@@ -12,10 +12,12 @@ run "$replication/code/00_declare_path.do"
 capture log close
 log using "$replication_log/fig3_duration_relationship.log", replace text
 
-**# Figure: Success Rate - time relationship 
+**# Figure: Success Rate - time relationship
 
 {
-use  "$temp/vacation_connected_callcontract_level"  , clear
+* Call-level data (one row per call): each call counted once when computing
+* the duration-vs-success-rate relationship and the duration distributions.
+use  "$temp/vacation_connected_call_level"  , clear
 
 * calcualte precentile
 preserve
@@ -29,7 +31,6 @@ bys if_succeed: sum bridge_duration_num , de
 keep if bridge_duration_num < 900
 
 set scheme white_ptol
-
 
 
 **## Histogram - Human
@@ -99,7 +100,6 @@ twoway (histogram bridge_duration_num if if_AI == 1 & if_succeed == 1, fraction 
 **## Relationship
 		
 foreach y in if_succeed  {
-// local y if_succeed
 
 if "`y'" == "if_succeed"{
 	
@@ -109,7 +109,6 @@ if "`y'" == "if_succeed"{
 }
 if "`y'" == "payment_amt_num"{
 	
-// 	keep if if_succeed
 	global ytitle = "Payment Amount (CNY)"
 	global title = "Payment Amount - Call Duration"
 	
@@ -128,7 +127,9 @@ tw || ///
 
 **## t-test
 
-use  "$temp/vacation_connected_callcontract_level"  , clear
+* Reload call-level data for the Panel A t-test (success-rate difference by
+* call-duration bin, AI vs human).
+use  "$temp/vacation_connected_call_level"  , clear
 
 **### < 450
 
@@ -168,10 +169,7 @@ if "`y'" == "if_succeed"{
 		   xtitle("")   ytitle($ytitle )  	 graphregion(margin(zero)) ///
 		   saving(ttest1, replace)
 
-// 			   name("Fig_`y'_vacation",replace ) 
 			
-// gr_edit .plotregion1.plot2.style.editstyle marker(size(huge)) 		
-
 restore
 
 }
@@ -214,10 +212,7 @@ if "`y'" == "if_succeed"{
 		   xtitle("")   ytitle($ytitle ) 	 graphregion(margin(zero)) ///
 		   saving(ttest2, replace)
 
-// 			   name("Fig_`y'_vacation",replace ) 
 			
-// gr_edit .plotregion1.plot2.style.editstyle marker(size(huge)) 		
-
 restore
 
 }
@@ -257,11 +252,8 @@ preserve
 keep if if_succeed
 
 	* first tease out fixed effects
-// 	local y if_succeed
 	cap drop `y'_res
 	reghdfe `y' province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id) res(`y'_res)
-// 	local mean_control = _b[_cons]
-// 	local se_control = _se[_cons]
 
 	replace `y'_res = `y'_res + _b[_cons]
 	
@@ -287,8 +279,6 @@ keep if if_succeed
 	gen upper_bound = mean + 1.96 * sem
 
 
-	
-// 	set scheme s1mono
 	set scheme white_ptol
 	twoway (bar mean `group_variable' if `group_variable' == 0 , barwidth(0.5) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///
 		   (bar mean `group_variable' if `group_variable' == 1 , barwidth(0.5) fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///
@@ -309,11 +299,8 @@ restore
 }
 
 
-
 }	
 
-		
-		
 		
 **## Combine
 		

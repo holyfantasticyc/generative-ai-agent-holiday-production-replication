@@ -41,7 +41,6 @@ if "`y'" == "if_succeed"{
 }
 if "`y'" == "payment_amt_num"{
 	
-// 	global ytitle = "Payment Amount (CNY)"
 	local ytitle = "Chinese Yuan (CNY)"
 
 }
@@ -107,9 +106,6 @@ restore
 }	
 	
 	
-
-
-
 dis `i'
 
 

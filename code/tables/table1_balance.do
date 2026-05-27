@@ -21,14 +21,8 @@ drop if month_create_time == 10 & day_create_time == 27 // drop this because it 
 
 cap gen gender_customer_num = ( gender_customer == "Female" )
 
-// keep if  if_call_w_1_hour
-// keep if  if_call_w_10_min
-// keep if  if_call_w_1_min
 
 // forvalue i = 9(1)20{ // call time is not balance
-//	
-// 	gen hour_create_time_`i' = ( hour_create_time == `i')
-//	
 // }
 gen if_hang_w_60 =  if_connected * (bridge_duration_num < 60)
 gen if_hang_w_30 =  if_connected * (bridge_duration_num < 30)

@@ -22,12 +22,9 @@ replace province_capital = 1 if missing(province_capital)
 
 drop if gender_customer == "Unknown" |  gender_cno == "Unknown" 
 gen gender_customer_num = (gender_customer == "Female")
-// egen gender_customer_num = group(gender_customer)
-// egen gender_cno_num = group(gender_cno)
 
 foreach y in if_succeed  bridge_duration_num bridge_duration_num n_policy_succeed payment_amt_num payment_amt_per if_refund scale_premium_num ins_amt_num {
 
-// local group_variable gender_combine
 
 keep if vacation == 1 
 
@@ -43,7 +40,6 @@ if "`y'" == "if_succeed"{
 }
 if "`y'" == "payment_amt_num"{
 	
-// 	global ytitle = "Payment Amount (CNY)"
 	local ytitle = "Chinese Yuan (CNY)"
 
 }
@@ -99,7 +95,6 @@ replace gender_group = 2 if !if_AI  & gender_customer == "Female"
 replace gender_group = 3 if !if_AI  & gender_customer == "Male" 
 
 
-// reghdfe `y' i.gender_group##i.gender_customer_num   province_capital gap_create_first_call ///
 // 		, absorb(date_create_time hour_create_time ) cl(crm_user_id)
 
 reghdfe  `y'  i.if_AI##i.gender_customer_num   province_capital  gap_create_first_call ///

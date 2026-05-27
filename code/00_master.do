@@ -21,9 +21,10 @@ do "$replication/code/00_declare_path.do"
 *-------------------------------------------------------------------
 do "$replication/code/tables/table1_balance.do"
 do "$replication/code/tables/table2_revenue_decomposition_estimates.do"
-* Note: Table 2 final formatting is in the accompanying Jupyter notebook
-*       table2_revenue_decomposition.ipynb. Run it separately in Jupyter
-*       after table2_revenue_decomposition_estimates.do has been executed.
+* Note: Table 2 final formatting (delta-method point estimates + 95% CIs +
+*       LaTeX rendering) is in the Python driver
+*       code/tables/table2_revenue_decomposition.py, which run_all.sh invokes
+*       automatically after this master script completes.
 do "$replication/code/tables/tableA1_summary_statistics.do"
 do "$replication/code/tables/tableA2_main.do"
 do "$replication/code/tables/tableA3_robust_notcontrols.do"

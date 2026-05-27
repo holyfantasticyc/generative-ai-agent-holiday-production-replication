@@ -106,5 +106,4 @@ file open myfile using "$table_overleaf/table_summary_statistics.tex", write app
 file close myfile	
 
 
-
 capture log close

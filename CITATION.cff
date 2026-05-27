@@ -8,11 +8,11 @@ authors:
     given-names: "Yucheng"
     email: "yuchengwangecon@gmail.com"
     affiliation: "School of Economics, University of Sydney"
-version: "1.0.0"
-date-released: "2026-05-19"
+version: "2.0.0"
+date-released: "2026-05-27"
 license: MIT
 repository-code: "https://github.com/holyfantasticyc/generative-ai-agent-holiday-production-replication"
-doi: "10.5281/zenodo.20289041"
+doi: "10.5281/zenodo.20289040"
 preferred-citation:
   type: article
   title: "Generative AI as Backup Production Under Labor Constraints: System-Level Gains Despite Inferior Task Performance"

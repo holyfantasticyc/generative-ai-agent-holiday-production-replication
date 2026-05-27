@@ -5,7 +5,8 @@
 # Runs, in order:
 #   1. Stata 00_master.do                  (all tables and figures)
 #   2. Python table2_revenue_decomposition.py   (final Table 2 .tex)
-#   3. Python combine_panels.py            (assemble multi-panel figure PDFs)
+#   3. Python post_process_table_headers.py     (split long column titles)
+#   4. Python combine_panels.py            (assemble multi-panel figure PDFs)
 #
 # Usage:
 #   ./run_all.sh
@@ -56,7 +57,7 @@ echo "=================================================================="
 
 # --- step 1: Stata master ---
 echo ""
-echo ">>> Step 1/3: running Stata 00_master.do"
+echo ">>> Step 1/5: running Stata 00_master.do"
 echo ""
 cd "$REPLICATION_PATH/code"
 "$STATA" -b do "$REPLICATION_PATH/code/00_master.do"
@@ -67,13 +68,20 @@ fi
 
 # --- step 2: Python -- Table 2 final formatter ---
 echo ""
-echo ">>> Step 2/3: running table2_revenue_decomposition.py"
+echo ">>> Step 2/4: running table2_revenue_decomposition.py"
 echo ""
 "$PYTHON" "$REPLICATION_PATH/code/tables/table2_revenue_decomposition.py"
 
-# --- step 3: Python -- combine multi-panel figure PDFs ---
+# --- step 3: Python -- split long column headers across two rows ---
 echo ""
-echo ">>> Step 3/3: running combine_panels.py"
+echo ">>> Step 3/4: running post_process_table_headers.py"
+echo ""
+REPLICATION_PATH="$REPLICATION_PATH" "$PYTHON" \
+    "$REPLICATION_PATH/code/tables/post_process_table_headers.py"
+
+# --- step 4: Python -- combine multi-panel figure PDFs ---
+echo ""
+echo ">>> Step 4/4: running combine_panels.py"
 echo ""
 "$PYTHON" "$REPLICATION_PATH/code/figures/combine_panels.py"
 
@@ -83,7 +91,7 @@ echo ""
 # and echoes paths from `use`, `log using`, etc. We strip these so the logs
 # you ship to the journal contain no information about your local machine.
 echo ""
-echo ">>> Step 4/4: scrubbing local paths and username from logs/output"
+echo ">>> Step 5/5: scrubbing local paths and username from logs/output"
 echo ""
 "$PYTHON" - "$REPLICATION_PATH" <<'PYEOF'
 import os, re, sys

@@ -31,22 +31,24 @@ table_overleaf = os.path.join(replication_root, "output", "table")
 os.makedirs(table_overleaf, exist_ok=True)
 
 # ============================================================
-# INPUTS
+# INPUTS  (from delta.log Part 1; vacation_connected_call_level filtered to
+#          the 21-day window. Re-run code/tables/table2_revenue_decomposition_estimates.do
+#          and copy fresh values here if any upstream regression changes.)
 # ============================================================
-k = 3.38
+k    = 3.38
 se_k = 0.0
 
-p_h0 = 3.777799 / 100
-se_p_h0 = 0.29882 / 100
+p_h0    = 3.5469033 / 100      # Part 1: if_succeed regression Constant
+se_p_h0 = 0.35210258 / 100     # Part 1: SE(Constant)
 
-p_ai = 2.561433 / 100
-se_p_ai = 0.1767427 / 100
+p_ai    = 2.31643   / 100      # Part 1: lincom _cons + if_AI
+se_p_ai = 0.1355558 / 100      # Part 1: SE of that lincom
 
-m_ai = 114.8695
-se_m_ai = 6.356324
+m_h    = 97.42616              # Part 1: payment_amt_num regression Constant
+se_m_h = 4.8512363             # Part 1: SE(Constant)
 
-m_h = 129.8188
-se_m_h = 4.094225
+m_ai    = 81.64863             # Part 1: payment lincom _cons + if_AI
+se_m_ai = 4.336858             # Part 1: SE of that lincom
 
 # ============================================================
 # SCENARIOS
@@ -297,9 +299,9 @@ display_index = [
     "    Percentage change",
     "    95% CI",
     "Total Revenue",
-    "  Human immediate [(d)=(a)*129.8]",
-    "  Human callback [(e)=(b)*129.8]",
-    "  AI immediate [(f)=(c)*114.9]",
+    f"  Human immediate [(d)=(a)*{m_h:.1f}]",
+    f"  Human callback [(e)=(b)*{m_h:.1f}]",
+    f"  AI immediate [(f)=(c)*{m_ai:.1f}]",
     "  Revenue without AI [(R.1)=(d)+(e)]",
     "  Revenue with AI [(R.2)=(d)+(f)]",
     "  Revenue enhancement [Diff = (R.2) - (R.1)]",
@@ -397,11 +399,11 @@ latex_lines.append(make_row(r"\hspace{2em} 95\% CI",
 
 latex_lines.append(r"\midrule")
 latex_lines.append(make_row(r"\textbf{Total Revenue}", [""] * len(scenario_order)))
-latex_lines.append(make_row(r"\hspace{1em} Human immediate [(d)=(a)*129.8]",
+latex_lines.append(make_row(rf"\hspace{{1em}} Human immediate [(d)=(a)*{m_h:.1f}]",
                             [f"{results[name]['d']:.2f}" for name in scenario_order]))
-latex_lines.append(make_row(r"\hspace{1em} Human callback [(e)=(b)*129.8]",
+latex_lines.append(make_row(rf"\hspace{{1em}} Human callback [(e)=(b)*{m_h:.1f}]",
                             [f"{results[name]['e']:.1f}" for name in scenario_order]))
-latex_lines.append(make_row(r"\hspace{1em} AI immediate [(f)=(c)*114.9]",
+latex_lines.append(make_row(rf"\hspace{{1em}} AI immediate [(f)=(c)*{m_ai:.1f}]",
                             [f"{results[name]['f']:.1f}" for name in scenario_order]))
 latex_lines.append(make_row(r"\hspace{1em} Revenue without AI [(R.1)=(d)+(e)]",
                             [f"{results[name]['rev_without_ai']:.1f}" for name in scenario_order]))

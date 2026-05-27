@@ -13,18 +13,17 @@ capture log close
 log using "$replication_log/figA4_workload_duration.log", replace text
 
 **# Figure: Results: by workload
-use  "$temp/vacation_connected_callcontract_level"  , clear
-keep if gap_creat_lastcallthrough < 3600 // get rid of follow up call the next day
+* Call-level data: same dataset and task_order convention as Figure 2, so the
+* duration version (Figure A.4) lines up with the success-rate version.
+use  "$temp/vacation_connected_call_level"  , clear
+keep if gap_creat_lastcallthrough < 3600 // get rid of follow-up calls that begin the next day
 
 {
-// append using  "$temp/connected_call_level_2023"  
 replace if_succeed = if_succeed * 100
 sort crm_user_id date_create_time hour_create_time minute_create_time
 bys crm_user_id date_create_time: gen task_order = _n
 bys crm_user_id date_create_time  (task_order): egen cumulative_payment = sum(payment_amt_num)
 
-// binsreg if_succeed task_order , by(if_AI)  absorb(date_create_time hour_create_time)
-// reghdfe if_succeed task_order if !if_AI ,  absorb(date_create_time hour_create_time) 
 
 replace task_order = 0 if if_AI 
 

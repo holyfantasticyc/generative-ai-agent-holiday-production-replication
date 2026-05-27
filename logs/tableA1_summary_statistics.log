@@ -1,8 +1,8 @@
---------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA1_summary_statistics.log
   log type:  text
- opened on:   9 May 2026, 09:07:07
+ opened on:  26 May 2026, 18:37:19
 
 . 
 . **## Task/raw data level
@@ -14,10 +14,10 @@
 . use "$temp/vacation_full_data_no_collapse" , clear
 
 . keep if month_create_time > 5 
-(54,831 observations deleted)
+(0 observations deleted)
 
 . drop if month_create_time == 10 & day_create_time == 27 // drop this because it might have less refund window compared with other dates. And it will also help to reduce the to sample size to < 10,000
-(2,920 observations deleted)
+(0 observations deleted)
 
 . cap gen gender_customer_num = ( gender_customer == "Female" )
 
@@ -26,23 +26,14 @@
 
 .         tabstat $variable_list1  ,  stat(N mean sd min max ) save
 
-   Stats |  if_con~d     if_AI  if~1_min  if~0_min
----------+----------------------------------------
-       N |     98340     98340     75883     75883
-    Mean |  .5579215  .4727273  .7271589  .8911877
-      SD |  .4966363  .4992582  .4454228  .3114056
-     Min |         0         0         0         0
-     Max |         1         1         1         1
---------------------------------------------------
-
-   Stats |  if_cal~r  provin~l  gender~m
----------+------------------------------
-       N |     75883     95327     98340
-    Mean |  .8994505  .1988104  .5457494
-      SD |  .3007333  .3991071  .4979051
-     Min |         0         0         0
-     Max |         1         1         1
-----------------------------------------
+   Stats |  if_con~d     if_AI  if~1_min  if~0_min  if_cal~r  provin~l  gender~m
+---------+----------------------------------------------------------------------
+       N |     98340     98340     75883     75883     75883     95327     98340
+    Mean |  .5579215  .4727273  .7271589  .8911877  .8994505  .1988104  .5457494
+      SD |  .4966363  .4992582  .4454228  .3114056  .3007333  .3991071  .4979051
+     Min |         0         0         0         0         0         0         0
+     Max |         1         1         1         1         1         1         1
+--------------------------------------------------------------------------------
 
 .         mat A = r(StatTotal)'
 
@@ -61,7 +52,7 @@
 . use  "$temp/vacation_connected_call_level"  , clear
 
 . replace if_succeed = if_succeed * 100   // express as percentage to match Table A.1 in the manuscript
-(2,458 real changes made)
+(1,255 real changes made)
 
 . 
 . preserve
@@ -70,17 +61,17 @@
 
    Stats |  if_suc~d  bridge~m
 ---------+--------------------
-       N |     74029     74029
-    Mean |   3.32032  121.6279
-      SD |   17.9168  253.1889
+       N |     42537     42537
+    Mean |  2.950373  108.7215
+      SD |  16.92156  222.0175
      Min |         0        11
-     Max |       100      3586
+     Max |       100      3582
 ------------------------------
 
 .         mat B = r(StatTotal)'
 
 .         count 
-  74,029
+  42,537
 
 .         local N_B = r(N)
 
@@ -93,39 +84,30 @@
 . use  "$temp/vacation_connected_call_level"  , clear
 
 . keep if if_succeed
-(71,571 observations deleted)
+(41,282 observations deleted)
 
 . gen payment_amt_per = total_payment_amt_num / bridge_duration_num
 
 . replace ins_amt_num = ins_amt_num / 10000
-(2,458 real changes made)
+(1,255 real changes made)
 
 . preserve
 
 .         tabstat $variable_list3  ,  stat(N mean sd min max ) save
 
-   Stats |  bridge~m  n_po~eed  paymen~m  paymen~r
----------+----------------------------------------
-       N |      2458      2458      2458      2458
-    Mean |  709.7307  1.235151  122.0004  1.016476
-      SD |  740.6618  .6264042  131.4503  2.696193
-     Min |        11         1         0         0
-     Max |      3582        10       968  39.96923
---------------------------------------------------
-
-   Stats |  if_ref~d  scale_~m  ins_am~m
----------+------------------------------
-       N |      2458      2458      2458
-    Mean |  .1879577  547.5478  574.6447
-      SD |  .3907579  436.3853   163.183
-     Min |         0       1.2         5
-     Max |         1    3849.6      1585
-----------------------------------------
+   Stats |  bridge~m  n_po~eed  paymen~m  paymen~r  if_ref~d  scale_~m  ins_am~m
+---------+----------------------------------------------------------------------
+       N |      1255      1255      1255      1255      1255      1255      1255
+    Mean |  617.5371  1.236653   91.9719  1.061945  .1760956  553.9284  584.2136
+      SD |  695.3553  .6686855  89.30933  2.741191  .3810533  446.8815  161.6238
+     Min |        11         1        .1  .0005133         0       1.2        10
+     Max |      3582        10     962.4  39.96923         1    3849.6      1585
+--------------------------------------------------------------------------------
 
 .         mat C = r(StatTotal)'
 
 .         count 
-  2,458
+  1,255
 
 .         local N_C = r(N)
 
@@ -136,7 +118,7 @@
 . use "$temp/vacation_full_data_no_collapse" , clear
 
 . keep if !if_AI 
-(49,993 observations deleted)
+(46,488 observations deleted)
 
 . sort crm_user_id date_create_time hour_create_time minute_create_time
 
@@ -147,10 +129,10 @@
 . gen gender_cno_num = ( gender_cno == "Female" )
 
 . replace gender_cno_num = . if gender_cno == "Unknown" | missing(gender_cno)
-(53,880 real changes made, 53,880 to missing)
+(16,408 real changes made, 16,408 to missing)
 
 . replace working_hours = . if working_hours == 0
-(20,557 real changes made, 20,557 to missing)
+(9,744 real changes made, 9,744 to missing)
 
 . 
 . collapse (mean) start_working_hour work_month_num cumulative_payment (max) task_order gender_cno_num, by(crm_user_id)
@@ -162,28 +144,19 @@
 
 .         tabstat $variable_list4  ,  stat(N mean sd min max ) save
 
-   Stats |  start_~r  work_m~m  task_o~r  cumula~t
----------+----------------------------------------
-       N |       539       539       539       539
-    Mean |  9.871927  6.402201  52.27644   154.105
-      SD |  1.306277  8.786214  30.91594  334.0719
-     Min |         9         0         1         0
-     Max |        18        50       272   4296.84
---------------------------------------------------
-
-   Stats |  gender~m
----------+----------
-       N |       154
-    Mean |   .525974
-      SD |   .500954
-     Min |         0
-     Max |         1
---------------------
+   Stats |  start_~r  work_m~m  task_o~r  cumula~t  gender~m
+---------+--------------------------------------------------
+       N |       267       267       267       267       146
+    Mean |  10.21548  7.589595  48.21348  74.61842  .5205479
+      SD |  1.637156  9.781284  30.96778  138.3134  .5012973
+     Min |         9         0         1         0         0
+     Max |        16        49       170  1182.768         1
+------------------------------------------------------------
 
 .         mat D = r(StatTotal)'
 
 .         count 
-  539
+  267
 
 .         local N_D = r(N)
 
@@ -225,59 +198,32 @@
 . mat list E , format(%9.2f)
 
 E[25,5]
-                    c1        c2        c3        c4
-\textbf{Pa~a         .         .         .         .
-   Connected  98340.00      0.56      0.50      0.00
-          AI  98340.00      0.47      0.50      0.00
-Call withi~n  75883.00      0.73      0.45      0.00
-Call withi~n  75883.00      0.89      0.31      0.00
-Call withi~r  75883.00      0.90      0.30      0.00
-Capital ci~s  95327.00      0.20      0.40      0.00
-Female cus~r  98340.00      0.55      0.50      0.00
-\textbf{Pa~s         .         .         .         .
-Success ra~%  74029.00      3.32     17.92      0.00
-Duration, ~)  74029.00    121.63    253.19     11.00
-\textbf{Pa~}         .         .         .         .
-Duration, ~)   2458.00    709.73    740.66     11.00
-Number of ~s   2458.00      1.24      0.63      1.00
-Payment am~)   2458.00    122.00    131.45      0.00
-Payment pe~)   2458.00      1.02      2.70      0.00
-      Refund   2458.00      0.19      0.39      0.00
-Scale prem~)   2458.00    547.55    436.39      1.20
-Insurance ~)   2458.00    574.64    163.18      5.00
-\textbf{Pa~t         .         .         .         .
-Starting w~r    539.00      9.87      1.31      9.00
-Working ex~)    539.00      6.40      8.79      0.00
-Total task~y    539.00     52.28     30.92      1.00
-Cumulative~)    539.00    154.11    334.07      0.00
-Female rep~e    154.00      0.53      0.50      0.00
-
-                    c5
-\textbf{Pa~a         .
-   Connected      1.00
-          AI      1.00
-Call withi~n      1.00
-Call withi~n      1.00
-Call withi~r      1.00
-Capital ci~s      1.00
-Female cus~r      1.00
-\textbf{Pa~s         .
-Success ra~%    100.00
-Duration, ~)   3586.00
-\textbf{Pa~}         .
-Duration, ~)   3582.00
-Number of ~s     10.00
-Payment am~)    968.00
-Payment pe~)     39.97
-      Refund      1.00
-Scale prem~)   3849.60
-Insurance ~)   1585.00
-\textbf{Pa~t         .
-Starting w~r     18.00
-Working ex~)     50.00
-Total task~y    272.00
-Cumulative~)   4296.84
-Female rep~e      1.00
+                    c1        c2        c3        c4        c5
+\textbf{Pa~a         .         .         .         .         .
+   Connected  98340.00      0.56      0.50      0.00      1.00
+          AI  98340.00      0.47      0.50      0.00      1.00
+Call withi~n  75883.00      0.73      0.45      0.00      1.00
+Call withi~n  75883.00      0.89      0.31      0.00      1.00
+Call withi~r  75883.00      0.90      0.30      0.00      1.00
+Capital ci~s  95327.00      0.20      0.40      0.00      1.00
+Female cus~r  98340.00      0.55      0.50      0.00      1.00
+\textbf{Pa~s         .         .         .         .         .
+Success ra~%  42537.00      2.95     16.92      0.00    100.00
+Duration, ~)  42537.00    108.72    222.02     11.00   3582.00
+\textbf{Pa~}         .         .         .         .         .
+Duration, ~)   1255.00    617.54    695.36     11.00   3582.00
+Number of ~s   1255.00      1.24      0.67      1.00     10.00
+Payment am~)   1255.00     91.97     89.31      0.10    962.40
+Payment pe~)   1255.00      1.06      2.74      0.00     39.97
+      Refund   1255.00      0.18      0.38      0.00      1.00
+Scale prem~)   1255.00    553.93    446.88      1.20   3849.60
+Insurance ~)   1255.00    584.21    161.62     10.00   1585.00
+\textbf{Pa~t         .         .         .         .         .
+Starting w~r    267.00     10.22      1.64      9.00     16.00
+Working ex~)    267.00      7.59      9.78      0.00     49.00
+Total task~y    267.00     48.21     30.97      1.00    170.00
+Cumulative~)    267.00     74.62    138.31      0.00   1182.77
+Female rep~e    146.00      0.52      0.50      0.00      1.00
 
 . 
 . estadd matrix E, replace
@@ -286,6 +232,7 @@ added matrix:
                   e(E) :  25 x 5
 
 . esttab e(E, fmt(2)) using "$table_overleaf/table_summary_statistics.tex", ///    replace booktabs  noobs nonotes nonumber nomtitle nolabel fragment ///    alignment(D{.}{.}{-1}) ///    collabel("Obs" "Mean" "SD" "Min" "Max", lhs("Variables")) 
+(file <REPLICATION_ROOT>/output/table/table_summary_statistics.tex not found)
 (output written to <REPLICATION_ROOT>/output/table/table_summary_statistics.tex)
 
 . 
@@ -294,7 +241,6 @@ added matrix:
 . // file write myfile "\bottomrule" _n
 . file close myfile       
 
-. 
 . 
 . 
 . capture log close

@@ -27,12 +27,6 @@ replace gender_combine = 4 if if_AI & gender_customer  == "Male"
 replace gender_combine = 5 if !if_AI & gender_cno == "Female"  &gender_customer  == "Male"
 replace gender_combine = 6 if !if_AI & gender_cno == "Male"  &gender_customer  == "Male"
 
-// gen gender_combine = 2 if gender_cno == "Female"  &gender_customer  == "Female"
-// replace gender_combine = 3 if gender_cno == "Female"  &gender_customer  == "Male"
-// replace gender_combine = 4 if gender_cno == "Male"  &gender_customer  == "Female"
-// replace gender_combine = 5 if gender_cno == "Male"  &gender_customer  == "Male"
-// replace gender_combine = 0 if if_AI & gender_customer  == "Female" 
-// replace gender_combine = 1 if if_AI & gender_customer  == "Male"
 drop if missing(gender_combine)
 
 gen gender_cno_redefine = 1 if gender_cno == "Female" 
@@ -46,7 +40,6 @@ replace gender_customer_redefine = 0 if if_AI
 local y  if_succeed
 local group_variable gender_combine
 
-// preserve
 keep if vacation == 1 
 
 if "`y'" == "if_succeed"{
@@ -57,7 +50,6 @@ if "`y'" == "if_succeed"{
 }
 
 	* first tease out fixed effects
-// 	local y if_succeed
 	cap drop `y'_res
 	reghdfe `y' province_capital  , absorb(date_create_time hour_create_time)  cl(crm_user_id) res(`y'_res)
 	local mean_control = _b[_cons]
@@ -75,7 +67,6 @@ reghdfe `y'_res  i.gender_combine province_capital   ///
 	local coef2 = round(r(estimate),0.001)
 	lincom 5.gender_combine - 4.gender_combine - 1.gender_combine	
 	local coef3 = round(r(estimate),0.001)
-// 	reghdfe `y' if_AI province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id)
 		
 		
 	* figure
@@ -153,20 +144,7 @@ twoway (bar mean `group_variable' if `group_variable' == 0 , barwidth(0.7) fcolo
 		graph export "$figure_overleaf/Coef_by_gender_if_succeed.pdf", as(png) name("Graph") replace	
 
 
-			   
-	
-// restore
-
-// use  "$temp/vacation_connected_call_level"  , clear
-// replace province_capital = 1 if missing(province_capital)
-//
-// drop if gender_customer == "Unknown" |  gender_cno == "Unknown" 
-// egen gender_customer_num = group(gender_customer)
-// egen gender_cno_num = group(gender_cno)
-//
-// reghdfe bridge_duration_num i.if_AI##i.gender_customer_num province_capital   ///
 // 		, absorb(date_create_time hour_create_time ) cl(crm_user_id)
-//		
 					
 }
 

@@ -1,8 +1,8 @@
---------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig2_workload_coef.log
   log type:  text
- opened on:   9 May 2026, 09:08:51
+ opened on:  26 May 2026, 18:38:55
 
 . 
 . *===================================================================
@@ -10,25 +10,24 @@
 . *  source: analysis_data_vacation.do, section "Figure: Results: by workload"
 . *===================================================================
 . **# Figure: Results: by workload
-. use  "$temp/vacation_connected_callcontract_level"  , clear
+. * Call-level data (one row per call): used so within-day task_order counts each
+. * call exactly once, rather than once per contract sold.
+. use  "$temp/vacation_connected_call_level"  , clear
 
-. keep if gap_creat_lastcallthrough < 3600 // get rid of follow up call the next day
-(9,298 observations deleted)
+. keep if gap_creat_lastcallthrough < 3600 // get rid of follow-up calls that begin the next day
+(3,384 observations deleted)
 
 . 
 . {
-. // append using  "$temp/connected_call_level_2023"  
 . replace if_succeed = if_succeed * 100
-(2,736 real changes made)
+(1,208 real changes made)
 . sort crm_user_id date_create_time hour_create_time minute_create_time
 . bys crm_user_id date_create_time: gen task_order = _n
 . bys crm_user_id date_create_time  (task_order): egen cumulative_payment = sum(payment_amt_num)
 . 
-. // binsreg if_succeed task_order , by(if_AI)  absorb(date_create_time hour_create_time)
-. // reghdfe if_succeed task_order if !if_AI ,  absorb(date_create_time hour_create_time) 
 . 
 . replace task_order = 0 if if_AI 
-(16,237 real changes made)
+(15,224 real changes made)
 . 
 . gen bin_task_order = recode(task_order,0,3,6,10,15,20,30,50,100) // 0 to 0; 1-3 to 3; 4-6 to 6 ...
 . 
@@ -52,38 +51,38 @@ file hx.gph saved
 . reghdfe if_succeed ib0.bin_task_order  ///                , absorb(date_create_time hour_create_time)   cl(crm_user_id)
 (MWFE estimator converged in 5 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =     65,309
-Absorbing 2 HDFE groups                           F(   8,    533)                                                       =       5.80
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0000
-                                                  R-squared                                                             =     0.0072
-                                                  Adj R-squared                                                         =     0.0065
-                                                  Within R-sq.                                                          =     0.0031
-Number of clusters (crm_user_id) =        534     Root MSE                                                              =    19.9694
+HDFE Linear regression                            Number of obs   =     39,153
+Absorbing 2 HDFE groups                           F(   8,    262) =      11.87
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.0080
+                                                  Adj R-squared   =     0.0070
+                                                  Within R-sq.    =     0.0043
+Number of clusters (crm_user_id) =        263     Root MSE        =    17.2319
 
-                          (Std. err. adjusted for 534 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-  if_succeed | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
--------------+----------------------------------------------------------------
-bin_task_o~r |
-          3  |   4.800759   .8691947     5.52   0.000     3.093292                                                          6.508227
-          6  |   2.754648    .621169     4.43   0.000     1.534408                                                          3.974888
-         10  |   1.610166   .5102556     3.16   0.002      .607807                                                          2.612525
-         15  |   .6714981    .438872     1.53   0.127    -.1906329                                                          1.533629
-         20  |   1.367864   .5173215     2.64   0.008     .3516247                                                          2.384103
-         30  |   .9517583   .6141914     1.55   0.122    -.2547744                                                          2.158291
-         50  |   .3797252   .6933017     0.55   0.584    -.9822138                                                          1.741664
-        100  |   -1.08765   1.101431    -0.99   0.324    -3.251328                                                          1.076029
-             |
-       _cons |    2.86082   .2023458    14.14   0.000     2.463327                                                          3.258313
-------------------------------------------------------------------------------
+                            (Std. err. adjusted for 263 clusters in crm_user_id)
+--------------------------------------------------------------------------------
+               |               Robust
+    if_succeed | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------+----------------------------------------------------------------
+bin_task_order |
+            3  |   4.600172   1.059968     4.34   0.000     2.513031    6.687313
+            6  |   2.559957   .6266602     4.09   0.000     1.326026    3.793888
+           10  |   1.717978   .5071899     3.39   0.001     .7192912    2.716665
+           15  |   .5286926   .4534523     1.17   0.245     -.364182    1.421567
+           20  |   .5730295   .5400778     1.06   0.290    -.4904159    1.636475
+           30  |   .2041263   .5831888     0.35   0.727    -.9442073     1.35246
+           50  |  -.3053286   .6630812    -0.46   0.646    -1.610975    1.000318
+          100  |  -3.469583   .4953056    -7.00   0.000    -4.444869   -2.494296
+               |
+         _cons |   2.226347   .1193905    18.65   0.000      1.99126    2.461434
+--------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
- hour_create_time |        12           1          11                                                           |
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
 ----------------------------------------------------------+
 .                 
 .                 
@@ -95,15 +94,9 @@ file effect_by_load.gph saved
 . 
 .                         
 .                         graph export "$figure_overleaf/Coef_by_workload.png", as(png) name("Graph") replace             
-file
-    /path/to/<user>/Dropbox/AI/PNAS_NEXUS/replica
-    > tion_package/output/figure/Coef_by_workload.png
-    saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Coef_by_workload.png saved as PNG format
 .                         graph export "$figure_overleaf/Coef_by_workload.pdf", as(pdf) name("Graph") replace
-file
-    /path/to/<user>/Dropbox/AI/PNAS_NEXUS/replica
-    > tion_package/output/figure/Coef_by_workload.pdf
-    saved as PDF format
+file <REPLICATION_ROOT>/output/figure/Coef_by_workload.pdf saved as PDF format
 . }
 
 . 
@@ -143,16 +136,10 @@ file
 
 . 
 . graph export "$figure_overleaf/Overtime_rule_panel.png", as(png) name("overtime_rule") replace
-file
-    /path/to/<user>/Dropbox/AI/PNAS_NEXUS/replica
-    > tion_package/output/figure/Overtime_rule_panel.p
-    > ng saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Overtime_rule_panel.png saved as PNG format
 
 . graph export "$figure_overleaf/Overtime_rule_panel.pdf", as(pdf) name("overtime_rule") replace
-file
-    /path/to/<user>/Dropbox/AI/PNAS_NEXUS/replica
-    > tion_package/output/figure/Overtime_rule_panel.p
-    > df saved as PDF format
+file <REPLICATION_ROOT>/output/figure/Overtime_rule_panel.pdf saved as PDF format
 
 . 
 . capture log close

@@ -18,7 +18,6 @@ log using "$replication_log/fig4_case_study.log", replace text
 * Panel A: National Day case study (handling capacity)
 *  source: RR1/Figure_case_study_nationalday.do
 *===================================================================
-* date: Apr, 2, 2026
 **# Figure: Impact of AI on company case handelling capacity
 	
 **## vacation
@@ -102,7 +101,6 @@ preserve
 		gen temp = y if n == 1 & year_create_time == 2023
 		egen normalizer = max(temp)
 	}
-	// sum N_total_calls if n == 1
 	replace y = y / normalizer
 
 		qui: sum y if year_create_time == 2024 & x_week == 0 & if_AI == 0
@@ -113,7 +111,6 @@ preserve
 		dis `boost'
 		
 		
-	// set scheme white_jet
 	set scheme white_ptol
 
 	twoway || ///
@@ -126,7 +123,7 @@ preserve
 		scatteri 0.29 0.3 0.29 0.18 , recast(line) lw(medthin)  mc(none) lc(black) lp(solid) ||  ///
 		, legend(on order(1 "Only Human, 2023 Sept. + Holiday Week" 2 "Only Human, 2024 Sept." 4 "Human + AI, 2024 Holiday Week" 3 "Only Human, 2024 Holiday Week"  ) ring(0) pos(7) rows(4)) xlabel( -4  "T-4 Week" -3 "T-3 Week" -2 "T-2 Week" -1 "T-1 Week" 0 `" "Holiday Week"  "{bf: (AI Treatment)}" "' 1.5 " " , nogrid) ///
 	   xtitle("")   ytitle( " Number of Calls Finished (normalized)" ) /// 
-		ylabel(0(0.5)1.7, nogrid ) 	 text(0.78 0.7 "{bf: AI boost:}" )  text(0.72 1.0 "# of calls: 338%") graphregion(margin(zero))	 
+		ylabel(0(0.5)1.7, nogrid ) 	 text(0.78 0.7 "{bf: AI boost:}" )  text(0.72 1.0 "# of calls: `boost'%") graphregion(margin(zero))
 		
 		graph export "$figure_overleaf/case_study_nationalday_R1.png", as(png) name("Graph") replace
 		graph export "$figure_overleaf/case_study_nationalday_R1.pdf", as(pdf) name("Graph") replace
@@ -137,7 +134,6 @@ restore
 * Panel B: Decline in connection / success rate by follow-up delay
 *  source: RR1/Figure_rate_time_gap_relationsip.do
 *===================================================================
-* date: Apr, 2, 2026
 **#Figure: Relationship between call gap and Success Rate
 
 	use "$temp/full_data_no_collapse" , clear  
@@ -145,10 +141,6 @@ restore
 	replace if_connected = if_connected * 100
 	replace if_succeed = if_succeed * 100
 		
-// drop if hour_create_time >= 20
-	
-// 	merge m:1 date_create_time using "$temp/vacation_date_create_time" , keep(1 3) nogen
-// 	collapse (mean) gap_create_first_call_mean = gap_create_first_call (median) gap_create_first_call_median = gap_create_first_call , by(date_create_time vacation_create_time)
 	
 	gen if_call_w_1_day  = gap_create_first_call < 3600 * 24
 	gen if_call_w_30_min  = gap_create_first_call < 3600 * 1/2	
@@ -186,25 +178,10 @@ restore
 		replace A1 = A1 
 		save "$temp/temp_A" , replace
 	restore
-//		
-// 	reghdfe if_connected if_call_w_10_min  , a(date_create_time)
-// 	reghdfe if_connected if_call_w_30_min  , a(date_create_time)
-// 	reghdfe if_connected if_call_w_1_hour  , a(date_create_time)
-// 	reghdfe if_connected if_call_w_6_hour  , a(date_create_time)
-// 	reghdfe if_connected if_call_w_1_day  , a(date_create_time)
 
-// 	binscatter if_connected gap_create_first_call 
 preserve
 	
-// 	keep if bridge_duration_num != 0
-// 	keep if bridge_duration_num > 10 
 	
-// 	binscatter if_succeed gap_create_first_call if if_call_w_1_hour
-//	
-// 	reghdfe if_succeed if_call_w_10_min if if_connected, a(date_create_time)
-// 	reghdfe if_succeed if_call_w_1_hour if if_connected, a(date_create_time)
-// 	reghdfe if_succeed if_call_w_1_day if if_connected , a(date_create_time)
-
 	reghdfe if_succeed ib0.bin_gap_range  , a(crm_user_id date_create_time) vce(cl crm_user_id)
 	local base = _b[_cons]
 	
@@ -229,7 +206,6 @@ restore
 
 use "$temp/temp_A" , clear
 merge 1:1 bin using "$temp/temp_B", nogen
-// replace B3 = 0 if B3 > 0
 
 foreach var in A2 A3 A4 B2 B3 B4{
 	replace `var' = `var' * 100

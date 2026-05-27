@@ -13,12 +13,10 @@ capture log close
 log using "$replication_log/figA3_coef_alter_FEs.log", replace text
 
 **# *Figure: Results with difference FEs and controls
-// use  "$temp/vacation_connected_callcontract_level"  , clear
 {
 
 use  "$temp/vacation_connected_call_level"  , clear
 replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
-// keep if month_create_time > 5 
 
 cap gen gender_customer_num = ( gender_customer == "Female" )
 replace province_capital = 1 if missing(province_capital)
@@ -36,7 +34,6 @@ if "`y'" == "if_succeed"{
 }
 if "`y'" == "payment_amt_num"{
 	
-// 	global ytitle = "Payment Amount (CNY)"
 	local ytitle = "Chinese Yuan (CNY)"
 
 }

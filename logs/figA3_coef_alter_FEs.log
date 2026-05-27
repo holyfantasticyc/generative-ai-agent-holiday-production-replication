@@ -1,24 +1,22 @@
---------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA3_coef_alter_FEs.log
   log type:  text
- opened on:   9 May 2026, 09:09:58
+ opened on:  26 May 2026, 18:40:01
 
 . 
 . **# *Figure: Results with difference FEs and controls
-. // use  "$temp/vacation_connected_callcontract_level"  , clear
 . {
 . 
 . use  "$temp/vacation_connected_call_level"  , clear
 . replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
 (0 real changes made)
-. // keep if month_create_time > 5 
 . 
 . cap gen gender_customer_num = ( gender_customer == "Female" )
 . replace province_capital = 1 if missing(province_capital)
-(2,405 real changes made)
+(1,352 real changes made)
 . replace payment_amt_num = 0 if if_succeed == 0
-(71,571 real changes made)
+(41,282 real changes made)
 . 
 . foreach y in  if_succeed payment_amt_num if_refund bridge_duration_num {
   2. dis   "`y'"
@@ -32,7 +30,6 @@
 . }
   8. if "`y'" == "payment_amt_num"{
   9.         
-. //      global ytitle = "Payment Amount (CNY)"
 .         local ytitle = "Chinese Yuan (CNY)"
  10. 
 . }
@@ -185,108 +182,108 @@ delimiter now cr
 . restore 
  88. }       
 if_succeed
-(2,458 real changes made)
+(1,255 real changes made)
 (MWFE estimator converged in 1 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =     74,029
-Absorbing 1 HDFE group                            F(   1,    533)                                                       =      46.51
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0000
-                                                  R-squared                                                             =     0.0017
-                                                  Adj R-squared                                                         =     0.0017
-                                                  Within R-sq.                                                          =     0.0017
-Number of clusters (crm_user_id) =        534     Root MSE                                                              =    17.9019
+HDFE Linear regression                            Number of obs   =     42,537
+Absorbing 1 HDFE group                            F(   1,    262) =      27.79
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.0022
+                                                  Adj R-squared   =     0.0022
+                                                  Within R-sq.    =     0.0022
+Number of clusters (crm_user_id) =        263     Root MSE        =    16.9033
 
-                          (Std. err. adjusted for 534 clusters in crm_user_id)
+                          (Std. err. adjusted for 263 clusters in crm_user_id)
 ------------------------------------------------------------------------------
              |               Robust
-  if_succeed | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
+  if_succeed | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-       if_AI |  -1.777683   .2606537    -6.82   0.000    -2.289717                                                         -1.265648
-       _cons |   3.708376   .2606537    14.23   0.000     3.196341                                                           4.22041
-------------------------------------------------------------------------------
-(MWFE estimator converged in 1 iterations)
-
-HDFE Linear regression                            Number of obs                                                         =     74,029
-Absorbing 1 HDFE group                            F(   3,    533)                                                       =      15.80
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0000
-                                                  R-squared                                                             =     0.0018
-                                                  Adj R-squared                                                         =     0.0018
-                                                  Within R-sq.                                                          =     0.0018
-Number of clusters (crm_user_id) =        534     Root MSE                                                              =    17.9007
-
-                          (Std. err. adjusted for 534 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-  if_succeed | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
--------------+----------------------------------------------------------------
-       if_AI |   -1.77875    .260856    -6.82   0.000    -2.291182                                                         -1.266318
-province_c~l |   .1139077    .120582     0.94   0.345    -.1229666                                                          .3507819
-gender_cus~m |  -.4325448   .1347335    -3.21   0.001    -.6972187                                                         -.1678709
-       _cons |   3.910297   .3019312    12.95   0.000     3.317176                                                          4.503418
+       if_AI |  -1.648689   .3127364    -5.27   0.000    -2.264485   -1.032892
+       _cons |   3.540439   .3127364    11.32   0.000     2.924642    4.156235
 ------------------------------------------------------------------------------
 (MWFE estimator converged in 1 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =     74,029
-Absorbing 1 HDFE group                            F(   3,    533)                                                       =       5.81
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0007
-                                                  R-squared                                                             =     0.0034
-                                                  Adj R-squared                                                         =     0.0030
-                                                  Within R-sq.                                                          =     0.0006
-Number of clusters (crm_user_id) =        534     Root MSE                                                              =    17.8897
+HDFE Linear regression                            Number of obs   =     42,537
+Absorbing 1 HDFE group                            F(   3,    262) =      11.96
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.0025
+                                                  Adj R-squared   =     0.0024
+                                                  Within R-sq.    =     0.0025
+Number of clusters (crm_user_id) =        263     Root MSE        =    16.9012
 
-                          (Std. err. adjusted for 534 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-  if_succeed | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
--------------+----------------------------------------------------------------
-       if_AI |  -1.202888   .3202454    -3.76   0.000    -1.831986                                                         -.5737905
-province_c~l |   .1190244    .121338     0.98   0.327    -.1193349                                                          .3573838
-gender_cus~m |  -.4331753    .136736    -3.17   0.002    -.7017828                                                         -.1645677
-       _cons |   3.783733   .3067575    12.33   0.000     3.181131                                                          4.386335
-------------------------------------------------------------------------------
+                                 (Std. err. adjusted for 263 clusters in crm_user_id)
+-------------------------------------------------------------------------------------
+                    |               Robust
+         if_succeed | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------+----------------------------------------------------------------
+              if_AI |  -1.647065   .3131025    -5.26   0.000    -2.263582   -1.030547
+   province_capital |   .3972261   .1859932     2.14   0.034     .0309944    .7634578
+gender_customer_num |  -.4608764   .1575565    -2.93   0.004    -.7711146   -.1506381
+              _cons |   3.694131   .3557259    10.38   0.000     2.993685    4.394576
+-------------------------------------------------------------------------------------
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =     42,537
+Absorbing 1 HDFE group                            F(   3,    262) =       6.07
+Statistics robust to heteroskedasticity           Prob > F        =     0.0005
+                                                  R-squared       =     0.0035
+                                                  Adj R-squared   =     0.0030
+                                                  Within R-sq.    =     0.0011
+Number of clusters (crm_user_id) =        263     Root MSE        =    16.8961
+
+                                 (Std. err. adjusted for 263 clusters in crm_user_id)
+-------------------------------------------------------------------------------------
+                    |               Robust
+         if_succeed | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------+----------------------------------------------------------------
+              if_AI |  -1.233015    .337023    -3.66   0.000    -1.896634   -.5693967
+   province_capital |   .3943684   .1860287     2.12   0.035     .0280667    .7606701
+gender_customer_num |   -.469071   .1561154    -3.00   0.003    -.7764716   -.1616704
+              _cons |    3.55094   .3579485     9.92   0.000     2.846118    4.255761
+-------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
+ date_create_time |        21           0          21     |
 ----------------------------------------------------------+
 (MWFE estimator converged in 5 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =     74,029
-Absorbing 2 HDFE groups                           F(   3,    533)                                                       =       6.55
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0002
-                                                  R-squared                                                             =     0.0039
-                                                  Adj R-squared                                                         =     0.0034
-                                                  Within R-sq.                                                          =     0.0005
-Number of clusters (crm_user_id) =        534     Root MSE                                                              =    17.8867
+HDFE Linear regression                            Number of obs   =     42,537
+Absorbing 2 HDFE groups                           F(   3,    262) =       7.38
+Statistics robust to heteroskedasticity           Prob > F        =     0.0001
+                                                  R-squared       =     0.0038
+                                                  Adj R-squared   =     0.0030
+                                                  Within R-sq.    =     0.0009
+Number of clusters (crm_user_id) =        263     Root MSE        =    16.8961
 
-                          (Std. err. adjusted for 534 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-  if_succeed | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
--------------+----------------------------------------------------------------
-       if_AI |  -1.216366   .3057333    -3.98   0.000    -1.816956                                                         -.6157755
-province_c~l |   .1219745   .1213149     1.01   0.315    -.1163395                                                          .3602885
-gender_cus~m |  -.4176518   .1345189    -3.10   0.002     -.681904                                                         -.1533997
-       _cons |   3.777799     .29882    12.64   0.000     3.190789                                                          4.364808
-------------------------------------------------------------------------------
+                                 (Std. err. adjusted for 263 clusters in crm_user_id)
+-------------------------------------------------------------------------------------
+                    |               Robust
+         if_succeed | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------+----------------------------------------------------------------
+              if_AI |  -1.230473   .3279628    -3.75   0.000    -1.876252   -.5846951
+   province_capital |   .3975954   .1873129     2.12   0.035     .0287652    .7664257
+gender_customer_num |  -.4645601   .1583266    -2.93   0.004    -.7763146   -.1528056
+              _cons |   3.546903   .3521026    10.07   0.000     2.853592    4.240214
+-------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
- hour_create_time |        12           1          11                                                           |
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
 ----------------------------------------------------------+
 
 A[5,3]
             c1          c2          c3
 r1           1           .           .
-r2           2  -1.7776827   .26065374
-r3           3  -1.7787501     .260856
-r4           4  -1.2028885   .32024539
-r5           5  -1.2163656   .30573335
+r2           2  -1.6486888   .31273637
+r3           3  -1.6470646   .31310251
+r4           4  -1.2330151     .337023
+r5           5  -1.2304735   .32796284
 number of observations will be reset to 5
 Press any key to continue, or Break to abort
 Number of observations (_N) was 0, now 5.
@@ -302,105 +299,105 @@ file f_if_succeed.gph saved
 payment_amt_num
 (MWFE estimator converged in 1 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =     74,029
-Absorbing 1 HDFE group                            F(   1,    533)                                                       =      83.85
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0000
-                                                  R-squared                                                             =     0.0019
-                                                  Adj R-squared                                                         =     0.0019
-                                                  Within R-sq.                                                          =     0.0019
-Number of clusters (crm_user_id) =        534     Root MSE                                                              =    32.3934
+HDFE Linear regression                            Number of obs   =     42,537
+Absorbing 1 HDFE group                            F(   1,    262) =      44.11
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.0022
+                                                  Adj R-squared   =     0.0021
+                                                  Within R-sq.    =     0.0022
+Number of clusters (crm_user_id) =        263     Root MSE        =    21.8250
 
-                          (Std. err. adjusted for 534 clusters in crm_user_id)
+                          (Std. err. adjusted for 263 clusters in crm_user_id)
 ------------------------------------------------------------------------------
              |               Robust
-payment_am~m | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
+payment_am~m | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-       if_AI |   -3.40524   .3718635    -9.16   0.000    -4.135737                                                         -2.674742
-       _cons |   4.794142   .3718635    12.89   0.000     4.063644                                                           5.52464
+       if_AI |  -2.121446   .3194157    -6.64   0.000    -2.750394   -1.492497
+       _cons |    3.47278   .3194157    10.87   0.000     2.843831    4.101728
 ------------------------------------------------------------------------------
 (MWFE estimator converged in 1 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =     74,029
-Absorbing 1 HDFE group                            F(   3,    533)                                                       =      29.88
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0000
-                                                  R-squared                                                             =     0.0020
-                                                  Adj R-squared                                                         =     0.0020
-                                                  Within R-sq.                                                          =     0.0020
-Number of clusters (crm_user_id) =        534     Root MSE                                                              =    32.3914
+HDFE Linear regression                            Number of obs   =     42,537
+Absorbing 1 HDFE group                            F(   3,    262) =      15.71
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.0023
+                                                  Adj R-squared   =     0.0023
+                                                  Within R-sq.    =     0.0023
+Number of clusters (crm_user_id) =        263     Root MSE        =    21.8237
 
-                          (Std. err. adjusted for 534 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-payment_am~m | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
--------------+----------------------------------------------------------------
-       if_AI |  -3.412375   .3718641    -9.18   0.000    -4.142874                                                         -2.681876
-province_c~l |  -.3527301   .2620841    -1.35   0.179    -.8675747                                                          .1621145
-gender_cus~m |  -.7471567   .2201854    -3.39   0.001    -1.179694                                                          -.314619
-       _cons |   5.271926   .4265541    12.36   0.000     4.433992                                                          6.109859
-------------------------------------------------------------------------------
+                                 (Std. err. adjusted for 263 clusters in crm_user_id)
+-------------------------------------------------------------------------------------
+                    |               Robust
+    payment_amt_num | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------+----------------------------------------------------------------
+              if_AI |  -2.121464   .3194066    -6.64   0.000    -2.750395   -1.492534
+   province_capital |   .2729107   .2770934     0.98   0.326    -.2727028    .8185241
+gender_customer_num |  -.5000664   .1884838    -2.65   0.008    -.8712022   -.1289305
+              _cons |   3.676099   .3536958    10.39   0.000     2.979651    4.372547
+-------------------------------------------------------------------------------------
 (MWFE estimator converged in 1 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =     74,029
-Absorbing 1 HDFE group                            F(   3,    533)                                                       =      12.56
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0000
-                                                  R-squared                                                             =     0.0053
-                                                  Adj R-squared                                                         =     0.0049
-                                                  Within R-sq.                                                          =     0.0003
-Number of clusters (crm_user_id) =        534     Root MSE                                                              =    32.3438
+HDFE Linear regression                            Number of obs   =     42,537
+Absorbing 1 HDFE group                            F(   3,    262) =      11.29
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.0043
+                                                  Adj R-squared   =     0.0038
+                                                  Within R-sq.    =     0.0008
+Number of clusters (crm_user_id) =        263     Root MSE        =    21.8069
 
-                          (Std. err. adjusted for 534 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-payment_am~m | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
--------------+----------------------------------------------------------------
-       if_AI |  -1.463364   .2693619    -5.43   0.000    -1.992506                                                         -.9342234
-province_c~l |  -.3104098   .2626678    -1.18   0.238    -.8264009                                                          .2055814
-gender_cus~m |  -.7445224   .2212615    -3.36   0.001    -1.179174                                                         -.3098708
-       _cons |   4.835235   .3928905    12.31   0.000     4.063431                                                          5.607039
-------------------------------------------------------------------------------
+                                 (Std. err. adjusted for 263 clusters in crm_user_id)
+-------------------------------------------------------------------------------------
+                    |               Robust
+    payment_amt_num | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------+----------------------------------------------------------------
+              if_AI |  -1.415916      .2757    -5.14   0.000    -1.958785    -.873046
+   province_capital |   .3200416   .2901279     1.10   0.271    -.2512375    .8913208
+gender_customer_num |  -.5401857   .1877547    -2.88   0.004    -.9098859   -.1704855
+              _cons |    3.43416   .3365338    10.20   0.000     2.771505    4.096816
+-------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
+ date_create_time |        21           0          21     |
 ----------------------------------------------------------+
 (MWFE estimator converged in 5 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =     74,029
-Absorbing 2 HDFE groups                           F(   3,    533)                                                       =      10.70
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0000
-                                                  R-squared                                                             =     0.0056
-                                                  Adj R-squared                                                         =     0.0051
-                                                  Within R-sq.                                                          =     0.0003
-Number of clusters (crm_user_id) =        534     Root MSE                                                              =    32.3413
+HDFE Linear regression                            Number of obs   =     42,537
+Absorbing 2 HDFE groups                           F(   3,    262) =      10.53
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.0048
+                                                  Adj R-squared   =     0.0040
+                                                  Within R-sq.    =     0.0006
+Number of clusters (crm_user_id) =        263     Root MSE        =    21.8052
 
-                          (Std. err. adjusted for 534 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-payment_am~m | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
--------------+----------------------------------------------------------------
-       if_AI |  -1.357535   .3006947    -4.51   0.000    -1.948227                                                         -.7668429
-province_c~l |  -.3057422   .2625289    -1.16   0.245    -.8214605                                                           .209976
-gender_cus~m |  -.7278545   .2174347    -3.35   0.001    -1.154989                                                         -.3007203
-       _cons |   4.802254   .3801759    12.63   0.000     4.055427                                                          5.549081
-------------------------------------------------------------------------------
+                                 (Std. err. adjusted for 263 clusters in crm_user_id)
+-------------------------------------------------------------------------------------
+                    |               Robust
+    payment_amt_num | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------+----------------------------------------------------------------
+              if_AI |  -1.322575   .2968842    -4.45   0.000    -1.907158   -.7379925
+   province_capital |   .3211574   .2932803     1.10   0.274    -.2563291    .8986439
+gender_customer_num |  -.5451668   .1863455    -2.93   0.004    -.9120921   -.1782415
+              _cons |   3.403143   .3367796    10.10   0.000     2.740004    4.066282
+-------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
- hour_create_time |        12           1          11                                                           |
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
 ----------------------------------------------------------+
 
 A[5,3]
             c1          c2          c3
 r1           1           .           .
-r2           2  -3.4052397   .37186346
-r3           3  -3.4123752   .37186405
-r4           4  -1.4633645   .26936186
-r5           5  -1.3575349   .30069466
+r2           2   -2.121446   .31941566
+r3           3  -2.1214644   .31940656
+r4           4  -1.4159157   .27569998
+r5           5  -1.3225753    .2968842
 number of observations will be reset to 5
 Press any key to continue, or Break to abort
 Number of observations (_N) was 0, now 5.
@@ -414,108 +411,108 @@ Number of observations (_N) was 0, now 5.
 (file f_payment_amt_num.gph not found)
 file f_payment_amt_num.gph saved
 if_refund
-(462 real changes made)
+(221 real changes made)
 (MWFE estimator converged in 1 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =      2,458
-Absorbing 1 HDFE group                            F(   1,    286)                                                       =       0.08
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.7772
-                                                  R-squared                                                             =     0.0000
-                                                  Adj R-squared                                                         =    -0.0004
-                                                  Within R-sq.                                                          =     0.0000
-Number of clusters (crm_user_id) =        287     Root MSE                                                              =    39.0837
+HDFE Linear regression                            Number of obs   =      1,255
+Absorbing 1 HDFE group                            F(   1,    128) =       2.68
+Statistics robust to heteroskedasticity           Prob > F        =     0.1041
+                                                  R-squared       =     0.0005
+                                                  Adj R-squared   =    -0.0003
+                                                  Within R-sq.    =     0.0005
+Number of clusters (crm_user_id) =        129     Root MSE        =    38.1119
 
-                          (Std. err. adjusted for 287 clusters in crm_user_id)
+                          (Std. err. adjusted for 129 clusters in crm_user_id)
 ------------------------------------------------------------------------------
              |               Robust
-   if_refund | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
+   if_refund | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-       if_AI |  -.2359787   .8331287    -0.28   0.777     -1.87582                                                          1.403863
-       _cons |   18.82572   .8331287    22.60   0.000     17.18588                                                          20.46556
-------------------------------------------------------------------------------
-(MWFE estimator converged in 1 iterations)
-
-HDFE Linear regression                            Number of obs                                                         =      2,458
-Absorbing 1 HDFE group                            F(   3,    286)                                                       =       2.59
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0530
-                                                  R-squared                                                             =     0.0032
-                                                  Adj R-squared                                                         =     0.0020
-                                                  Within R-sq.                                                          =     0.0032
-Number of clusters (crm_user_id) =        287     Root MSE                                                              =    39.0365
-
-                          (Std. err. adjusted for 287 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-   if_refund | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
--------------+----------------------------------------------------------------
-       if_AI |  -.1780192   .8307231    -0.21   0.830    -1.813126                                                          1.457088
-province_c~l |   .1452636   1.968151     0.07   0.941    -3.728635                                                          4.019162
-gender_cus~m |   4.446064   1.609714     2.76   0.006     1.277674                                                          7.614453
-       _cons |   16.58199   1.193721    13.89   0.000      14.2324                                                          18.93159
+       if_AI |   1.930728   1.179314     1.64   0.104    -.4027456    4.264201
+       _cons |   17.16649   1.179314    14.56   0.000     14.83302    19.49997
 ------------------------------------------------------------------------------
 (MWFE estimator converged in 1 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =      2,458
-Absorbing 1 HDFE group                            F(   3,    286)                                                       =       5.22
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0016
-                                                  R-squared                                                             =     0.0201
-                                                  Adj R-squared                                                         =     0.0080
-                                                  Within R-sq.                                                          =     0.0037
-Number of clusters (crm_user_id) =        287     Root MSE                                                              =    38.9193
+HDFE Linear regression                            Number of obs   =      1,255
+Absorbing 1 HDFE group                            F(   3,    128) =       3.15
+Statistics robust to heteroskedasticity           Prob > F        =     0.0273
+                                                  R-squared       =     0.0054
+                                                  Adj R-squared   =     0.0030
+                                                  Within R-sq.    =     0.0054
+Number of clusters (crm_user_id) =        129     Root MSE        =    38.0475
 
-                          (Std. err. adjusted for 287 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-   if_refund | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
--------------+----------------------------------------------------------------
-       if_AI |   3.627181   1.606666     2.26   0.025      .464791                                                          6.789572
-province_c~l |   .8892792   2.002028     0.44   0.657      -3.0513                                                          4.829858
-gender_cus~m |   4.299065     1.6232     2.65   0.009     1.104131                                                          7.493998
-       _cons |   15.99228   1.177176    13.59   0.000     13.67525                                                           18.3093
-------------------------------------------------------------------------------
+                                 (Std. err. adjusted for 129 clusters in crm_user_id)
+-------------------------------------------------------------------------------------
+                    |               Robust
+          if_refund | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------+----------------------------------------------------------------
+              if_AI |   1.906442   1.188619     1.60   0.111    -.4454437    4.258327
+   province_capital |  -1.169874   2.378215    -0.49   0.624    -5.875578    3.535831
+gender_customer_num |   5.179257   1.936824     2.67   0.008     1.346919    9.011596
+              _cons |   14.92726    1.70416     8.76   0.000     11.55529    18.29923
+-------------------------------------------------------------------------------------
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =      1,255
+Absorbing 1 HDFE group                            F(   3,    128) =       7.11
+Statistics robust to heteroskedasticity           Prob > F        =     0.0002
+                                                  R-squared       =     0.0329
+                                                  Adj R-squared   =     0.0148
+                                                  Within R-sq.    =     0.0063
+Number of clusters (crm_user_id) =        129     Root MSE        =    37.8217
+
+                                 (Std. err. adjusted for 129 clusters in crm_user_id)
+-------------------------------------------------------------------------------------
+                    |               Robust
+          if_refund | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------+----------------------------------------------------------------
+              if_AI |   4.734069    1.66974     2.84   0.005     1.430204    8.037934
+   province_capital |  -.4423497   2.546809    -0.17   0.862    -5.481646    4.596947
+gender_customer_num |   4.861398   1.917804     2.53   0.012     1.066696    8.656101
+              _cons |   14.24946    1.59694     8.92   0.000     11.08964    17.40928
+-------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
+ date_create_time |        21           0          21     |
 ----------------------------------------------------------+
 (MWFE estimator converged in 6 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =      2,458
-Absorbing 2 HDFE groups                           F(   3,    286)                                                       =       4.82
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0027
-                                                  R-squared                                                             =     0.0302
-                                                  Adj R-squared                                                         =     0.0138
-                                                  Within R-sq.                                                          =     0.0038
-Number of clusters (crm_user_id) =        287     Root MSE                                                              =    38.8057
+HDFE Linear regression                            Number of obs   =      1,255
+Absorbing 2 HDFE groups                           F(   3,    128) =       7.48
+Statistics robust to heteroskedasticity           Prob > F        =     0.0001
+                                                  R-squared       =     0.0451
+                                                  Adj R-squared   =     0.0185
+                                                  Within R-sq.    =     0.0064
+Number of clusters (crm_user_id) =        129     Root MSE        =    37.7508
 
-                          (Std. err. adjusted for 287 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-   if_refund | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
--------------+----------------------------------------------------------------
-       if_AI |   4.910977   1.987653     2.47   0.014     .9986918                                                          8.823262
-province_c~l |   .8699147   1.919063     0.45   0.651    -2.907363                                                          4.647193
-gender_cus~m |   4.249986   1.637178     2.60   0.010     1.027539                                                          7.472433
-       _cons |   15.85829   1.183168    13.40   0.000     13.52947                                                          18.18711
-------------------------------------------------------------------------------
+                                 (Std. err. adjusted for 129 clusters in crm_user_id)
+-------------------------------------------------------------------------------------
+                    |               Robust
+          if_refund | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------+----------------------------------------------------------------
+              if_AI |   6.614296   2.010245     3.29   0.001     2.636682    10.59191
+   province_capital |   -.357488   2.457852    -0.15   0.885    -5.220768    4.505792
+gender_customer_num |   4.492731   2.059944     2.18   0.031     .4167796    8.568682
+              _cons |   13.97737   1.627223     8.59   0.000     10.75763    17.19711
+-------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
- hour_create_time |        12           1          11                                                           |
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
 ----------------------------------------------------------+
 
 A[5,3]
-            c1          c2          c3
-r1           1           .           .
-r2           2  -.23597868   .83312872
-r3           3  -.17801915   .83072312
-r4           4   3.6271814   1.6066663
-r5           5   4.9109768   1.9876535
+           c1         c2         c3
+r1          1          .          .
+r2          2  1.9307279  1.1793136
+r3          3  1.9064417  1.1886189
+r4          4  4.7340688  1.6697397
+r5          5  6.6142957  2.0102451
 number of observations will be reset to 5
 Press any key to continue, or Break to abort
 Number of observations (_N) was 0, now 5.
@@ -529,108 +526,108 @@ Number of observations (_N) was 0, now 5.
 (file f_if_refund.gph not found)
 file f_if_refund.gph saved
 bridge_duration_num
-(71,571 observations deleted)
+(41,282 observations deleted)
 (MWFE estimator converged in 1 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =      2,458
-Absorbing 1 HDFE group                            F(   1,    286)                                                       =     401.97
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0000
-                                                  R-squared                                                             =     0.0579
-                                                  Adj R-squared                                                         =     0.0575
-                                                  Within R-sq.                                                          =     0.0579
-Number of clusters (crm_user_id) =        287     Root MSE                                                              =   719.0501
+HDFE Linear regression                            Number of obs   =      1,255
+Absorbing 1 HDFE group                            F(   1,    128) =     200.64
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.0901
+                                                  Adj R-squared   =     0.0894
+                                                  Within R-sq.    =     0.0901
+Number of clusters (crm_user_id) =        129     Root MSE        =   663.5531
 
-                          (Std. err. adjusted for 287 clusters in crm_user_id)
+                          (Std. err. adjusted for 129 clusters in crm_user_id)
 ------------------------------------------------------------------------------
              |               Robust
-bridge_dur~m | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
+bridge_dur~m | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-       if_AI |  -535.2076   26.69478   -20.05   0.000    -587.7507                                                         -482.6644
-       _cons |   777.6659   26.69478    29.13   0.000     725.1227                                                           830.209
-------------------------------------------------------------------------------
-(MWFE estimator converged in 1 iterations)
-
-HDFE Linear regression                            Number of obs                                                         =      2,458
-Absorbing 1 HDFE group                            F(   3,    286)                                                       =     159.65
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0000
-                                                  R-squared                                                             =     0.0581
-                                                  Adj R-squared                                                         =     0.0570
-                                                  Within R-sq.                                                          =     0.0581
-Number of clusters (crm_user_id) =        287     Root MSE                                                              =   719.2478
-
-                          (Std. err. adjusted for 287 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-bridge_dur~m | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
--------------+----------------------------------------------------------------
-       if_AI |  -534.9911    26.6344   -20.09   0.000    -587.4154                                                         -482.5668
-province_c~l |   -7.57129   36.59164    -0.21   0.836    -79.59436                                                          64.45178
-gender_cus~m |   21.90164   28.75192     0.76   0.447    -34.69058                                                          78.49386
-       _cons |   768.6211   28.78636    26.70   0.000     711.9611                                                          825.2811
+       if_AI |  -496.1835   35.02909   -14.16   0.000    -565.4946   -426.8725
+       _cons |   731.4023   35.02909    20.88   0.000     662.0912    800.7133
 ------------------------------------------------------------------------------
 (MWFE estimator converged in 1 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =      2,458
-Absorbing 1 HDFE group                            F(   3,    286)                                                       =      61.40
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0000
-                                                  R-squared                                                             =     0.0728
-                                                  Adj R-squared                                                         =     0.0613
-                                                  Within R-sq.                                                          =     0.0319
-Number of clusters (crm_user_id) =        287     Root MSE                                                              =   717.5914
+HDFE Linear regression                            Number of obs   =      1,255
+Absorbing 1 HDFE group                            F(   3,    128) =      74.42
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.0902
+                                                  Adj R-squared   =     0.0881
+                                                  Within R-sq.    =     0.0902
+Number of clusters (crm_user_id) =        129     Root MSE        =   664.0352
 
-                          (Std. err. adjusted for 287 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-bridge_dur~m | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
--------------+----------------------------------------------------------------
-       if_AI |  -465.7234   36.35017   -12.81   0.000    -537.2712                                                         -394.1756
-province_c~l |   9.759165    38.2348     0.26   0.799    -65.49813                                                          85.01646
-gender_cus~m |   22.47819   29.10585     0.77   0.441    -34.81066                                                          79.76704
-       _cons |   755.3623   28.88563    26.15   0.000     698.5069                                                          812.2177
-------------------------------------------------------------------------------
+                                 (Std. err. adjusted for 129 clusters in crm_user_id)
+-------------------------------------------------------------------------------------
+                    |               Robust
+bridge_duration_num | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------+----------------------------------------------------------------
+              if_AI |  -496.4094   35.01849   -14.18   0.000    -565.6995   -427.1194
+   province_capital |  -8.853594   38.75215    -0.23   0.820    -85.53135    67.82416
+gender_customer_num |   13.30614   40.43742     0.33   0.743    -66.70619    93.31848
+              _cons |   727.1734   45.78177    15.88   0.000     636.5863    817.7605
+-------------------------------------------------------------------------------------
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =      1,255
+Absorbing 1 HDFE group                            F(   3,    128) =      54.35
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.1127
+                                                  Adj R-squared   =     0.0962
+                                                  Within R-sq.    =     0.0636
+Number of clusters (crm_user_id) =        129     Root MSE        =   661.0736
+
+                                 (Std. err. adjusted for 129 clusters in crm_user_id)
+-------------------------------------------------------------------------------------
+                    |               Robust
+bridge_duration_num | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------+----------------------------------------------------------------
+              if_AI |  -468.2938    39.6848   -11.80   0.000    -546.8169   -389.7706
+   province_capital |   13.73253   43.01268     0.32   0.750     -71.3754    98.84047
+gender_customer_num |   13.65959   42.10218     0.32   0.746    -69.64677    96.96596
+              _cons |   714.8069   45.27407    15.79   0.000     625.2244    804.3893
+-------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
+ date_create_time |        21           0          21     |
 ----------------------------------------------------------+
 (MWFE estimator converged in 6 iterations)
 
-HDFE Linear regression                            Number of obs                                                         =      2,458
-Absorbing 2 HDFE groups                           F(   3,    286)                                                       =      37.19
-Statistics robust to heteroskedasticity           Prob > F                                                              =     0.0000
-                                                  R-squared                                                             =     0.0874
-                                                  Adj R-squared                                                         =     0.0720
-                                                  Within R-sq.                                                          =     0.0257
-Number of clusters (crm_user_id) =        287     Root MSE                                                              =   713.5157
+HDFE Linear regression                            Number of obs   =      1,255
+Absorbing 2 HDFE groups                           F(   3,    128) =      37.90
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.1255
+                                                  Adj R-squared   =     0.1011
+                                                  Within R-sq.    =     0.0477
+Number of clusters (crm_user_id) =        129     Root MSE        =   659.2540
 
-                          (Std. err. adjusted for 287 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-bridge_dur~m | Coefficient  std. err.      t    P>|t|     [95% con                                                      f. interval]
--------------+----------------------------------------------------------------
-       if_AI |  -500.8605   49.28939   -10.16   0.000    -597.8765                                                         -403.8445
-province_c~l |   10.94843   38.17176     0.29   0.774    -64.18478                                                          86.08165
-gender_cus~m |     23.486    30.4481     0.77   0.441    -36.44479                                                          83.41679
-       _cons |   759.0364    29.5335    25.70   0.000     700.9059                                                           817.167
-------------------------------------------------------------------------------
+                                 (Std. err. adjusted for 129 clusters in crm_user_id)
+-------------------------------------------------------------------------------------
+                    |               Robust
+bridge_duration_num | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------+----------------------------------------------------------------
+              if_AI |  -492.8251   51.28397    -9.61   0.000    -594.2992    -391.351
+   province_capital |   13.35418   43.52693     0.31   0.759    -72.77129    99.47965
+gender_customer_num |   19.85248   42.37402     0.47   0.640    -63.99176    103.6967
+              _cons |   717.4928   46.30165    15.50   0.000     625.8771    809.1086
+-------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs                                                       |
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- date_create_time |        28           0          28                                                           |
- hour_create_time |        12           1          11                                                           |
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
 ----------------------------------------------------------+
 
 A[5,3]
             c1          c2          c3
 r1           1           .           .
-r2           2  -535.20756   26.694775
-r3           3  -534.99113   26.634405
-r4           4  -465.72344   36.350172
-r5           5  -500.86048   49.289391
+r2           2  -496.18353   35.029086
+r3           3  -496.40944   35.018487
+r4           4  -468.29375   39.684799
+r5           5   -492.8251   51.283974
 number of observations will be reset to 5
 Press any key to continue, or Break to abort
 Number of observations (_N) was 0, now 5.
@@ -648,15 +645,9 @@ file f_bridge_duration_num.gph saved
 .          graph combine  f_if_succeed.gph f_payment_amt_num.gph ///                                        f_if_refund.gph f_bridge_duration_num.gph  ///                ,    rows(2)  imargin(0 0 0 0) ///                graphregion(margin(vsmall)) 
 .                 
 .         graph export "$figure_overleaf/Coef_w_alter_FEs.png", as(png) name("Graph") replace             
-file
-    /path/to/<user>/Dropbox/AI/PNAS_NEXUS/replica
-    > tion_package/output/figure/Coef_w_alter_FEs.png
-    saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Coef_w_alter_FEs.png saved as PNG format
 .         graph export "$figure_overleaf/Coef_w_alter_FEs.pdf", as(pdf) name("Graph") replace             
-file
-    /path/to/<user>/Dropbox/AI/PNAS_NEXUS/replica
-    > tion_package/output/figure/Coef_w_alter_FEs.pdf
-    saved as PDF format
+file <REPLICATION_ROOT>/output/figure/Coef_w_alter_FEs.pdf saved as PDF format
 .         
 .         
 . }

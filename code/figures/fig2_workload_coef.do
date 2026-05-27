@@ -17,18 +17,17 @@ log using "$replication_log/fig2_workload_coef.log", replace text
 *  source: analysis_data_vacation.do, section "Figure: Results: by workload"
 *===================================================================
 **# Figure: Results: by workload
-use  "$temp/vacation_connected_callcontract_level"  , clear
-keep if gap_creat_lastcallthrough < 3600 // get rid of follow up call the next day
+* Call-level data (one row per call): used so within-day task_order counts each
+* call exactly once, rather than once per contract sold.
+use  "$temp/vacation_connected_call_level"  , clear
+keep if gap_creat_lastcallthrough < 3600 // get rid of follow-up calls that begin the next day
 
 {
-// append using  "$temp/connected_call_level_2023"  
 replace if_succeed = if_succeed * 100
 sort crm_user_id date_create_time hour_create_time minute_create_time
 bys crm_user_id date_create_time: gen task_order = _n
 bys crm_user_id date_create_time  (task_order): egen cumulative_payment = sum(payment_amt_num)
 
-// binsreg if_succeed task_order , by(if_AI)  absorb(date_create_time hour_create_time)
-// reghdfe if_succeed task_order if !if_AI ,  absorb(date_create_time hour_create_time) 
 
 replace task_order = 0 if if_AI 
 
