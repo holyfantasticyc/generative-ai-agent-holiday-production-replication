@@ -16,7 +16,7 @@ log using "$replication_log/fig1_outcome_bars.log", replace text
 {
 
 **## Figure: Main Results: Succeed
-* Connect data, 电话(通)-合同 level
+* Connect data, call level
 use  "$temp/vacation_connected_call_level"  , clear
 cap gen gender_customer_num = ( gender_customer == "Female" )
 replace province_capital = 1 if missing(province_capital)
@@ -86,7 +86,7 @@ restore
 	
 
 **## Figure: Main Results: Amount
-* Connect data, 电话(通) level
+* Connect data, call level
 
 use  "$temp/vacation_connected_call_level"  , clear
 cap gen gender_customer_num = ( gender_customer == "Female" )
@@ -189,7 +189,7 @@ restore
 
 
 **## Figure: Main Results: Unconditional Amount
-* Connect data, 电话(通) level
+* Connect data, call level
 
 use  "$temp/vacation_connected_call_level"  , clear
 cap gen gender_customer_num = ( gender_customer == "Female" )
