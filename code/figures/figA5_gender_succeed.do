@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------
 if "${replication}" == "" {
-    global replication "<REPLICATION_ROOT>"
+    global replication "/Users/holyfantastic/Dropbox/AI/PNAS_NEXUS/replication_package"
 }
 run "$replication/code/00_declare_path.do"
 
@@ -141,11 +141,8 @@ twoway (bar mean `group_variable' if `group_variable' == 0 , barwidth(0.7) fcolo
 		 text(9 5 "{bf: Male Customer}") 
 		   
 		graph export "$figure_overleaf/Coef_by_gender_if_succeed.png", as(png) name("Graph") replace	
-		graph export "$figure_overleaf/Coef_by_gender_if_succeed.pdf", as(png) name("Graph") replace	
+		graph export "$figure_overleaf/Coef_by_gender_if_succeed.pdf", as(png) name("Graph") replace
 
-
-// 		, absorb(date_create_time hour_create_time ) cl(crm_user_id)
-					
 }
 
 capture log close

@@ -28,8 +28,6 @@ replace gap_creat_lastcallthrough = gap_creat_lastcallthrough / 1
 local i = 0
 foreach y in if_succeed  bridge_duration_num bridge_duration_num n_policy_succeed payment_amt_num payment_amt_per if_refund scale_premium_num ins_amt_num {
 
-// foreach y in if_succeed n_policy_succeed {
-
 dis   "`y'"
 	local i = `i' + 1
 

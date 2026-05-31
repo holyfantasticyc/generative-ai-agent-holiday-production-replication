@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------
 if "${replication}" == "" {
-    global replication "<REPLICATION_ROOT>"
+    global replication "/Users/holyfantastic/Dropbox/AI/PNAS_NEXUS/replication_package"
 }
 run "$replication/code/00_declare_path.do"
 
@@ -14,16 +14,13 @@ log using "$replication_log/table1_balance.log", replace text
 
 **# Table: balance test
 
-* Full data, including not connected
+* Full data, including not connected. The 21-day sample window
+* (drop Oct 27 partial-data day) is applied in the data layer; see
+* the apply_filter step described in the README.
 use "$temp/vacation_full_data_no_collapse" , clear
-keep if month_create_time > 5 
-drop if month_create_time == 10 & day_create_time == 27 // drop this because it might have less refund window compared with other dates. And it will also help to reduce the to sample size to < 10,000
 
 cap gen gender_customer_num = ( gender_customer == "Female" )
 
-
-// forvalue i = 9(1)20{ // call time is not balance
-// }
 gen if_hang_w_60 =  if_connected * (bridge_duration_num < 60)
 gen if_hang_w_30 =  if_connected * (bridge_duration_num < 30)
 gen if_hang_w_10 =  if_connected * (bridge_duration_num < 10)

@@ -7,7 +7,7 @@
 *   Panel B: rate_time_gap_relationsip_R1.pdf (delay-vs-success)
 *-------------------------------------------------------------------
 if "${replication}" == "" {
-    global replication "<REPLICATION_ROOT>"
+    global replication "/Users/holyfantastic/Dropbox/AI/PNAS_NEXUS/replication_package"
 }
 run "$replication/code/00_declare_path.do"
 
@@ -89,7 +89,7 @@ foreach var in N_total_calls N_succeed_calls tota_payment{
 * normalize
 preserve 
 	cap drop n y temp* normalizer
-	gen y = N_total_calls // N_total_calls N_succeed_calls tota_payment
+	gen y = N_total_calls
 	bys year_create_time : gen n = _n
 
 	global normalize_method = 2

@@ -90,10 +90,8 @@ if "`y'" == "ins_amt_num"{
 gen gender_group = . 
 replace gender_group = 1 if if_AI
 replace gender_group = 2 if !if_AI  & gender_customer == "Female" 
-replace gender_group = 3 if !if_AI  & gender_customer == "Male" 
+replace gender_group = 3 if !if_AI  & gender_customer == "Male"
 
-
-// 		, absorb(date_create_time hour_create_time ) cl(crm_user_id)
 
 reghdfe  `y'  i.if_AI##i.gender_customer_num   province_capital  gap_create_first_call ///
 		, absorb(date_create_time hour_create_time ) cl(crm_user_id)

@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------
 if "${replication}" == "" {
-    global replication "<REPLICATION_ROOT>"
+    global replication "/Users/holyfantastic/Dropbox/AI/PNAS_NEXUS/replication_package"
 }
 run "$replication/code/00_declare_path.do"
 
@@ -357,9 +357,6 @@ preserve
 		graph export "$figure_overleaf/Bar_plot2_if_refund_FE.pdf", as(pdf) name("Graph") replace		
 	   
 restore
-
-//  ///
-		   
 
 }
 

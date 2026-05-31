@@ -2,7 +2,7 @@
 * table2_revenue_decomposition_estimates.do  --  PNAS Nexus replication package
 *-------------------------------------------------------------------
 if "${replication}" == "" {
-    global replication "<REPLICATION_ROOT>"
+    global replication "/Users/holyfantastic/Dropbox/AI/PNAS_NEXUS/replication_package"
 }
 
 run "$replication/code/00_declare_path.do"
@@ -26,8 +26,6 @@ replace gap_creat_lastcallthrough = gap_creat_lastcallthrough / 1
 
 local i = 0
 foreach y in if_succeed  payment_amt_num  {
-
-// foreach y in if_succeed n_policy_succeed {
 
 dis   "`y'"
 	local i = `i' + 1

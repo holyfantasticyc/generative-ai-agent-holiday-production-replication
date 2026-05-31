@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------
 if "${replication}" == "" {
-    global replication "<REPLICATION_ROOT>"
+    global replication "/Users/holyfantastic/Dropbox/AI/PNAS_NEXUS/replication_package"
 }
 run "$replication/code/00_declare_path.do"
 
@@ -16,9 +16,9 @@ log using "$replication_log/tableA1_summary_statistics.log", replace text
 macro drop  variable_list1
 global variable_list1 if_connected if_AI if_call_w_1_min if_call_w_10_min if_call_w_1_hour province_capital gender_customer_num
 
+* The 21-day sample window (drop Oct 27 partial-data day) is applied
+* in the data layer; see the apply_filter step described in the README.
 use "$temp/vacation_full_data_no_collapse" , clear
-keep if month_create_time > 5 
-drop if month_create_time == 10 & day_create_time == 27 // drop this because it might have less refund window compared with other dates. And it will also help to reduce the to sample size to < 10,000
 cap gen gender_customer_num = ( gender_customer == "Female" )
 
 preserve
@@ -102,8 +102,7 @@ esttab e(E, fmt(2)) using "$table_overleaf/table_summary_statistics.tex", ///
     collabel("Obs" "Mean" "SD" "Min" "Max", lhs("Variables")) 
 
 file open myfile using "$table_overleaf/table_summary_statistics.tex", write append
-// file write myfile "\bottomrule" _n
-file close myfile	
+file close myfile
 
 
 capture log close

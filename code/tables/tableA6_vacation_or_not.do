@@ -2,7 +2,7 @@
 * tableA6_vacation_or_not.do  --  PNAS Nexus replication package
 *-------------------------------------------------------------------
 if "${replication}" == "" {
-    global replication "<REPLICATION_ROOT>"
+    global replication "/Users/holyfantastic/Dropbox/AI/PNAS_NEXUS/replication_package"
 }
 
 run "$replication/code/00_declare_path.do"
@@ -24,10 +24,8 @@ global treat_color "red%50"
 
 **# Connected Rate
 
-use "$temp/full_data_no_collapse" , clear  
+use "$temp/full_data_no_collapse" , clear
 merge m:1 date_create_time using "$temp/vacation_date_create_time" , keep(3) nogen
-
-// codebook crm_user_id
 
 bys crm_user_id : gen flag_n_calls = _N
 drop if gap_creat_lastcall > 3600
