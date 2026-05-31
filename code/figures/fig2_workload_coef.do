@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------
 if "${replication}" == "" {
-    global replication "<REPLICATION_ROOT>"
+    global replication "/Users/holyfantastic/Dropbox/AI/PNAS_NEXUS/replication_package"
 }
 run "$replication/code/00_declare_path.do"
 
@@ -20,7 +20,7 @@ log using "$replication_log/fig2_workload_coef.log", replace text
 * Call-level data (one row per call): used so within-day task_order counts each
 * call exactly once, rather than once per contract sold.
 use  "$temp/vacation_connected_call_level"  , clear
-keep if gap_creat_lastcallthrough < 3600 // get rid of follow-up calls that begin the next day
+keep if gap_creat_lastcallthrough < 3600 // restrict to follow-up within 1 hour
 
 {
 replace if_succeed = if_succeed * 100

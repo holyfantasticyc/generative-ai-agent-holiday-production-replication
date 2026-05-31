@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------
 if "${replication}" == "" {
-    global replication "<REPLICATION_ROOT>"
+    global replication "/Users/holyfantastic/Dropbox/AI/PNAS_NEXUS/replication_package"
 }
 run "$replication/code/00_declare_path.do"
 
@@ -17,9 +17,9 @@ log using "$replication_log/tableA4_robust_w_1h.log", replace text
 {
 
 use  "$temp/vacation_connected_call_level"  , clear
+keep if vacation == 1
+keep if gap_creat_lastcallthrough < 3600 // restrict to follow-up within 1 hour
 replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
-keep if vacation == 1 
-keep if gap_creat_lastcallthrough < 3600 // get rid of follow up call the next day
 
 cap gen gender_customer_num = ( gender_customer == "Female" )
 replace province_capital = 1 if missing(province_capital)

@@ -1,11 +1,11 @@
 *-------------------------------------------------------------------
 * figA4_workload_duration.do  --  PNAS Nexus replication package
 *
-* Generates Figure A.4 (Gap in Call Duration between Human and AI Representatives by Work Load). The plotting block was commented out in the working .do file; uncommented in this replication package.
+* Generates Figure A.4 (Gap in Call Duration between Human and AI Representatives by Work Load).
 *
 *-------------------------------------------------------------------
 if "${replication}" == "" {
-    global replication "<REPLICATION_ROOT>"
+    global replication "/Users/holyfantastic/Dropbox/AI/PNAS_NEXUS/replication_package"
 }
 run "$replication/code/00_declare_path.do"
 
@@ -16,7 +16,7 @@ log using "$replication_log/figA4_workload_duration.log", replace text
 * Call-level data: same dataset and task_order convention as Figure 2, so the
 * duration version (Figure A.4) lines up with the success-rate version.
 use  "$temp/vacation_connected_call_level"  , clear
-keep if gap_creat_lastcallthrough < 3600 // get rid of follow-up calls that begin the next day
+keep if gap_creat_lastcallthrough < 3600 // restrict to follow-up within 1 hour
 
 {
 replace if_succeed = if_succeed * 100
@@ -31,9 +31,6 @@ gen bin_task_order = recode(task_order,0,3,6,10,15,20,30,50,100) // 0 to 0; 1-3 
 
 *-------------------------------------------------------------------
 * Figure A.4: Coef_by_workload_duration
-*  (this block was commented out with /* ... */ in the working
-*   copy of analysis_data_vacation.do; it is restored here so the
-*   replication package reproduces Figure A.4.)
 *-------------------------------------------------------------------
 * Call duration as Y
 		

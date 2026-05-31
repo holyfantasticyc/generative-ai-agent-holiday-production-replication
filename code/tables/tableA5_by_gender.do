@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------
 if "${replication}" == "" {
-    global replication "<REPLICATION_ROOT>"
+    global replication "/Users/holyfantastic/Dropbox/AI/PNAS_NEXUS/replication_package"
 }
 run "$replication/code/00_declare_path.do"
 
@@ -18,15 +18,13 @@ log using "$replication_log/tableA5_by_gender.log", replace text
 local i = 0
 	
 use  "$temp/vacation_connected_call_level"  , clear
-replace province_capital = 1 if missing(province_capital)
+drop if gender_customer == "Unknown" |  gender_cno == "Unknown"
+keep if vacation == 1
 
-drop if gender_customer == "Unknown" |  gender_cno == "Unknown" 
+replace province_capital = 1 if missing(province_capital)
 gen gender_customer_num = (gender_customer == "Female")
 
 foreach y in if_succeed  bridge_duration_num bridge_duration_num n_policy_succeed payment_amt_num payment_amt_per if_refund scale_premium_num ins_amt_num {
-
-
-keep if vacation == 1 
 
 dis   "`y'"
 	local i = `i' + 1

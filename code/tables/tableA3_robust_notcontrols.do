@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------
 if "${replication}" == "" {
-    global replication "<REPLICATION_ROOT>"
+    global replication "/Users/holyfantastic/Dropbox/AI/PNAS_NEXUS/replication_package"
 }
 run "$replication/code/00_declare_path.do"
 
@@ -17,8 +17,8 @@ log using "$replication_log/tableA3_robust_notcontrols.log", replace text
 {
 
 use  "$temp/vacation_connected_call_level"  , clear
+keep if vacation == 1
 replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
-	keep if vacation == 1 
 
 cap gen gender_customer_num = ( gender_customer == "Female" )
 replace province_capital = 1 if missing(province_capital)
