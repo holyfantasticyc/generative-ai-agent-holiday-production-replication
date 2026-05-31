@@ -14,7 +14,6 @@ log using "$replication_log/fig2_workload_coef.log", replace text
 
 *===================================================================
 * Panel A: Coef_by_workload.pdf
-*  source: analysis_data_vacation.do, section "Figure: Results: by workload"
 *===================================================================
 **# Figure: Results: by workload
 * Call-level data (one row per call): used so within-day task_order counts each
@@ -83,7 +82,6 @@ reghdfe if_succeed ib0.bin_task_order  ///
 
 *===================================================================
 * Panel B: Overtime_rule_panel.pdf  (statutory overtime compensation)
-*  source: RR1/Figure_overtime_rule.do
 *===================================================================
 **# Figure: statutory overtime compensation under Chinese labor law
 clear

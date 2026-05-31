@@ -49,7 +49,6 @@ if "`y'" == "if_succeed"{
 	
 }
 
-	* first tease out fixed effects
 	cap drop `y'_res
 	reghdfe `y' province_capital  , absorb(date_create_time hour_create_time)  cl(crm_user_id) res(`y'_res)
 	local mean_control = _b[_cons]
@@ -69,7 +68,6 @@ reghdfe `y'_res  i.gender_combine province_capital   ///
 	local coef3 = round(r(estimate),0.001)
 		
 		
-	* figure
 	clear
 	set obs 6
 	

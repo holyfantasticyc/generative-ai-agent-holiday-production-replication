@@ -148,11 +148,9 @@ if "`y'" == "if_succeed"{
 	
 }
 
-	* regression coefficent 
 	reghdfe `y' if_AI , noa 
 	local coe = round(_b[if_AI],0.01)
 	
-	* figure
 	collapse (mean) mean= `y' (sem) sem= `y', by(`group_variable')
 	gen lower_bound = mean - 1.96 * sem
 	gen upper_bound = mean + 1.96 * sem
@@ -191,11 +189,9 @@ if "`y'" == "if_succeed"{
 	
 }
 
-	* regression coefficent 
 	reghdfe `y' if_AI , noa 
 	local coe = round(_b[if_AI],0.01)
 	
-	* figure
 	collapse (mean) mean= `y' (sem) sem= `y', by(`group_variable')
 	gen lower_bound = mean - 1.96 * sem
 	gen upper_bound = mean + 1.96 * sem
@@ -251,13 +247,11 @@ preserve
 
 keep if if_succeed
 
-	* first tease out fixed effects
 	cap drop `y'_res
 	reghdfe `y' province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id) res(`y'_res)
 
 	replace `y'_res = `y'_res + _b[_cons]
 	
-	* regression coefficent with fixed effects
 	reghdfe `y' if_AI province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id)
 	local coe = round(_b[if_AI],0.001)
 	local mean_treat = _b[if_AI] + _b[_cons]
@@ -266,7 +260,6 @@ keep if if_succeed
 	lincom if_AI + _cons
 	local se_treat = r(se)
 
-	* figure
 	clear
 	set obs 2
 	gen `group_variable' = 0 in 1

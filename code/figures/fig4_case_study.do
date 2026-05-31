@@ -16,7 +16,6 @@ log using "$replication_log/fig4_case_study.log", replace text
 
 *===================================================================
 * Panel A: National Day case study (handling capacity)
-*  source: RR1/Figure_case_study_nationalday.do
 *===================================================================
 **# Figure: Impact of AI on company case handelling capacity
 	
@@ -29,7 +28,6 @@ gen if_call_w_6_hour  = gap_create_first_call < 3600 * 6
 merge m:1 date_create_time using "$temp/vacation_date_create_time" , keep(3) nogen
 gen overtime = (hour_create_time >= 20)
 cap drop if overtime == 1
-*drop data that should not exists
 drop if if_AI == 1 & vacation_create_time == 0 & overtime == 0
 gen N = 1
 
@@ -132,7 +130,6 @@ restore
 
 *===================================================================
 * Panel B: Decline in connection / success rate by follow-up delay
-*  source: RR1/Figure_rate_time_gap_relationsip.do
 *===================================================================
 **#Figure: Relationship between call gap and Success Rate
 

@@ -39,13 +39,11 @@ if "`y'" == "if_succeed"{
 }
 
 	
-	* first tease out fixed effects
 	cap drop `y'_res
 	reghdfe `y' province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id) res(`y'_res)
 
 	replace `y'_res = `y'_res + _b[_cons]
 	
-	* regression coefficent with fixed effects
 	reghdfe `y' if_AI province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id)
 	local coe = round(_b[if_AI],0.001)
 	local mean_treat = _b[if_AI] + _b[_cons]
@@ -54,7 +52,6 @@ if "`y'" == "if_succeed"{
 	lincom if_AI + _cons
 	local se_treat = r(se)
 
-	* figure
 	clear
 	set obs 2
 	gen `group_variable' = 0 in 1
@@ -137,13 +134,11 @@ if "`var'" == "ins_amt_num"{
 preserve
 	keep if vacation == 1 
 	
-	* first tease out fixed effects
 	cap drop `y'_res
 	reghdfe `y' province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id) res(`y'_res)
 
 	replace `y'_res = `y'_res + _b[_cons]
 	
-	* regression coefficent with fixed effects
 	reghdfe `y' if_AI province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id)
 	local coe = round(_b[if_AI],0.001)
 	local mean_treat = _b[if_AI] + _b[_cons]
@@ -152,7 +147,6 @@ preserve
 	lincom if_AI + _cons
 	local se_treat = r(se)
 
-	* figure
 	clear
 	set obs 2
 	gen `group_variable' = 0 in 1
@@ -240,13 +234,11 @@ if "`var'" == "ins_amt_num"{
 preserve
 	keep if vacation == 1 
 	
-	* first tease out fixed effects
 	cap drop `y'_res
 	reghdfe `y' province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id) res(`y'_res)
 
 	replace `y'_res = `y'_res + _b[_cons]
 	
-	* regression coefficent with fixed effects
 	reghdfe `y' if_AI province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id)
 	local coe = round(_b[if_AI],0.001)
 	local mean_treat = _b[if_AI] + _b[_cons]
@@ -255,7 +247,6 @@ preserve
 	lincom if_AI + _cons
 	local se_treat = r(se)
 
-	* figure
 	clear
 	set obs 2
 	gen `group_variable' = 0 in 1
@@ -315,13 +306,11 @@ preserve
 	keep if if_succeed 
 	replace if_refund = if_refund * 100
 
-	* first tease out fixed effects
 	cap drop `y'_res
 	reghdfe `y' province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id) res(`y'_res)
 
 	replace `y'_res = `y'_res + _b[_cons]
 	
-	* regression coefficent with fixed effects
 	reghdfe `y' if_AI province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id)
 	local coe = round(_b[if_AI],0.001)
 	local mean_treat = _b[if_AI] + _b[_cons]
@@ -330,7 +319,6 @@ preserve
 	lincom if_AI + _cons
 	local se_treat = r(se)
 
-	* figure
 	clear
 	set obs 2
 	gen `group_variable' = 0 in 1

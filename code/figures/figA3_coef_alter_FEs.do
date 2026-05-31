@@ -69,7 +69,7 @@ if "`y'" == "if_refund"{
 	mat A[`k',3]=.
 	local k = `k' + 1
 	
-	*parsimounious
+	* Parsimonious
 	{
 
 	reghdfe `y' if_AI ///
