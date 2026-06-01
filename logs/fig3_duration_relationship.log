@@ -1,8 +1,8 @@
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig3_duration_relationship.log
   log type:  text
- opened on:  31 May 2026, 09:29:23
+ opened on:   1 Jun 2026, 09:18:17
 
 . 
 . **# Figure: Success Rate - time relationship
@@ -24,7 +24,7 @@
 . 
 . bys if_succeed: sum bridge_duration_num , de
 
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
 -> if_succeed = 0
 
                        bridge_duration
@@ -42,7 +42,7 @@
 95%          345           3276       Skewness       6.283063
 99%          823           3487       Kurtosis       65.75273
 
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
 -> if_succeed = 1
 
                        bridge_duration
@@ -319,13 +319,9 @@ file ttest.gph saved
 .  graph combine    ttest.gph relation.gph  hx.gph ///                ,    cols(1)      imargin(0 0 0 0) ///                graphregion(margin(medium))   xsize(4)  ysize(3) 
 .                 
 .         graph export "$figure_overleaf/relationship_duration_succeed.png", as(png) name("Graph") replace                
-file
-    <REPLICATION_ROOT>/output/figure/relationship_duration_su
-    > cceed.png saved as PNG format
+file <REPLICATION_ROOT>/output/figure/relationship_duration_succeed.png saved as PNG format
 .         graph export "$figure_overleaf/relationship_duration_succeed.pdf", as(pdf) name("Graph") replace                
-file
-    <REPLICATION_ROOT>/output/figure/relationship_duration_su
-    > cceed.pdf saved as PDF format
+file <REPLICATION_ROOT>/output/figure/relationship_duration_succeed.pdf saved as PDF format
 . 
 . 
 . }

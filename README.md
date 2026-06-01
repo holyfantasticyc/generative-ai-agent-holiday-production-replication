@@ -74,22 +74,19 @@ pip install pandas openpyxl pymupdf
 
 ### Step 2. Place the data
 
-The cleaned `.dta` files are not shipped in this package; see the [Data](#data) section for the access procedure (data are proprietary and require a data-use agreement with the firm). Once you have the files, place all eleven of them in a single folder, for example:
+The cleaned `.dta` files are not shipped in this package; see the [Data](#data) section for the access procedure (data are proprietary and require a data-use agreement with the firm). Once you have the files, place all six of them in a single folder, for example:
 
 ```
 /somewhere/on/your/machine/data/temp/
 ├── vacation_connected_call_level.dta
-├── vacation_connected_callcontract_level.dta
 ├── vacation_full_data_no_collapse.dta
 ├── vacation_date_create_time.dta
 ├── full_data_no_collapse.dta
 ├── full_data_no_collapse_w_AI.dta
-├── full_connected_call_level.dta
-├── temp.dta
-├── temp_A.dta
-├── temp_B.dta
-└── temp_history_productivity.dta
+└── full_connected_call_level.dta
 ```
+
+A handful of additional `.dta` files (`temp.dta`, `temp_A.dta`, `temp_B.dta`, `temp_history_productivity.dta`) will appear in the same folder as the pipeline runs; the scripts create them as intermediate outputs, so you do **not** need to provide them yourself.
 
 The folder names `data/` and `temp/` matter: the Stata code expects to find the `.dta` files at `$data/temp/`. Note the `temp` subfolder.
 
@@ -178,20 +175,28 @@ The phone-call records used in this study were collected by a Chinese online med
 
 The package starts from cleaned `.dta` files. The raw-to-clean step (parsing the firm's Excel exports into Stata format) is **not** part of this package — too many of the cleaning rules are tied to firm-specific conventions to be useful outside the firm.
 
-The eleven cleaned files are:
+#### Input files (six)
+
+These are the only files an outside replicator needs to obtain from the partner firm. The pipeline reads all of them; none of them is written to.
 
 | File | Approx. size | Unit of observation | Used by |
 |---|---|---|---|
-| `vacation_connected_call_level.dta` | 17 MB | One row per *connected* phone call during the holiday and weekend sample. Most regressions in the paper use this. | Tables A.2–A.5, Figure 1, Figures A.3, A.5–A.7, Table 2 estimates |
+| `vacation_connected_call_level.dta` | 17 MB | One row per *connected* phone call during the holiday and weekend sample. Most regressions in the paper use this. | Figure 1, Figure 2 Panel A, Figure 3, Figures A.3, A.5–A.7, Tables A.2–A.5, Table 2 estimates |
 | `vacation_full_data_no_collapse.dta` | 186 MB | One row per call attempt (including unconnected) during the holiday and weekend sample. Used wherever the connection rate or unconditional outcomes are needed. | Table 1, Table A.1 |
-| `vacation_connected_callcontract_level.dta` | 32 MB | One row per (connected call × contract) pair: a successful call can produce more than one insurance contract. Used for analyses that condition on contract-level outcomes. | Figure 2, Figure 3, Figure A.4 |
 | `vacation_date_create_time.dta` | 8 KB | One row per calendar date in the sample with a `vacation_create_time` flag (1 = holiday or weekend). | Table A.6, Figure 4 (joins) |
 | `full_data_no_collapse.dta` | 3.8 GB | Same as `vacation_full_data_no_collapse` but covering the full sample (not just holidays/weekends). | Figure 4 Panel B, Table A.6 |
-| `full_data_no_collapse_w_AI.dta` | 4.0 GB | `full_data_no_collapse` augmented with an AI-availability indicator at the call level. | Figure 4 Panel A |
+| `full_data_no_collapse_w_AI.dta` | 4.0 GB | `full_data_no_collapse` augmented with an AI-availability indicator at the call level. | Figure 4 Panel A, Figure A.7 |
 | `full_connected_call_level.dta` | 439 MB | Connected calls within the full sample. | Table A.6 |
-| `temp.dta` | 16 KB | Date-level metadata (year/month/day/dow) used by Figure 4 to attach calendar context. | Figure 4 |
-| `temp_A.dta`, `temp_B.dta` | 4 KB each | Small intermediate matrices saved by Figure 3 / Table 2 estimation steps when transferring values across blocks. The files exist in the data folder for convenience but are also re-created by the running scripts. | Figure 3, Figure 4 |
-| `temp_history_productivity.dta` | 28 KB | One row per human representative with their pre-period historical productivity (used to match agents in the vacation-vs-non-vacation comparison). | Table A.6 |
+
+#### Pipeline-created files (not inputs)
+
+These appear in `$data/temp/` once the pipeline runs and are created by the scripts themselves. They are not part of the replication input; documented here only so a replicator who inspects the data folder can recognise them.
+
+| File | Created by | Purpose |
+|---|---|---|
+| `temp.dta` | `fig4_case_study.do` | Date-level metadata cached for a downstream merge in the same script. |
+| `temp_A.dta`, `temp_B.dta` | `fig4_case_study.do` | Small intermediate matrices saved when transferring values across plot blocks. |
+| `temp_history_productivity.dta` | `tableA6_vacation_or_not.do` | Per-representative pre-period productivity averages, merged back into the script twice. |
 
 ### Variables an outside replicator can expect
 

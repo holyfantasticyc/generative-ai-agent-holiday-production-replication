@@ -1,8 +1,8 @@
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA5_gender_succeed.log
   log type:  text
- opened on:  31 May 2026, 09:30:29
+ opened on:   1 Jun 2026, 09:19:23
 
 . 
 . **## Success rate
@@ -264,13 +264,9 @@ if_succeed~s | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
 . twoway (bar mean `group_variable' if `group_variable' == 0 , barwidth(0.7) fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 1, barwidth(0.7) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 2 , barwidth(0.7) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                        (bar mean `group_variable' if `group_variable' == 4 , barwidth(0.7)  fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 5 , barwidth(0.7)  fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 6 , barwidth(0.7)  fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 0, lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 1 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 2 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 4 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 5 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 6 , lw(medium) lcolor(black) lp(dash)) ///                   (scatteri 5.4 0 5.4 1,  recast(line) lw(medthin)  mc(none) lc(black) lp("-")) ///                   (scatteri 5.4 0 5.4 1,  recast(dropline) base(5.1) lw(medthin) mc(none) lc(black) lp(solid)) ///                   (scatteri 6.9 4 6.9 5,  recast(line) lw(medthin)  mc(none) lc(black) lp("-")) ///                   (scatteri 6.9 4 6.9 5,  recast(dropline) base(6.6) lw(medthin) mc(none) lc(black) lp(solid)) ///                   (scatteri 7.8 0.5 7.8 4.5,  recast(line) lw(medthin)  mc(none) lc(black) lp("-")) ///                   (scatteri 7.8 0.5 7.8 4.5,  recast(dropline) base(7.5) lw(medthin) mc(none) lc(black) lp(solid)) ///                   , legend(off )  ///                    ylabel(0(1)9 , nogrid ) ///                        text(5.7 0.5 "diff = `coef1', p{superscript:***} < 0.01")  ///                        text(7.2 4.5 "diff = `coef2', p{superscript:***} < 0.01")  ///                        text(8.1 3 "diff = `coef3', p{superscript:*} < 0.1")  ///                        xlabel( ///                        0 `"AI (Female-voice)"' 1 `"Female"' 2  `"Male"' 3 " " 4 `"AI (Female-voice)"' 5 `"Female "' 6 `"Male"', nogrid labsize(small)) ///                xtitle("")  ytitle($ytitle ) title("Success Rate")       graphregion(margin(zero)) ///                 text(9 1 "{bf: Female Customer}") ///                 text(9 5 "{bf: Male Customer}") 
 .                    
 .                 graph export "$figure_overleaf/Coef_by_gender_if_succeed.png", as(png) name("Graph") replace    
-file
-    <REPLICATION_ROOT>/output/figure/Coef_by_gender_if_succee
-    > d.png saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Coef_by_gender_if_succeed.png saved as PNG format
 .                 graph export "$figure_overleaf/Coef_by_gender_if_succeed.pdf", as(png) name("Graph") replace
-file
-    <REPLICATION_ROOT>/output/figure/Coef_by_gender_if_succee
-    > d.pdf saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Coef_by_gender_if_succeed.pdf saved as PNG format
 . 
 . }
 

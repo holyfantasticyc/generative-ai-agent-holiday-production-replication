@@ -152,11 +152,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/table1_balance.log", replace text
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/table1_balance.log
   log type:  text
- opened on:  31 May 2026, 09:27:14
+ opened on:   1 Jun 2026, 09:16:06
 
 . 
 . **# Table: balance test
@@ -365,21 +365,21 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/table2_revenue_decomposition_estimates.log", replace text
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/table2_revenue_decomposition_estimates.log
   log type:  text
- opened on:  31 May 2026, 09:27:15
+ opened on:   1 Jun 2026, 09:16:07
 
 . 
 . capture log close
 
 . log using "$table_overleaf/delta.log", replace text
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/output/table/delta.log
   log type:  text
- opened on:  31 May 2026, 09:27:15
+ opened on:   1 Jun 2026, 09:16:07
 
 . **# Part 1
 . 
@@ -881,8 +881,8 @@ r7           0           0           0
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/output/table/delta.log
   log type:  text
- closed on:  31 May 2026, 09:27:49
------------------------------------------------------------------------------------------------------------
+ closed on:   1 Jun 2026, 09:16:43
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 . 
 . capture log close
@@ -912,11 +912,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/tableA1_summary_statistics.log", replace text
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA1_summary_statistics.log
   log type:  text
- opened on:  31 May 2026, 09:27:49
+ opened on:   1 Jun 2026, 09:16:43
 
 . 
 . **## Task/raw data level
@@ -1174,11 +1174,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/tableA2_main.log", replace text
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA2_main.log
   log type:  text
- opened on:  31 May 2026, 09:27:50
+ opened on:   1 Jun 2026, 09:16:43
 
 . 
 . **# Appendix Table: main results  
@@ -1714,11 +1714,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/tableA3_robust_notcontrols.log", replace text
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA3_robust_notcontrols.log
   log type:  text
- opened on:  31 May 2026, 09:27:50
+ opened on:   1 Jun 2026, 09:16:43
 
 . 
 . **# Appendix Table: main results, robustness, no controls and fixed effects 
@@ -2165,11 +2165,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/tableA4_robust_w_1h.log", replace text
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA4_robust_w_1h.log
   log type:  text
- opened on:  31 May 2026, 09:27:51
+ opened on:   1 Jun 2026, 09:16:44
 
 . 
 . **# Appendix Table: main results, robustness, only call within 1 hour
@@ -2715,11 +2715,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/tableA5_by_gender.log", replace text
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA5_by_gender.log
   log type:  text
- opened on:  31 May 2026, 09:27:51
+ opened on:   1 Jun 2026, 09:16:44
 
 . 
 . **# Appendix Table: gender effects
@@ -3365,11 +3365,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/tableA6_vacation_or_not.log", replace text
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA6_vacation_or_not.log
   log type:  text
- opened on:  31 May 2026, 09:27:52
+ opened on:   1 Jun 2026, 09:16:45
 
 . 
 . 
@@ -3545,9 +3545,7 @@ date_creat~e |  1,810,293    23422.54    143.5693      23011      23679
 .         gen rank_ave_payment_amt = _n   
 
 .         save "$temp/temp_history_productivity" , replace
-file
-    <DATA_ROOT>/temp/temp_history_productivity.dt
-    > a saved
+file <DATA_ROOT>/temp/temp_history_productivity.dta saved
 
 .         
 . restore
@@ -4044,11 +4042,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/fig1_outcome_bars.log", replace text
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig1_outcome_bars.log
   log type:  text
- opened on:  31 May 2026, 09:29:20
+ opened on:   1 Jun 2026, 09:18:13
 
 . 
 . **# Figure 1: Main Results 
@@ -4194,13 +4192,9 @@ Number of observations (_N) was 0, now 2.
 .         set scheme white_ptol
 .         twoway (bar mean `group_variable' if `group_variable' == 0 , barwidth(0.5) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 1 , barwidth(0.5) fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 0, lw(medium) lcolor($control_color) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 1 , lw(medium) lcolor($treat_color) lp(dash)) ///                   (scatteri 4.8 0 4.8 1,  recast(line) lw(medthin)  mc(none) lc(black) lp("-")) ///                   (scatteri 4.8 0 4.8 1,  recast(dropline) base(4.5) lw(medthin) mc(none) lc(black) lp(solid)) ///                   , legend(off ) xlabel( 0 "Human Representative " 1 "AI Representative "  , nogrid ) ///                    ylabel(1(1)5, nogrid )                      text(4.95 0.5 "diff = `coe', p{superscript:***} < 0.01") ///                   xtitle("")   ytitle($ytitle ) title("Success Rate")   graphregion(margin(zero))
 .                   graph export "$figure_overleaf/Bar_plot_outcome_`y'_FE.png", as(png) name("Graph") replace
-file
-    <REPLICATION_ROOT>/output/figure/Bar_plot_outcome_if_succ
-    > eed_FE.png saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Bar_plot_outcome_if_succeed_FE.png saved as PNG format
 .                   graph export "$figure_overleaf/Bar_plot_outcome_`y'_FE.pdf", as(pdf) name("Graph") replace
-file
-    <REPLICATION_ROOT>/output/figure/Bar_plot_outcome_if_succ
-    > eed_FE.pdf saved as PDF format
+file <REPLICATION_ROOT>/output/figure/Bar_plot_outcome_if_succeed_FE.pdf saved as PDF format
 . 
 .                         
 . restore
@@ -4372,12 +4366,8 @@ Number of observations (_N) was 0, now 2.
 (1 real change made)
 (1 missing value generated)
 (1 real change made)
-file
-    <REPLICATION_ROOT>/output/figure/Bar_plot_outcome_payment
-    > _amt_num_uncon_FE.png saved as PNG format
-file
-    <REPLICATION_ROOT>/output/figure/Bar_plot_outcome_payment
-    > _amt_num_uncon_FE.pdf saved as PDF format
+file <REPLICATION_ROOT>/output/figure/Bar_plot_outcome_payment_amt_num_uncon_FE.png saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Bar_plot_outcome_payment_amt_num_uncon_FE.pdf saved as PDF format
 . 
 . }               
 . 
@@ -4508,13 +4498,9 @@ Number of observations (_N) was 0, now 2.
 .         set scheme white_ptol
 .         twoway (bar mean `group_variable' if `group_variable' == 0 , barwidth(0.5) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 1 , barwidth(0.5) fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 0, lw(medium) lcolor($control_color) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 1 , lw(medium) lcolor($treat_color) lp(dash)) ///                (scatteri 27.1 0 27.1 1,  recast(line) lw(medthin)  mc(none) lc(black) lp("-")) ///           (scatteri 27.1 0 27.1 1,  recast(dropline) base(25.8) lw(medthin) mc(none) lc(black) lp(solid)) ///                   , legend(off ) xlabel( 0 "Human Representative " 1 "AI Representative " , nogrid)  ///                                 xtitle("")   ytitle( $ytitle ) ///                        ylabel(10(5)25 29 " ", nogrid )                 text(27.8 0.5 "diff = `coe', p{superscript:***} < 0.01") ///                title("Refund Rate") graphregion(margin(zero))
 .                 graph export "$figure_overleaf/Bar_plot2_if_refund_FE.png", as(png) name("Graph") replace               
-file
-    <REPLICATION_ROOT>/output/figure/Bar_plot2_if_refund_FE.p
-    > ng saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Bar_plot2_if_refund_FE.png saved as PNG format
 .                 graph export "$figure_overleaf/Bar_plot2_if_refund_FE.pdf", as(pdf) name("Graph") replace               
-file
-    <REPLICATION_ROOT>/output/figure/Bar_plot2_if_refund_FE.p
-    > df saved as PDF format
+file <REPLICATION_ROOT>/output/figure/Bar_plot2_if_refund_FE.pdf saved as PDF format
 .            
 . restore
 . 
@@ -4547,11 +4533,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/fig2_workload_coef.log", replace text
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig2_workload_coef.log
   log type:  text
- opened on:  31 May 2026, 09:29:21
+ opened on:   1 Jun 2026, 09:18:15
 
 . 
 . *===================================================================
@@ -4642,11 +4628,9 @@ file effect_by_load.gph saved
 . 
 .                         
 .                         graph export "$figure_overleaf/Coef_by_workload.png", as(png) name("Graph") replace             
-file <REPLICATION_ROOT>/output/figure/Coef_by_workload.png
-    saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Coef_by_workload.png saved as PNG format
 .                         graph export "$figure_overleaf/Coef_by_workload.pdf", as(pdf) name("Graph") replace
-file <REPLICATION_ROOT>/output/figure/Coef_by_workload.pdf
-    saved as PDF format
+file <REPLICATION_ROOT>/output/figure/Coef_by_workload.pdf saved as PDF format
 . }
 
 . 
@@ -4685,12 +4669,10 @@ file <REPLICATION_ROOT>/output/figure/Coef_by_workload.pdf
 
 . 
 . graph export "$figure_overleaf/Overtime_rule_panel.png", as(png) name("overtime_rule") replace
-file <REPLICATION_ROOT>/output/figure/Overtime_rule_panel.png
-    saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Overtime_rule_panel.png saved as PNG format
 
 . graph export "$figure_overleaf/Overtime_rule_panel.pdf", as(pdf) name("overtime_rule") replace
-file <REPLICATION_ROOT>/output/figure/Overtime_rule_panel.pdf
-    saved as PDF format
+file <REPLICATION_ROOT>/output/figure/Overtime_rule_panel.pdf saved as PDF format
 
 . 
 . capture log close
@@ -4716,11 +4698,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/fig3_duration_relationship.log", replace text
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig3_duration_relationship.log
   log type:  text
- opened on:  31 May 2026, 09:29:23
+ opened on:   1 Jun 2026, 09:18:17
 
 . 
 . **# Figure: Success Rate - time relationship
@@ -4742,7 +4724,7 @@ end of do-file
 . 
 . bys if_succeed: sum bridge_duration_num , de
 
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
 -> if_succeed = 0
 
                        bridge_duration
@@ -4760,7 +4742,7 @@ end of do-file
 95%          345           3276       Skewness       6.283063
 99%          823           3487       Kurtosis       65.75273
 
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
 -> if_succeed = 1
 
                        bridge_duration
@@ -5037,13 +5019,9 @@ file ttest.gph saved
 .  graph combine    ttest.gph relation.gph  hx.gph ///                ,    cols(1)      imargin(0 0 0 0) ///                graphregion(margin(medium))   xsize(4)  ysize(3) 
 .                 
 .         graph export "$figure_overleaf/relationship_duration_succeed.png", as(png) name("Graph") replace                
-file
-    <REPLICATION_ROOT>/output/figure/relationship_duration_su
-    > cceed.png saved as PNG format
+file <REPLICATION_ROOT>/output/figure/relationship_duration_succeed.png saved as PNG format
 .         graph export "$figure_overleaf/relationship_duration_succeed.pdf", as(pdf) name("Graph") replace                
-file
-    <REPLICATION_ROOT>/output/figure/relationship_duration_su
-    > cceed.pdf saved as PDF format
+file <REPLICATION_ROOT>/output/figure/relationship_duration_succeed.pdf saved as PDF format
 . 
 . 
 . }
@@ -5074,11 +5052,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/fig4_case_study.log", replace text
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig4_case_study.log
   log type:  text
- opened on:  31 May 2026, 09:29:32
+ opened on:   1 Jun 2026, 09:18:27
 
 . 
 . *===================================================================
@@ -5258,14 +5236,10 @@ N_total_ca~s |          1    1044.429           .   1044.429   1044.429
 
 .                 
 .                 graph export "$figure_overleaf/case_study_nationalday_R1.png", as(png) name("Graph") replace
-file
-    <REPLICATION_ROOT>/output/figure/case_study_nationalday_R
-    > 1.png saved as PNG format
+file <REPLICATION_ROOT>/output/figure/case_study_nationalday_R1.png saved as PNG format
 
 .                 graph export "$figure_overleaf/case_study_nationalday_R1.pdf", as(pdf) name("Graph") replace
-file
-    <REPLICATION_ROOT>/output/figure/case_study_nationalday_R
-    > 1.pdf saved as PDF format
+file <REPLICATION_ROOT>/output/figure/case_study_nationalday_R1.pdf saved as PDF format
 
 . 
 . restore
@@ -5500,14 +5474,10 @@ file <DATA_ROOT>/temp/temp_B.dta saved
 
 . 
 . graph export "$figure_overleaf/rate_time_gap_relationsip_R1.png", as(png) name("Graph") replace         
-file
-    <REPLICATION_ROOT>/output/figure/rate_time_gap_relationsi
-    > p_R1.png saved as PNG format
+file <REPLICATION_ROOT>/output/figure/rate_time_gap_relationsip_R1.png saved as PNG format
 
 . graph export "$figure_overleaf/rate_time_gap_relationsip_R1.pdf", as(pdf) name("Graph") replace
-file
-    <REPLICATION_ROOT>/output/figure/rate_time_gap_relationsi
-    > p_R1.pdf saved as PDF format
+file <REPLICATION_ROOT>/output/figure/rate_time_gap_relationsip_R1.pdf saved as PDF format
 
 . 
 . capture log close
@@ -5533,11 +5503,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/figA3_coef_alter_FEs.log", replace text
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA3_coef_alter_FEs.log
   log type:  text
- opened on:  31 May 2026, 09:30:25
+ opened on:   1 Jun 2026, 09:19:19
 
 . 
 . **# *Figure: Results with difference FEs and controls
@@ -6180,11 +6150,9 @@ file f_bridge_duration_num.gph saved
 .          graph combine  f_if_succeed.gph f_payment_amt_num.gph ///                                        f_if_refund.gph f_bridge_duration_num.gph  ///                ,    rows(2)  imargin(0 0 0 0) ///                graphregion(margin(vsmall)) 
 .                 
 .         graph export "$figure_overleaf/Coef_w_alter_FEs.png", as(png) name("Graph") replace             
-file <REPLICATION_ROOT>/output/figure/Coef_w_alter_FEs.png
-    saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Coef_w_alter_FEs.png saved as PNG format
 .         graph export "$figure_overleaf/Coef_w_alter_FEs.pdf", as(pdf) name("Graph") replace             
-file <REPLICATION_ROOT>/output/figure/Coef_w_alter_FEs.pdf
-    saved as PDF format
+file <REPLICATION_ROOT>/output/figure/Coef_w_alter_FEs.pdf saved as PDF format
 .         
 .         
 . }
@@ -6213,11 +6181,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/figA4_workload_duration.log", replace text
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA4_workload_duration.log
   log type:  text
- opened on:  31 May 2026, 09:30:28
+ opened on:   1 Jun 2026, 09:19:22
 
 . 
 . **# Figure: Results: by workload
@@ -6287,13 +6255,9 @@ Absorbed degrees of freedom:
 . coefplot, vertical keep(*.bin_task_order) ///                omitted  scheme(plotplain) ///                recast(connected) lcolor($control_color) ///                mcolor($control_color) ///                msymbol(diamond) msize(small)  ///                ciopt(recast(rcap)  lpattern(dash)      lw(medthick) lcolor($control_color) ) ///                yline(0, lpattern(solid) lcolor(gs12)) ///                xlabel( ///                        1 "1-3" 2 "4-6" 3 "7-10" 4 "11-15"  ///                        5 "15-20" 6 "21-30" 7 "31-50" 8 ">51" ) ///                xsca(alt )  ///                ytitle(" Effects Size: Second " , size(small)) ///                 graphregion(margin(small)) ///          xlabel(, nogrid) ylabel(, nogrid)
 .                 
 .         graph export "$figure_overleaf/Coef_by_workload_duration.png", as(png) name("Graph") replace            
-file
-    <REPLICATION_ROOT>/output/figure/Coef_by_workload_duratio
-    > n.png saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Coef_by_workload_duration.png saved as PNG format
 .         graph export "$figure_overleaf/Coef_by_workload_duration.pdf", as(pdf) name("Graph") replace
-file
-    <REPLICATION_ROOT>/output/figure/Coef_by_workload_duratio
-    > n.pdf saved as PDF format
+file <REPLICATION_ROOT>/output/figure/Coef_by_workload_duration.pdf saved as PDF format
 . 
 . }
 
@@ -6321,11 +6285,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/figA5_gender_succeed.log", replace text
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA5_gender_succeed.log
   log type:  text
- opened on:  31 May 2026, 09:30:29
+ opened on:   1 Jun 2026, 09:19:23
 
 . 
 . **## Success rate
@@ -6587,13 +6551,9 @@ if_succeed~s | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
 . twoway (bar mean `group_variable' if `group_variable' == 0 , barwidth(0.7) fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 1, barwidth(0.7) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 2 , barwidth(0.7) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                        (bar mean `group_variable' if `group_variable' == 4 , barwidth(0.7)  fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 5 , barwidth(0.7)  fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 6 , barwidth(0.7)  fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 0, lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 1 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 2 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 4 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 5 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 6 , lw(medium) lcolor(black) lp(dash)) ///                   (scatteri 5.4 0 5.4 1,  recast(line) lw(medthin)  mc(none) lc(black) lp("-")) ///                   (scatteri 5.4 0 5.4 1,  recast(dropline) base(5.1) lw(medthin) mc(none) lc(black) lp(solid)) ///                   (scatteri 6.9 4 6.9 5,  recast(line) lw(medthin)  mc(none) lc(black) lp("-")) ///                   (scatteri 6.9 4 6.9 5,  recast(dropline) base(6.6) lw(medthin) mc(none) lc(black) lp(solid)) ///                   (scatteri 7.8 0.5 7.8 4.5,  recast(line) lw(medthin)  mc(none) lc(black) lp("-")) ///                   (scatteri 7.8 0.5 7.8 4.5,  recast(dropline) base(7.5) lw(medthin) mc(none) lc(black) lp(solid)) ///                   , legend(off )  ///                    ylabel(0(1)9 , nogrid ) ///                        text(5.7 0.5 "diff = `coef1', p{superscript:***} < 0.01")  ///                        text(7.2 4.5 "diff = `coef2', p{superscript:***} < 0.01")  ///                        text(8.1 3 "diff = `coef3', p{superscript:*} < 0.1")  ///                        xlabel( ///                        0 `"AI (Female-voice)"' 1 `"Female"' 2  `"Male"' 3 " " 4 `"AI (Female-voice)"' 5 `"Female "' 6 `"Male"', nogrid labsize(small)) ///                xtitle("")  ytitle($ytitle ) title("Success Rate")       graphregion(margin(zero)) ///                 text(9 1 "{bf: Female Customer}") ///                 text(9 5 "{bf: Male Customer}") 
 .                    
 .                 graph export "$figure_overleaf/Coef_by_gender_if_succeed.png", as(png) name("Graph") replace    
-file
-    <REPLICATION_ROOT>/output/figure/Coef_by_gender_if_succee
-    > d.png saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Coef_by_gender_if_succeed.png saved as PNG format
 .                 graph export "$figure_overleaf/Coef_by_gender_if_succeed.pdf", as(png) name("Graph") replace
-file
-    <REPLICATION_ROOT>/output/figure/Coef_by_gender_if_succee
-    > d.pdf saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Coef_by_gender_if_succeed.pdf saved as PNG format
 . 
 . }
 
@@ -6621,11 +6581,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/figA6_gender_payment_refund.log", replace text
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA6_gender_payment_refund.log
   log type:  text
- opened on:  31 May 2026, 09:30:30
+ opened on:   1 Jun 2026, 09:19:24
 
 . 
 . **## Amount (unconditional)
@@ -6886,13 +6846,9 @@ payment_am~s | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
 . twoway (bar mean `group_variable' if `group_variable' == 0 , barwidth(0.7) fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 1, barwidth(0.7) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 2 , barwidth(0.7) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                        (bar mean `group_variable' if `group_variable' == 4 , barwidth(0.7)  fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 5 , barwidth(0.7)  fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 6 , barwidth(0.7)  fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 0, lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 1 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 2 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 4 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 5 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 6 , lw(medium) lcolor(black) lp(dash)) ///                   , legend(off )  ///                    ylabel( 0(2)8 , nogrid )             ///                        xlabel( ///                        0 `"AI (Female-voice)"' 1 `"Female"' 2  `"Male"'  3 " " 4 `"AI (Female-voice)"' 5 `"Female "' 6 `"Male"', nogrid labsize(small)) ///                subtitle("{bf: Female Customer}                                          {bf: Male Customer}")  ///                  xtitle("")  ytitle($ytitle ) title("Payment Amount per Call")    graphregion(margin(zero))
 .                    
 .                 graph export "$figure_overleaf/Coef_by_gender_payment_amt_num.png", as(png) name("Graph") replace       
-file
-    <REPLICATION_ROOT>/output/figure/Coef_by_gender_payment_a
-    > mt_num.png saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Coef_by_gender_payment_amt_num.png saved as PNG format
 .                 graph export "$figure_overleaf/Coef_by_gender_payment_amt_num.pdf", as(png) name("Graph") replace
-file
-    <REPLICATION_ROOT>/output/figure/Coef_by_gender_payment_a
-    > mt_num.pdf saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Coef_by_gender_payment_amt_num.pdf saved as PNG format
 . 
 . }
 
@@ -7126,13 +7082,9 @@ if_refund_~s | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
 . 
 . twoway (bar mean `group_variable' if `group_variable' == 0 , barwidth(0.7) fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 1, barwidth(0.7) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 2 , barwidth(0.7) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                        (bar mean `group_variable' if `group_variable' == 4 , barwidth(0.7)  fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 5 , barwidth(0.7)  fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 6 , barwidth(0.7)  fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 0, lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 1 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 2 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 4 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 5 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 6 , lw(medium) lcolor(black) lp(dash)) ///                   , legend(off )  ///                        ylabel(,nogrid) ///                        xlabel( ///                        0 `"AI (Female-voice)"' 1 `"Female"' 2  `"Male"'  3 " " 4 `"AI (Female-voice)"' 5 `"Female "' 6 `"Male"', nogrid labsize(small)) ///                xtitle("")  ytitle($ytitle ) title("Refund Rate")        graphregion(margin(zero)) ///                 subtitle("{bf: Female Customer}                                          {bf: Male Customer}")  
 .                 graph export "$figure_overleaf/Coef_by_gender_if_refund.png", as(png) name("Graph") replace     
-file
-    <REPLICATION_ROOT>/output/figure/Coef_by_gender_if_refund
-    > .png saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Coef_by_gender_if_refund.png saved as PNG format
 .                 graph export "$figure_overleaf/Coef_by_gender_if_refund.pdf", as(png) name("Graph") replace
-file
-    <REPLICATION_ROOT>/output/figure/Coef_by_gender_if_refund
-    > .pdf saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Coef_by_gender_if_refund.pdf saved as PNG format
 . 
 . }
 
@@ -7158,11 +7110,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/figA7_ai_success_weekly.log", replace text
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA7_ai_success_weekly.log
   log type:  text
- opened on:  31 May 2026, 09:30:31
+ opened on:   1 Jun 2026, 09:19:25
 
 . 
 . *============================================================*
@@ -7336,18 +7288,7 @@ Number of observations (_N) was 0, now 12.
 . twoway ///    (rarea lb ub week, sort color(gs12%35) lcolor(gs12%35)) ///    (connected coef week, sort msymbol(O) mcolor(black) ///        lcolor(black) lwidth(medthick)) ///    (line zero week, sort lpattern(dash) lcolor(black) lwidth(medium)), ///    xtitle("Week") ///    ytitle("Change in human–AI success-rate gap relative to base week") ///    legend(off) ///    xlabel(`=yw(2024,30)'(2)`=yw(2024,43)', format(%tw) nogrid) ///    ylabel(, nogrid) ///    graphregion(color(white)) ///    plotregion(color(white))
 
 . graph export "$figure_overleaf/ai_success_week_interaction_relative.pdf", replace
-file
-    <REPLICATION_ROOT>/output/figure/ai_success_week_interact
-    > ion_relative.pdf saved as PDF format
-
-. 
-. *============================================================*
-. * Save extracted coefficients
-. *============================================================*
-. save "$temp/ai_success_week_interaction_relative.dta", replace
-file
-    <DATA_ROOT>/temp/ai_success_week_interaction_
-    > relative.dta saved
+file <REPLICATION_ROOT>/output/figure/ai_success_week_interaction_relative.pdf saved as PDF format
 
 . 
 . capture log close

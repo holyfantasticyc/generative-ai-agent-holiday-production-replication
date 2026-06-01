@@ -1,8 +1,8 @@
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA3_coef_alter_FEs.log
   log type:  text
- opened on:  31 May 2026, 09:30:25
+ opened on:   1 Jun 2026, 09:19:19
 
 . 
 . **# *Figure: Results with difference FEs and controls
@@ -645,11 +645,9 @@ file f_bridge_duration_num.gph saved
 .          graph combine  f_if_succeed.gph f_payment_amt_num.gph ///                                        f_if_refund.gph f_bridge_duration_num.gph  ///                ,    rows(2)  imargin(0 0 0 0) ///                graphregion(margin(vsmall)) 
 .                 
 .         graph export "$figure_overleaf/Coef_w_alter_FEs.png", as(png) name("Graph") replace             
-file <REPLICATION_ROOT>/output/figure/Coef_w_alter_FEs.png
-    saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Coef_w_alter_FEs.png saved as PNG format
 .         graph export "$figure_overleaf/Coef_w_alter_FEs.pdf", as(pdf) name("Graph") replace             
-file <REPLICATION_ROOT>/output/figure/Coef_w_alter_FEs.pdf
-    saved as PDF format
+file <REPLICATION_ROOT>/output/figure/Coef_w_alter_FEs.pdf saved as PDF format
 .         
 .         
 . }

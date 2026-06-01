@@ -1,8 +1,8 @@
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig1_outcome_bars.log
   log type:  text
- opened on:  31 May 2026, 09:29:20
+ opened on:   1 Jun 2026, 09:18:13
 
 . 
 . **# Figure 1: Main Results 
@@ -148,13 +148,9 @@ Number of observations (_N) was 0, now 2.
 .         set scheme white_ptol
 .         twoway (bar mean `group_variable' if `group_variable' == 0 , barwidth(0.5) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 1 , barwidth(0.5) fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 0, lw(medium) lcolor($control_color) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 1 , lw(medium) lcolor($treat_color) lp(dash)) ///                   (scatteri 4.8 0 4.8 1,  recast(line) lw(medthin)  mc(none) lc(black) lp("-")) ///                   (scatteri 4.8 0 4.8 1,  recast(dropline) base(4.5) lw(medthin) mc(none) lc(black) lp(solid)) ///                   , legend(off ) xlabel( 0 "Human Representative " 1 "AI Representative "  , nogrid ) ///                    ylabel(1(1)5, nogrid )                      text(4.95 0.5 "diff = `coe', p{superscript:***} < 0.01") ///                   xtitle("")   ytitle($ytitle ) title("Success Rate")   graphregion(margin(zero))
 .                   graph export "$figure_overleaf/Bar_plot_outcome_`y'_FE.png", as(png) name("Graph") replace
-file
-    <REPLICATION_ROOT>/output/figure/Bar_plot_outcome_if_succ
-    > eed_FE.png saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Bar_plot_outcome_if_succeed_FE.png saved as PNG format
 .                   graph export "$figure_overleaf/Bar_plot_outcome_`y'_FE.pdf", as(pdf) name("Graph") replace
-file
-    <REPLICATION_ROOT>/output/figure/Bar_plot_outcome_if_succ
-    > eed_FE.pdf saved as PDF format
+file <REPLICATION_ROOT>/output/figure/Bar_plot_outcome_if_succeed_FE.pdf saved as PDF format
 . 
 .                         
 . restore
@@ -326,12 +322,8 @@ Number of observations (_N) was 0, now 2.
 (1 real change made)
 (1 missing value generated)
 (1 real change made)
-file
-    <REPLICATION_ROOT>/output/figure/Bar_plot_outcome_payment
-    > _amt_num_uncon_FE.png saved as PNG format
-file
-    <REPLICATION_ROOT>/output/figure/Bar_plot_outcome_payment
-    > _amt_num_uncon_FE.pdf saved as PDF format
+file <REPLICATION_ROOT>/output/figure/Bar_plot_outcome_payment_amt_num_uncon_FE.png saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Bar_plot_outcome_payment_amt_num_uncon_FE.pdf saved as PDF format
 . 
 . }               
 . 
@@ -462,13 +454,9 @@ Number of observations (_N) was 0, now 2.
 .         set scheme white_ptol
 .         twoway (bar mean `group_variable' if `group_variable' == 0 , barwidth(0.5) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 1 , barwidth(0.5) fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 0, lw(medium) lcolor($control_color) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 1 , lw(medium) lcolor($treat_color) lp(dash)) ///                (scatteri 27.1 0 27.1 1,  recast(line) lw(medthin)  mc(none) lc(black) lp("-")) ///           (scatteri 27.1 0 27.1 1,  recast(dropline) base(25.8) lw(medthin) mc(none) lc(black) lp(solid)) ///                   , legend(off ) xlabel( 0 "Human Representative " 1 "AI Representative " , nogrid)  ///                                 xtitle("")   ytitle( $ytitle ) ///                        ylabel(10(5)25 29 " ", nogrid )                 text(27.8 0.5 "diff = `coe', p{superscript:***} < 0.01") ///                title("Refund Rate") graphregion(margin(zero))
 .                 graph export "$figure_overleaf/Bar_plot2_if_refund_FE.png", as(png) name("Graph") replace               
-file
-    <REPLICATION_ROOT>/output/figure/Bar_plot2_if_refund_FE.p
-    > ng saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Bar_plot2_if_refund_FE.png saved as PNG format
 .                 graph export "$figure_overleaf/Bar_plot2_if_refund_FE.pdf", as(pdf) name("Graph") replace               
-file
-    <REPLICATION_ROOT>/output/figure/Bar_plot2_if_refund_FE.p
-    > df saved as PDF format
+file <REPLICATION_ROOT>/output/figure/Bar_plot2_if_refund_FE.pdf saved as PDF format
 .            
 . restore
 . 

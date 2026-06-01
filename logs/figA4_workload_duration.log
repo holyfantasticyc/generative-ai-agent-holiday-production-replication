@@ -1,8 +1,8 @@
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA4_workload_duration.log
   log type:  text
- opened on:  31 May 2026, 09:30:28
+ opened on:   1 Jun 2026, 09:19:22
 
 . 
 . **# Figure: Results: by workload
@@ -72,13 +72,9 @@ Absorbed degrees of freedom:
 . coefplot, vertical keep(*.bin_task_order) ///                omitted  scheme(plotplain) ///                recast(connected) lcolor($control_color) ///                mcolor($control_color) ///                msymbol(diamond) msize(small)  ///                ciopt(recast(rcap)  lpattern(dash)      lw(medthick) lcolor($control_color) ) ///                yline(0, lpattern(solid) lcolor(gs12)) ///                xlabel( ///                        1 "1-3" 2 "4-6" 3 "7-10" 4 "11-15"  ///                        5 "15-20" 6 "21-30" 7 "31-50" 8 ">51" ) ///                xsca(alt )  ///                ytitle(" Effects Size: Second " , size(small)) ///                 graphregion(margin(small)) ///          xlabel(, nogrid) ylabel(, nogrid)
 .                 
 .         graph export "$figure_overleaf/Coef_by_workload_duration.png", as(png) name("Graph") replace            
-file
-    <REPLICATION_ROOT>/output/figure/Coef_by_workload_duratio
-    > n.png saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Coef_by_workload_duration.png saved as PNG format
 .         graph export "$figure_overleaf/Coef_by_workload_duration.pdf", as(pdf) name("Graph") replace
-file
-    <REPLICATION_ROOT>/output/figure/Coef_by_workload_duratio
-    > n.pdf saved as PDF format
+file <REPLICATION_ROOT>/output/figure/Coef_by_workload_duration.pdf saved as PDF format
 . 
 . }
 

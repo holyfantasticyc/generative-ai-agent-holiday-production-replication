@@ -1,8 +1,8 @@
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA7_ai_success_weekly.log
   log type:  text
- opened on:  31 May 2026, 09:30:31
+ opened on:   1 Jun 2026, 09:19:25
 
 . 
 . *============================================================*
@@ -176,18 +176,7 @@ Number of observations (_N) was 0, now 12.
 . twoway ///    (rarea lb ub week, sort color(gs12%35) lcolor(gs12%35)) ///    (connected coef week, sort msymbol(O) mcolor(black) ///        lcolor(black) lwidth(medthick)) ///    (line zero week, sort lpattern(dash) lcolor(black) lwidth(medium)), ///    xtitle("Week") ///    ytitle("Change in human–AI success-rate gap relative to base week") ///    legend(off) ///    xlabel(`=yw(2024,30)'(2)`=yw(2024,43)', format(%tw) nogrid) ///    ylabel(, nogrid) ///    graphregion(color(white)) ///    plotregion(color(white))
 
 . graph export "$figure_overleaf/ai_success_week_interaction_relative.pdf", replace
-file
-    <REPLICATION_ROOT>/output/figure/ai_success_week_interact
-    > ion_relative.pdf saved as PDF format
-
-. 
-. *============================================================*
-. * Save extracted coefficients
-. *============================================================*
-. save "$temp/ai_success_week_interaction_relative.dta", replace
-file
-    <DATA_ROOT>/temp/ai_success_week_interaction_
-    > relative.dta saved
+file <REPLICATION_ROOT>/output/figure/ai_success_week_interaction_relative.pdf saved as PDF format
 
 . 
 . capture log close

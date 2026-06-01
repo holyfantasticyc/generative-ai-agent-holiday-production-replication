@@ -1,8 +1,8 @@
------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig4_case_study.log
   log type:  text
- opened on:  31 May 2026, 09:29:32
+ opened on:   1 Jun 2026, 09:18:27
 
 . 
 . *===================================================================
@@ -182,14 +182,10 @@ N_total_ca~s |          1    1044.429           .   1044.429   1044.429
 
 .                 
 .                 graph export "$figure_overleaf/case_study_nationalday_R1.png", as(png) name("Graph") replace
-file
-    <REPLICATION_ROOT>/output/figure/case_study_nationalday_R
-    > 1.png saved as PNG format
+file <REPLICATION_ROOT>/output/figure/case_study_nationalday_R1.png saved as PNG format
 
 .                 graph export "$figure_overleaf/case_study_nationalday_R1.pdf", as(pdf) name("Graph") replace
-file
-    <REPLICATION_ROOT>/output/figure/case_study_nationalday_R
-    > 1.pdf saved as PDF format
+file <REPLICATION_ROOT>/output/figure/case_study_nationalday_R1.pdf saved as PDF format
 
 . 
 . restore
@@ -424,14 +420,10 @@ file <DATA_ROOT>/temp/temp_B.dta saved
 
 . 
 . graph export "$figure_overleaf/rate_time_gap_relationsip_R1.png", as(png) name("Graph") replace         
-file
-    <REPLICATION_ROOT>/output/figure/rate_time_gap_relationsi
-    > p_R1.png saved as PNG format
+file <REPLICATION_ROOT>/output/figure/rate_time_gap_relationsip_R1.png saved as PNG format
 
 . graph export "$figure_overleaf/rate_time_gap_relationsip_R1.pdf", as(pdf) name("Graph") replace
-file
-    <REPLICATION_ROOT>/output/figure/rate_time_gap_relationsi
-    > p_R1.pdf saved as PDF format
+file <REPLICATION_ROOT>/output/figure/rate_time_gap_relationsip_R1.pdf saved as PDF format
 
 . 
 . capture log close

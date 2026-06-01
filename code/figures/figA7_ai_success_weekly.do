@@ -2,7 +2,7 @@
 * figA7_ai_success_weekly.do  --  PNAS Nexus replication package
 *-------------------------------------------------------------------
 if "${replication}" == "" {
-    global replication "<REPLICATION_ROOT>"
+    global replication "/Users/holyfantastic/Dropbox/AI/PNAS_NEXUS/replication_package"
 }
 
 run "$replication/code/00_declare_path.do"
@@ -23,7 +23,7 @@ keep if vacation == 1
 cap gen gender_customer_num = (gender_customer == "Female")
 replace province_capital = 1 if missing(province_capital)
 
-* outcome
+* Outcome variable: success rate in %
 gen success_rate = if_succeed * 100
 
 * week variable in Stata weekly-date format
@@ -47,7 +47,7 @@ reghdfe success_rate i.if_AI##ib`baseweek'.week province_capital gender_customer
 
 eststo ai_week_interact
 
-* Optional regression table
+* Regression table for the AI-week interaction
 esttab ai_week_interact using "$table_overleaf/ai_success_week_interact.tex", ///
     replace se star(* 0.10 ** 0.05 *** 0.01) ///
     b(%9.3f) se(%9.3f) ///
@@ -103,10 +103,5 @@ twoway ///
     graphregion(color(white)) ///
     plotregion(color(white))
 graph export "$figure_overleaf/ai_success_week_interaction_relative.pdf", replace
-
-*============================================================*
-* Save extracted coefficients if needed
-*============================================================*
-save "$temp/ai_success_week_interaction_relative.dta", replace
 
 capture log close
