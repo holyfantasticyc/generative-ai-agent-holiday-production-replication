@@ -86,8 +86,6 @@ The cleaned `.dta` files are not shipped in this package; see the [Data](#data) 
 └── full_connected_call_level.dta
 ```
 
-A handful of additional `.dta` files (`temp.dta`, `temp_A.dta`, `temp_B.dta`, `temp_history_productivity.dta`) will appear in the same folder as the pipeline runs; the scripts create them as intermediate outputs, so you do **not** need to provide them yourself.
-
 The folder names `data/` and `temp/` matter: the Stata code expects to find the `.dta` files at `$data/temp/`. Note the `temp` subfolder.
 
 If you have access to the data through the firm's secure environment but cannot copy it locally, run the package inside that environment and point `$data` at the firm's path.
@@ -187,16 +185,6 @@ These are the only files an outside replicator needs to obtain from the partner 
 | `full_data_no_collapse.dta` | 3.8 GB | Same as `vacation_full_data_no_collapse` but covering the full sample (not just holidays/weekends). | Figure 4 Panel B, Table A.6 |
 | `full_data_no_collapse_w_AI.dta` | 4.0 GB | `full_data_no_collapse` augmented with an AI-availability indicator at the call level. | Figure 4 Panel A, Figure A.7 |
 | `full_connected_call_level.dta` | 439 MB | Connected calls within the full sample. | Table A.6 |
-
-#### Pipeline-created files (not inputs)
-
-These appear in `$data/temp/` once the pipeline runs and are created by the scripts themselves. They are not part of the replication input; documented here only so a replicator who inspects the data folder can recognise them.
-
-| File | Created by | Purpose |
-|---|---|---|
-| `temp.dta` | `fig4_case_study.do` | Date-level metadata cached for a downstream merge in the same script. |
-| `temp_A.dta`, `temp_B.dta` | `fig4_case_study.do` | Small intermediate matrices saved when transferring values across plot blocks. |
-| `temp_history_productivity.dta` | `tableA6_vacation_or_not.do` | Per-representative pre-period productivity averages, merged back into the script twice. |
 
 ### Variables an outside replicator can expect
 
