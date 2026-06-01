@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------
 if "${replication}" == "" {
-    global replication "<REPLICATION_ROOT>"
+    global replication "/Users/holyfantastic/Dropbox/AI/PNAS_NEXUS/replication_package"
 }
 run "$replication/code/00_declare_path.do"
 
@@ -19,7 +19,6 @@ log using "$replication_log/fig3_duration_relationship.log", replace text
 * the duration-vs-success-rate relationship and the duration distributions.
 use  "$temp/vacation_connected_call_level"  , clear
 
-* calcualte precentile
 preserve
 cap drop temp
 gen temp = bridge_duration_num <= 450  // Target comparison
@@ -216,85 +215,10 @@ restore
  graph combine  ttest1.gph ttest2.gph ///
 		,    rows(1)  imargin(0 0 0 0) ///
 		graphregion(margin(zero)) fysize(60) ///
-		subtitle("Panel A. Success Rate Difference by Call Duration",size(small)) ///   
-		saving(ttest, replace) 
-		
-		
-{
+		subtitle("Panel A. Success Rate Difference by Call Duration",size(small)) ///
+		saving(ttest, replace)
 
 
-**## *Figure: Duration
-use  "$temp/vacation_connected_call_level"  , clear
-cap gen gender_customer_num = ( gender_customer == "Female" )
-replace province_capital = 1 if missing(province_capital)
-
-replace payment_amt_num = 0 if missing(payment_amt_num)
-replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
-
-* only succeed phone call
-{
-	
-local y bridge_duration_num
-local group_variable if_AI
-
-if "`y'" == "bridge_duration_num"{
-	
-	global ytitle = " Seconds "
-	
-}
-
-preserve
-
-keep if if_succeed
-
-	cap drop `y'_res
-	reghdfe `y' province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id) res(`y'_res)
-
-	replace `y'_res = `y'_res + _b[_cons]
-	
-	reghdfe `y' if_AI province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id)
-	local coe = round(_b[if_AI],0.001)
-	local mean_treat = _b[if_AI] + _b[_cons]
-	local mean_control = _b[_cons]
-	local se_control = _se[_cons]
-	lincom if_AI + _cons
-	local se_treat = r(se)
-
-	clear
-	set obs 2
-	gen `group_variable' = 0 in 1
-	replace `group_variable' = 1 in 2
-	gen mean = `mean_control' if `group_variable' == 0 
-	replace mean = `mean_treat' if `group_variable' == 1 
-	gen sem = `se_control' if `group_variable' == 0 
-	replace sem = `se_treat' if `group_variable' == 1 	
-	gen lower_bound = mean - 1.96 * sem
-	gen upper_bound = mean + 1.96 * sem
-
-
-	set scheme white_ptol
-	twoway (bar mean `group_variable' if `group_variable' == 0 , barwidth(0.5) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///
-		   (bar mean `group_variable' if `group_variable' == 1 , barwidth(0.5) fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///
-		   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 0, lw(medium) lcolor($control_color) lp(dash)) ///
-		   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 1 , lw(medium) lcolor($treat_color) lp(dash)) ///
-		   (scatteri 920 0 920 1,  recast(line) lw(medthin)  mc(none) lc(black) lp("-")) ///
-		   (scatteri 920 0 920 1,  recast(dropline) base(860) lw(medthin) mc(none) lc(black) lp(solid)) ///
-		   , legend(off ) xlabel( 0 "Human Representative " 1 "AI Representative " , nogrid)  ///
-				   xtitle("")   ytitle( $ytitle ) /// 
-		    ylabel(100(200)980, nogrid ) 		text(955 0.5 "diff = `coe', p{superscript:***} < 0.01") ///
-		   subtitle("Duration of Success Calls")  graphregion(margin(zero)) 
-		graph export "$figure_overleaf/Bar_plot2_duration_succeed_FE.png", as(png) name("Graph") replace		
-		graph export "$figure_overleaf/Bar_plot2_duration_succeed_FE.pdf", as(pdf) name("Graph") replace		
-
-restore
-
-
-}
-
-
-}	
-
-		
 **## Combine
 		
  graph combine    ttest.gph relation.gph  hx.gph ///

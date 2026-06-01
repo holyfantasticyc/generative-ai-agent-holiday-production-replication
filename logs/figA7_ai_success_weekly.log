@@ -1,8 +1,8 @@
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA7_ai_success_weekly.log
   log type:  text
- opened on:  26 May 2026, 18:40:07
+ opened on:  31 May 2026, 09:30:31
 
 . 
 . *============================================================*
@@ -26,7 +26,7 @@
 (1,352 real changes made)
 
 . 
-. * outcome
+. * Outcome variable: success rate in %
 . gen success_rate = if_succeed * 100
 
 . 
@@ -114,9 +114,8 @@ Absorbed degrees of freedom:
 . eststo ai_week_interact
 
 . 
-. * Optional regression table
+. * Regression table for the AI-week interaction
 . esttab ai_week_interact using "$table_overleaf/ai_success_week_interact.tex", ///    replace se star(* 0.10 ** 0.05 *** 0.01) ///    b(%9.3f) se(%9.3f) ///    title("AI-week interaction in success rate")
-(file <REPLICATION_ROOT>/output/table/ai_success_week_interact.tex not found)
 (output written to <REPLICATION_ROOT>/output/table/ai_success_week_interact.tex)
 
 . 
@@ -177,15 +176,18 @@ Number of observations (_N) was 0, now 12.
 . twoway ///    (rarea lb ub week, sort color(gs12%35) lcolor(gs12%35)) ///    (connected coef week, sort msymbol(O) mcolor(black) ///        lcolor(black) lwidth(medthick)) ///    (line zero week, sort lpattern(dash) lcolor(black) lwidth(medium)), ///    xtitle("Week") ///    ytitle("Change in human–AI success-rate gap relative to base week") ///    legend(off) ///    xlabel(`=yw(2024,30)'(2)`=yw(2024,43)', format(%tw) nogrid) ///    ylabel(, nogrid) ///    graphregion(color(white)) ///    plotregion(color(white))
 
 . graph export "$figure_overleaf/ai_success_week_interaction_relative.pdf", replace
-file <REPLICATION_ROOT>/output/figure/ai_success_week_interaction_relative.pdf saved as PDF format
+file
+    <REPLICATION_ROOT>/output/figure/ai_success_week_interact
+    > ion_relative.pdf saved as PDF format
 
 . 
 . *============================================================*
-. * Save extracted coefficients if needed
+. * Save extracted coefficients
 . *============================================================*
 . save "$temp/ai_success_week_interaction_relative.dta", replace
-(file <DATA_ROOT>/temp/ai_success_week_interaction_relative.dta not found)
-file <DATA_ROOT>/temp/ai_success_week_interaction_relative.dta saved
+file
+    <DATA_ROOT>/temp/ai_success_week_interaction_
+    > relative.dta saved
 
 . 
 . capture log close

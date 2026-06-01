@@ -158,19 +158,7 @@ estadd local hour_fe "No" , replace
 eststo tab_vaction_or_not_c6
 
 
-reg vacation_create_time ave_payment_amt_num  , r
-sum vacation_create_time
-estadd local mean_y = string(r(mean), "%9.2f") , replace
-estadd local crm_user_fe "No" , replace
-estadd local year_fe "No" , replace
-estadd local month_fe "No" , replace
-estadd local day_fe "No" , replace
-estadd local dow_fe "No" , replace
-estadd local hour_fe "No" , replace
-eststo tab_vaction_or_not_c7
-
-
-#delimit ; 
+#delimit ;
 esttab tab_vaction_or_not_c1 tab_vaction_or_not_c2 tab_vaction_or_not_c3 tab_vaction_or_not_c4 tab_vaction_or_not_c5 tab_vaction_or_not_c6
 	using  "$table_overleaf/tab_vaction_or_not.tex"
 , replace f compress

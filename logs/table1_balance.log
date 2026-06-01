@@ -1,28 +1,21 @@
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/table1_balance.log
   log type:  text
- opened on:  26 May 2026, 18:36:42
+ opened on:  31 May 2026, 09:27:14
 
 . 
 . **# Table: balance test
 . 
-. * Full data, including not connected
+. * Full data, including not connected. The 21-day sample window
+. * (drop Oct 27 partial-data day) is applied in the data layer; see
+. * the apply_filter step described in the README.
 . use "$temp/vacation_full_data_no_collapse" , clear
-
-. keep if month_create_time > 5 
-(0 observations deleted)
-
-. drop if month_create_time == 10 & day_create_time == 27 // drop this because it might have less refund window compared with other dates. And it will also help to reduce the to sample size to < 10,000
-(0 observations deleted)
 
 . 
 . cap gen gender_customer_num = ( gender_customer == "Female" )
 
 . 
-. 
-. // forvalue i = 9(1)20{ // call time is not balance
-. // }
 . gen if_hang_w_60 =  if_connected * (bridge_duration_num < 60)
 
 . gen if_hang_w_30 =  if_connected * (bridge_duration_num < 30)
@@ -190,7 +183,6 @@ added macro:
 . #delimit ; 
 delimiter now ;
 . esttab table_balance_c1  table_balance_c2  table_balance_c3 table_balance_c4        using  "$table_overleaf/table_balance.tex", replace f compressb(%12.3f) se(%12.3f) star(* 0.10 ** 0.05 *** 0.01)  keep( if_AI )   order( if_AI ) coeflabels( if_AI " AI Representative  " ) label booktabs noobs nonotes  collabels(none) alignment(D{.}{.}{-1})  stats( date_fe r2_a obs , labels(  "Date FE" "Adjusted R-squared" "Obs" ) )nogaps mtitles(  "Customer is Female" "Customer is from Major Cities" "If Answered" "Hang up within 10 seconds")  ;
-(file <REPLICATION_ROOT>/output/table/table_balance.tex not found)
 (output written to <REPLICATION_ROOT>/output/table/table_balance.tex)
 .  #delimit cr
 delimiter now cr

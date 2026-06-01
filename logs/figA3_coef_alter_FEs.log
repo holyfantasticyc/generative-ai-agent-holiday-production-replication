@@ -1,8 +1,8 @@
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA3_coef_alter_FEs.log
   log type:  text
- opened on:  26 May 2026, 18:40:01
+ opened on:  31 May 2026, 09:30:25
 
 . 
 . **# *Figure: Results with difference FEs and controls
@@ -65,7 +65,7 @@
  30.         mat A[`k',3]=.
  31.         local k = `k' + 1
  32.         
-.         *parsimounious
+.         * Parsimonious
 .         {
  33. 
 .         reghdfe `y' if_AI ///        , noa cl(crm_user_id)
@@ -78,7 +78,7 @@
 .         
 .         }
  39.         
-.         *with controls
+.         * With controls
 . 
 .         {
  40. 
@@ -92,7 +92,7 @@
 .         
 .         }
  46. 
-.         * add date fixed effects
+.         * Add date fixed effects
 .         {
  47. 
 .         reghdfe `y' if_AI province_capital gender_customer_num ///        , absorb(date_create_time )  cl(crm_user_id)
@@ -105,7 +105,7 @@
 . 
 .         }
  53. 
-.         * add hour fixed effects
+.         * Add hour fixed effects
 .         {
  54. 
 .         reghdfe `y' if_AI province_capital gender_customer_num ///        , absorb(date_create_time hour_create_time)  cl(crm_user_id)
@@ -645,9 +645,11 @@ file f_bridge_duration_num.gph saved
 .          graph combine  f_if_succeed.gph f_payment_amt_num.gph ///                                        f_if_refund.gph f_bridge_duration_num.gph  ///                ,    rows(2)  imargin(0 0 0 0) ///                graphregion(margin(vsmall)) 
 .                 
 .         graph export "$figure_overleaf/Coef_w_alter_FEs.png", as(png) name("Graph") replace             
-file <REPLICATION_ROOT>/output/figure/Coef_w_alter_FEs.png saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Coef_w_alter_FEs.png
+    saved as PNG format
 .         graph export "$figure_overleaf/Coef_w_alter_FEs.pdf", as(pdf) name("Graph") replace             
-file <REPLICATION_ROOT>/output/figure/Coef_w_alter_FEs.pdf saved as PDF format
+file <REPLICATION_ROOT>/output/figure/Coef_w_alter_FEs.pdf
+    saved as PDF format
 .         
 .         
 . }

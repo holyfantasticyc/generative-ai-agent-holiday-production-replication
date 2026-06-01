@@ -18,8 +18,8 @@ log using "$replication_log/tableA5_by_gender.log", replace text
 local i = 0
 	
 use  "$temp/vacation_connected_call_level"  , clear
-drop if gender_customer == "Unknown" |  gender_cno == "Unknown"
 keep if vacation == 1
+drop if gender_customer == "Unknown" |  gender_cno == "Unknown"
 
 replace province_capital = 1 if missing(province_capital)
 gen gender_customer_num = (gender_customer == "Female")

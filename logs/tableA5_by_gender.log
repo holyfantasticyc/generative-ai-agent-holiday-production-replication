@@ -1,8 +1,8 @@
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA5_by_gender.log
   log type:  text
- opened on:  26 May 2026, 18:37:21
+ opened on:  31 May 2026, 09:27:51
 
 . 
 . **# Appendix Table: gender effects
@@ -11,100 +11,96 @@
 . local i = 0
 .         
 . use  "$temp/vacation_connected_call_level"  , clear
-. replace province_capital = 1 if missing(province_capital)
-(1,352 real changes made)
-. 
-. drop if gender_customer == "Unknown" |  gender_cno == "Unknown" 
+. keep if vacation == 1
+(0 observations deleted)
+. drop if gender_customer == "Unknown" |  gender_cno == "Unknown"
 (3,829 observations deleted)
+. 
+. replace province_capital = 1 if missing(province_capital)
+(179 real changes made)
 . gen gender_customer_num = (gender_customer == "Female")
 . 
 . foreach y in if_succeed  bridge_duration_num bridge_duration_num n_policy_succeed payment_amt_num payment_amt_per if_refund scale_premium_num ins_amt_num {
   2. 
-. 
-. keep if vacation == 1 
-  3. 
 . dis   "`y'"
-  4.         local i = `i' + 1
-  5. 
+  3.         local i = `i' + 1
+  4. 
 . preserve
-  6. 
+  5. 
 . if "`y'" == "if_succeed"{
-  7.         local ytitle = "%"
-  8.         replace `y' = `y' * 100
-  9.         
+  6.         local ytitle = "%"
+  7.         replace `y' = `y' * 100
+  8.         
 . }
- 10. if "`y'" == "payment_amt_num"{
- 11.         
+  9. if "`y'" == "payment_amt_num"{
+ 10.         
 .         local ytitle = "Chinese Yuan (CNY)"
- 12. 
+ 11. 
 . }
- 13. if "`y'" == "bridge_duration_num" & `i' == 2{
- 14.         global ytitle = " Seconds "
- 15.         
+ 12. if "`y'" == "bridge_duration_num" & `i' == 2{
+ 13.         global ytitle = " Seconds "
+ 14.         
 . }
- 16. if "`y'" == "bridge_duration_num" & `i' == 3{
- 17.         keep if if_succeed
- 18.         global ytitle = " Seconds "
- 19.         
+ 15. if "`y'" == "bridge_duration_num" & `i' == 3{
+ 16.         keep if if_succeed
+ 17.         global ytitle = " Seconds "
+ 18.         
 . }
- 20. if "`y'" == "payment_amt_per"{
- 21.         
+ 19. if "`y'" == "payment_amt_per"{
+ 20.         
 .         keep if if_succeed 
- 22.         cap drop payment_amt_per
- 23.         gen payment_amt_per = total_payment_amt_num / bridge_duration_num
- 24. 
+ 21.         cap drop payment_amt_per
+ 22.         gen payment_amt_per = total_payment_amt_num / bridge_duration_num
+ 23. 
 .         global ytitle = "Chinese Yuan (CNY)"
- 25.         
+ 24.         
 . }
- 26. if "`y'" == "if_refund"{
- 27.         
+ 25. if "`y'" == "if_refund"{
+ 26.         
 .         local ytitle = "%"
- 28.         replace `y' = `y' * 100
- 29.         
+ 27.         replace `y' = `y' * 100
+ 28.         
 . }
- 30. 
+ 29. 
 . 
 . if "`y'" == "n_policy_succeed"{
- 31.         keep if if_succeed
- 32. 
+ 30.         keep if if_succeed
+ 31. 
 .         global ytitle = "Count"
- 33.         
+ 32.         
 . }
- 34. if "`y'" == "scale_premium_num"{
- 35.         
+ 33. if "`y'" == "scale_premium_num"{
+ 34.         
 .         global ytitle = "Scale Premium (CNY)"
- 36.         
+ 35.         
 . }
- 37. 
+ 36. 
 . if "`y'" == "ins_amt_num"{
- 38.         
+ 37.         
 .         replace `y' = `y' / 10000
- 39. 
+ 38. 
 .         global ytitle = "Insurance Amount (10000 CNY)"
- 40.         
+ 39.         
 . }
- 41. 
+ 40. 
 . gen gender_group = . 
- 42. replace gender_group = 1 if if_AI
- 43. replace gender_group = 2 if !if_AI  & gender_customer == "Female" 
- 44. replace gender_group = 3 if !if_AI  & gender_customer == "Male" 
- 45. 
-. 
-. //              , absorb(date_create_time hour_create_time ) cl(crm_user_id)
+ 41. replace gender_group = 1 if if_AI
+ 42. replace gender_group = 2 if !if_AI  & gender_customer == "Female" 
+ 43. replace gender_group = 3 if !if_AI  & gender_customer == "Male"
+ 44. 
 . 
 . reghdfe  `y'  i.if_AI##i.gender_customer_num   province_capital  gap_create_first_call ///                , absorb(date_create_time hour_create_time ) cl(crm_user_id)
- 46.         estadd local mean_y = string(r(mean), "%9.2f") , replace
- 47.         estadd local date_fe "Yes" , replace
- 48.         estadd local control "Yes" , replace
- 49.         estadd local hour_create_time "Yes" , replace
- 50.         estadd local r2_a =  string(e(r2), "%9.3f") , replace
- 51.         estadd local N =  string(e(N), "%9.0f") , replace
- 52. 
+ 45.         estadd local mean_y = string(r(mean), "%9.2f") , replace
+ 46.         estadd local date_fe "Yes" , replace
+ 47.         estadd local control "Yes" , replace
+ 48.         estadd local hour_create_time "Yes" , replace
+ 49.         estadd local r2_a =  string(e(r2), "%9.3f") , replace
+ 50.         estadd local N =  string(e(N), "%9.0f") , replace
+ 51. 
 .         eststo table_by_gender_c`i'     
- 53. restore
- 54. 
+ 52. restore
+ 53. 
 . }       
-(0 observations deleted)
 if_succeed
 (1,092 real changes made)
 (38,708 missing values generated)
@@ -162,7 +158,6 @@ added macro:
 
 added macro:
                   e(N) : "38708"
-(0 observations deleted)
 bridge_duration_num
 (38,708 missing values generated)
 (14,866 real changes made)
@@ -219,7 +214,6 @@ added macro:
 
 added macro:
                   e(N) : "38708"
-(0 observations deleted)
 bridge_duration_num
 (37,616 observations deleted)
 (1,092 missing values generated)
@@ -277,7 +271,6 @@ added macro:
 
 added macro:
                   e(N) : "1092"
-(0 observations deleted)
 n_policy_succeed
 (37,616 observations deleted)
 (1,092 missing values generated)
@@ -335,7 +328,6 @@ added macro:
 
 added macro:
                   e(N) : "1092"
-(0 observations deleted)
 payment_amt_num
 (38,708 missing values generated)
 (14,866 real changes made)
@@ -392,7 +384,6 @@ added macro:
 
 added macro:
                   e(N) : "1092"
-(0 observations deleted)
 payment_amt_per
 (37,616 observations deleted)
 (1,092 missing values generated)
@@ -450,7 +441,6 @@ added macro:
 
 added macro:
                   e(N) : "1092"
-(0 observations deleted)
 if_refund
 (197 real changes made)
 (38,708 missing values generated)
@@ -508,7 +498,6 @@ added macro:
 
 added macro:
                   e(N) : "1092"
-(0 observations deleted)
 scale_premium_num
 (38,708 missing values generated)
 (14,866 real changes made)
@@ -565,7 +554,6 @@ added macro:
 
 added macro:
                   e(N) : "1092"
-(0 observations deleted)
 ins_amt_num
 (1,092 real changes made)
 (38,708 missing values generated)
@@ -630,7 +618,6 @@ added macro:
 . #delimit ; 
 delimiter now ;
 . esttab table_by_gender_c1 table_by_gender_c2 table_by_gender_c3 table_by_gender_c4 table_by_gender_c5 table_by_gender_c6 table_by_gender_c7 table_by_gender_c8  table_by_gender_c9         using  "$table_overleaf/table_by_gender.tex", replace f compressb(%12.3f) se(%12.3f) star(* 0.10 ** 0.05 *** 0.01)  keep( 1.if_AI  1.gender_customer_num 1.if_AI#1.gender_customer_num )   order(  1.gender_customer_num 1.if_AI#1.gender_customer_num  1.if_AI  ) coeflabels(                1.gender_customer_num  " Female Customer "                1.if_AI#1.gender_customer_num "$  \textit{AI} \times $ Female Customer "                1.if_AI "$ \textit{AI} $"  ) label booktabs noobs nonotes collabels(none) alignment(D{.}{.}{-1})  stats( control date_fe hour_create_time r2_a N , labels(  "Controls" "Date FE" "Hour FE" "\hline Adjusted R-squared"  "Obs" ) ) mtitles("Success rate" "Duration" "Duration (success)" "N succeed transcations"  "Payment amount" "Payment per second" "Refund rate" "Scale premium" "Insurance amount") nogaps  ;
-(file <REPLICATION_ROOT>/output/table/table_by_gender.tex not found)
 (output written to <REPLICATION_ROOT>/output/table/table_by_gender.tex)
 .  #delimit cr
 delimiter now cr

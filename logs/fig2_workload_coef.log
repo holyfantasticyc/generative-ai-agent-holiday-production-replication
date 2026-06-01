@@ -1,20 +1,19 @@
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig2_workload_coef.log
   log type:  text
- opened on:  26 May 2026, 18:38:55
+ opened on:  31 May 2026, 09:29:21
 
 . 
 . *===================================================================
 . * Panel A: Coef_by_workload.pdf
-. *  source: analysis_data_vacation.do, section "Figure: Results: by workload"
 . *===================================================================
 . **# Figure: Results: by workload
 . * Call-level data (one row per call): used so within-day task_order counts each
 . * call exactly once, rather than once per contract sold.
 . use  "$temp/vacation_connected_call_level"  , clear
 
-. keep if gap_creat_lastcallthrough < 3600 // get rid of follow-up calls that begin the next day
+. keep if gap_creat_lastcallthrough < 3600 // restrict to follow-up within 1 hour
 (3,384 observations deleted)
 
 . 
@@ -47,7 +46,7 @@ file hx.gph saved
 . restore
 . 
 . 
-. * If success as Y
+. * Success rate as outcome
 . reghdfe if_succeed ib0.bin_task_order  ///                , absorb(date_create_time hour_create_time)   cl(crm_user_id)
 (MWFE estimator converged in 5 iterations)
 
@@ -94,15 +93,16 @@ file effect_by_load.gph saved
 . 
 .                         
 .                         graph export "$figure_overleaf/Coef_by_workload.png", as(png) name("Graph") replace             
-file <REPLICATION_ROOT>/output/figure/Coef_by_workload.png saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Coef_by_workload.png
+    saved as PNG format
 .                         graph export "$figure_overleaf/Coef_by_workload.pdf", as(pdf) name("Graph") replace
-file <REPLICATION_ROOT>/output/figure/Coef_by_workload.pdf saved as PDF format
+file <REPLICATION_ROOT>/output/figure/Coef_by_workload.pdf
+    saved as PDF format
 . }
 
 . 
 . *===================================================================
 . * Panel B: Overtime_rule_panel.pdf  (statutory overtime compensation)
-. *  source: RR1/Figure_overtime_rule.do
 . *===================================================================
 . **# Figure: statutory overtime compensation under Chinese labor law
 . clear
@@ -136,10 +136,12 @@ file <REPLICATION_ROOT>/output/figure/Coef_by_workload.pdf saved as PDF format
 
 . 
 . graph export "$figure_overleaf/Overtime_rule_panel.png", as(png) name("overtime_rule") replace
-file <REPLICATION_ROOT>/output/figure/Overtime_rule_panel.png saved as PNG format
+file <REPLICATION_ROOT>/output/figure/Overtime_rule_panel.png
+    saved as PNG format
 
 . graph export "$figure_overleaf/Overtime_rule_panel.pdf", as(pdf) name("overtime_rule") replace
-file <REPLICATION_ROOT>/output/figure/Overtime_rule_panel.pdf saved as PDF format
+file <REPLICATION_ROOT>/output/figure/Overtime_rule_panel.pdf
+    saved as PDF format
 
 . 
 . capture log close

@@ -1,8 +1,8 @@
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/output/table/delta.log
   log type:  text
- opened on:  26 May 2026, 18:36:43
+ opened on:  31 May 2026, 09:27:15
 
 . **# Part 1
 . 
@@ -23,8 +23,6 @@
 . local i = 0
 . foreach y in if_succeed  payment_amt_num  {
   2. 
-. // foreach y in if_succeed n_policy_succeed {
-. 
 . dis   "`y'"
   3.         local i = `i' + 1
   4. 
@@ -434,7 +432,7 @@ p_h_med   = beta_0 + beta_6  =   0.79311536
 
 . 
 . * =========================================================
-. * Optional: lincom standard errors for delayed human success rates
+. * lincom standard errors for delayed human success rates
 . * =========================================================
 . display "SE for implied delayed human success rates"
 SE for implied delayed human success rates
@@ -506,5 +504,5 @@ r7           0           0           0
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/output/table/delta.log
   log type:  text
- closed on:  26 May 2026, 18:37:19
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ closed on:  31 May 2026, 09:27:49
+-----------------------------------------------------------------------------------------------------------

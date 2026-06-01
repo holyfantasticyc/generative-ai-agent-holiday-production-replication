@@ -1,14 +1,12 @@
--------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  <REPLICATION_ROOT>/log
-> s/fig4_case_study.log
+       log:  <REPLICATION_ROOT>/logs/fig4_case_study.log
   log type:  text
- opened on:  26 May 2026, 19:45:32
+ opened on:  31 May 2026, 09:29:32
 
 . 
 . *===================================================================
 . * Panel A: National Day case study (handling capacity)
-. *  source: RR1/Figure_case_study_nationalday.do
 . *===================================================================
 . **# Figure: Impact of AI on company case handelling capacity
 .         
@@ -22,8 +20,7 @@
 
 . gen if_call_w_6_hour  = gap_create_first_call < 3600 * 6
 
-. merge m:1 date_create_time using "$temp/vacation_date_create_time" , keep(3) 
-> nogen
+. merge m:1 date_create_time using "$temp/vacation_date_create_time" , keep(3) nogen
 
     Result                      Number of obs
     -----------------------------------------
@@ -35,7 +32,6 @@
 
 . cap drop if overtime == 1
 
-. *drop data that should not exists
 . drop if if_AI == 1 & vacation_create_time == 0 & overtime == 0
 (339 observations deleted)
 
@@ -44,13 +40,10 @@
 . 
 . preserve
 
-.         collapse (max) if_AI_date = if_AI , by( date_create_time year_create_
-> time month_create_time day_create_time dow_create_time )
+.         collapse (max) if_AI_date = if_AI , by( date_create_time year_create_time month_create_time day_create_time dow_create_time )
 
 .         save "$temp/temp" , replace
-file
-    <DATA_ROOT>/temp/
-    > temp.dta saved
+file <DATA_ROOT>/temp/temp.dta saved
 
 . restore
 
@@ -65,14 +58,11 @@ file
     -----------------------------------------
 
 . 
-. keep if (date_create_time >= 23623 & date_create_time <= 23656 ) ///
->                 | (date_create_time >= 23254 & date_create_time <= 23288 )
+. keep if (date_create_time >= 23623 & date_create_time <= 23656 ) ///                | (date_create_time >= 23254 & date_create_time <= 23288 )
 (2,810,480 observations deleted)
 
 . 
-. gen national_holiday = ( (date_create_time >= 23650 & date_create_time <= 236
-> 56 ) ///
->                 | (date_create_time >= 23282 & date_create_time <= 23288 ))
+. gen national_holiday = ( (date_create_time >= 23650 & date_create_time <= 23656 ) ///                | (date_create_time >= 23282 & date_create_time <= 23288 ))
 
 .         
 . replace if_AI = 0 if national_holiday == 0
@@ -82,14 +72,10 @@ file
 (267,047 real changes made)
 
 . 
-. collapse (sum) N_total_calls = N  N_succeed_calls = if_succeed tota_payment =
->  payment_amt_num (mean) if_call_w_1_d  , by( date_create_time national_holida
-> y year_create_time month_create_time day_create_time dow_create_time if_AI if
-> _AI_date )
+. collapse (sum) N_total_calls = N  N_succeed_calls = if_succeed tota_payment = payment_amt_num (mean) if_call_w_1_d  , by( date_create_time national_holiday year_create_time month_create_time day_create_time dow_create_time if_AI if_AI_date )
 
 . 
-. bys year_create_time : egen temp_min = min(date_create_time) if national_holi
-> day
+. bys year_create_time : egen temp_min = min(date_create_time) if national_holiday
 (55 missing values generated)
 
 . bys year_create_time : egen temp_min2 = min(temp_min) 
@@ -113,8 +99,7 @@ file
 (21 real changes made)
 
 . 
-. collapse (mean) N_total_calls N_succeed_calls tota_payment (mean) if_call_w_1
-> _d  , by( year_create_time x_week  if_AI )
+. collapse (mean) N_total_calls N_succeed_calls tota_payment (mean) if_call_w_1_d  , by( year_create_time x_week  if_AI )
 
 . 
 . sum N_total_calls if  year_create_time == 2024 & x_week == 0 & if_AI == 0   
@@ -123,8 +108,7 @@ file
 -------------+---------------------------------------------------------
 N_total_ca~s |          1    1044.429           .   1044.429   1044.429
 
-. replace N_total_calls = N_total_calls + r(mean) if  year_create_time == 2024 
-> & x_week == 0 & if_AI == 1  
+. replace N_total_calls = N_total_calls + r(mean) if  year_create_time == 2024 & x_week == 0 & if_AI == 1  
 (1 real change made)
 
 . 
@@ -142,8 +126,7 @@ N_total_ca~s |          1    1044.429           .   1044.429   1044.429
   7.         qui: sum `var' if year_create_time == 2024 & x_week == -1
   8.         local y3 = r(mean)  
   9.         
-.         replace `var' = `dy' * `y3' if year_create_time == 2024 & x_week == 0
->  & if_AI == 0
+.         replace `var' = `dy' * `y3' if year_create_time == 2024 & x_week == 0 & if_AI == 0
  10.         
 . }
 . 
@@ -155,7 +138,7 @@ N_total_ca~s |          1    1044.429           .   1044.429   1044.429
 
 .         cap drop n y temp* normalizer
 
-.         gen y = N_total_calls // N_total_calls N_succeed_calls tota_payment
+.         gen y = N_total_calls
 
 .         bys year_create_time : gen n = _n
 
@@ -177,13 +160,11 @@ N_total_ca~s |          1    1044.429           .   1044.429   1044.429
 (11 real changes made)
 
 . 
-.                 qui: sum y if year_create_time == 2024 & x_week == 0 & if_AI 
-> == 0
+.                 qui: sum y if year_create_time == 2024 & x_week == 0 & if_AI == 0
 
 .                 local y1 =  r(mean) 
 
-.                 qui: sum y if year_create_time == 2024 & x_week == 0 & if_AI 
-> == 1
+.                 qui: sum y if year_create_time == 2024 & x_week == 0 & if_AI == 1
 
 .                 local y2 =  r(mean) 
 
@@ -197,44 +178,18 @@ N_total_ca~s |          1    1044.429           .   1044.429   1044.429
 .         set scheme white_ptol
 
 . 
-.         twoway || ///
->                 scatter y x if year_create_time == 2023 ,mcolor(blue%50) msiz
-> e(medium) connect(l) lcolor(blue%50) lpattern(solid) lw(medium)   || ///
->                 scatter y x if year_create_time == 2024 & x != 0, mcolor(red%
-> 50) msize(medium) connect(l) lcolor(red%50) lpattern(solid) lw(medium) || ///
->                 scatter y x if year_create_time == 2024 & if_AI == 0 & x >= -
-> 1 , mcolor(red%50) msize(medium) connect(l) lcolor(red) lpattern(shortdash_do
-> t) lw(medium) || ///
->                 scatter y x if year_create_time == 2024 & ((if_AI == 1 & x >=
->  -1) | (if_AI == 0 & x == -1)) , ms(d) connect(l) mcolor(red) msize(medium) c
-> onnect(l) lcolor(red) lpattern(solid) lw(thick) || ///
->                 scatteri 1.27 0.3 0.29 0.3 , recast(line) lw(medthin)  mc(non
-> e) lc(black) lp("-") ||  ///
->                 scatteri 1.27 0.3 1.27 0.18 , recast(line) lw(medthin)  mc(no
-> ne) lc(black) lp(solid) ||  ///
->                 scatteri 0.29 0.3 0.29 0.18 , recast(line) lw(medthin)  mc(no
-> ne) lc(black) lp(solid) ||  ///
->                 , legend(on order(1 "Only Human, 2023 Sept. + Holiday Week" 2
->  "Only Human, 2024 Sept." 4 "Human + AI, 2024 Holiday Week" 3 "Only Human, 20
-> 24 Holiday Week"  ) ring(0) pos(7) rows(4)) xlabel( -4  "T-4 Week" -3 "T-3 We
-> ek" -2 "T-2 Week" -1 "T-1 Week" 0 `" "Holiday Week"  "{bf: (AI Treatment)}" "
-> ' 1.5 " " , nogrid) ///
->            xtitle("")   ytitle( " Number of Calls Finished (normalized)" ) //
-> / 
->                 ylabel(0(0.5)1.7, nogrid )       text(0.78 0.7 "{bf: AI boost
-> :}" )  text(0.72 1.0 "# of calls: `boost'%") graphregion(margin(zero))
+.         twoway || ///                scatter y x if year_create_time == 2023 ,mcolor(blue%50) msize(medium) connect(l) lcolor(blue%50) lpattern(solid) lw(medium)   || ///                scatter y x if year_create_time == 2024 & x != 0, mcolor(red%50) msize(medium) connect(l) lcolor(red%50) lpattern(solid) lw(medium) || ///                scatter y x if year_create_time == 2024 & if_AI == 0 & x >= -1 , mcolor(red%50) msize(medium) connect(l) lcolor(red) lpattern(shortdash_dot) lw(medium) || ///                scatter y x if year_create_time == 2024 & ((if_AI == 1 & x >= -1) | (if_AI == 0 & x == -1)) , ms(d) connect(l) mcolor(red) msize(medium) connect(l) lcolor(red) lpattern(solid) lw(thick) || ///                scatteri 1.27 0.3 0.29 0.3 , recast(line) lw(medthin)  mc(none) lc(black) lp("-") ||  ///                scatteri 1.27 0.3 1.27 0.18 , recast(line) lw(medthin)  mc(none) lc(black) lp(solid) ||  ///                scatteri 0.29 0.3 0.29 0.18 , recast(line) lw(medthin)  mc(none) lc(black) lp(solid) ||  ///                , legend(on order(1 "Only Human, 2023 Sept. + Holiday Week" 2 "Only Human, 2024 Sept." 4 "Human + AI, 2024 Holiday Week" 3 "Only Human, 2024 Holiday Week"  ) ring(0) pos(7) rows(4)) xlabel( -4  "T-4 Week" -3 "T-3 Week" -2 "T-2 Week" -1 "T-1 Week" 0 `" "Holiday Week"  "{bf: (AI Treatment)}" "' 1.5 " " , nogrid) ///           xtitle("")   ytitle( " Number of Calls Finished (normalized)" ) ///                 ylabel(0(0.5)1.7, nogrid )       text(0.78 0.7 "{bf: AI boost:}" )  text(0.72 1.0 "# of calls: `boost'%") graphregion(margin(zero))
 
 .                 
-.                 graph export "$figure_overleaf/case_study_nationalday_R1.png"
-> , as(png) name("Graph") replace
-file <REPLICATION_ROOT>/output/figu
-> re/case_study_nationalday_R1.png written in PNG format
-
-.                 graph export "$figure_overleaf/case_study_nationalday_R1.pdf"
-> , as(pdf) name("Graph") replace
+.                 graph export "$figure_overleaf/case_study_nationalday_R1.png", as(png) name("Graph") replace
 file
-    <REPLICATION_ROOT>/output/fig
-    > ure/case_study_nationalday_R1.pdf saved as PDF format
+    <REPLICATION_ROOT>/output/figure/case_study_nationalday_R
+    > 1.png saved as PNG format
+
+.                 graph export "$figure_overleaf/case_study_nationalday_R1.pdf", as(pdf) name("Graph") replace
+file
+    <REPLICATION_ROOT>/output/figure/case_study_nationalday_R
+    > 1.pdf saved as PDF format
 
 . 
 . restore
@@ -242,7 +197,6 @@ file
 . 
 . *===================================================================
 . * Panel B: Decline in connection / success rate by follow-up delay
-. *  source: RR1/Figure_rate_time_gap_relationsip.do
 . *===================================================================
 . **#Figure: Relationship between call gap and Success Rate
 . 
@@ -291,8 +245,7 @@ file
 (2,832 real changes made)
 
 . 
-.         reghdfe if_connected ib0.bin_gap_range  , a(crm_user_id date_create_t
-> ime) vce(cl crm_user_id)
+.         reghdfe if_connected ib0.bin_gap_range  , a(crm_user_id date_create_time) vce(cl crm_user_id)
 (dropped 18 singleton observations)
 (MWFE estimator converged in 12 iterations)
 
@@ -304,21 +257,21 @@ Statistics robust to heteroskedasticity           Prob > F        =     0.0000
                                                   Within R-sq.    =     0.0007
 Number of clusters (crm_user_id) =      1,465     Root MSE        =    47.4491
 
-                        (Std. err. adjusted for 1,465 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-if_connected | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
--------------+----------------------------------------------------------------
-bin_gap_ra~e |
-          1  |  -.9587206    .348694    -2.75   0.006    -1.642714   -.2747274
-          2  |  -2.301347    .670011    -3.43   0.001    -3.615631   -.9870633
-          3  |   -2.21227   .4349447    -5.09   0.000    -3.065451   -1.359089
-          4  |   -4.79085   .6978581    -6.87   0.000    -6.159759   -3.421942
-          5  |  -9.558775   .8909984   -10.73   0.000    -11.30654   -7.811005
-          6  |  -39.79364    2.76637   -14.38   0.000    -45.22011   -34.36716
-             |
-       _cons |   64.07674   .0066448  9643.10   0.000     64.06371    64.08978
-------------------------------------------------------------------------------
+                         (Std. err. adjusted for 1,465 clusters in crm_user_id)
+-------------------------------------------------------------------------------
+              |               Robust
+ if_connected | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+bin_gap_range |
+           1  |  -.9587206    .348694    -2.75   0.006    -1.642714   -.2747274
+           2  |  -2.301347    .670011    -3.43   0.001    -3.615631   -.9870633
+           3  |   -2.21227   .4349447    -5.09   0.000    -3.065451   -1.359089
+           4  |   -4.79085   .6978581    -6.87   0.000    -6.159759   -3.421942
+           5  |  -9.558775   .8909984   -10.73   0.000    -11.30654   -7.811005
+           6  |  -39.79364    2.76637   -14.38   0.000    -45.22011   -34.36716
+              |
+        _cons |   64.07674   .0066448  9643.10   0.000     64.06371    64.08978
+-------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
@@ -337,10 +290,8 @@ Absorbed degrees of freedom:
 
 .         forvalues i=1(1)6{ 
   2.            scalar a`i'=_b[`i'.bin_gap_range] / `base' 
-  3.            scalar b`i'=(_b[`i'.bin_gap_range]+1.96*_se[`i'.bin_gap_range])
->  / `base'
-  4.            scalar c`i'=(_b[`i'.bin_gap_range]-1.96*_se[`i'.bin_gap_range])
->  / `base' 
+  3.            scalar b`i'=(_b[`i'.bin_gap_range]+1.96*_se[`i'.bin_gap_range]) / `base'
+  4.            scalar c`i'=(_b[`i'.bin_gap_range]-1.96*_se[`i'.bin_gap_range]) / `base' 
   5.                 mat A[`i',1]=`i'
   6.                 mat A[`i',2]=a`i'
   7.                 mat A[`i',3]=b`i'
@@ -363,9 +314,7 @@ Number of observations (_N) was 0, now 7.
 (0 real changes made)
 
 .                 save "$temp/temp_A" , replace
-file
-    <DATA_ROOT>/temp/
-    > temp_A.dta saved
+file <DATA_ROOT>/temp/temp_A.dta saved
 
 .         restore
 
@@ -374,8 +323,7 @@ file
 
 .         
 .         
-.         reghdfe if_succeed ib0.bin_gap_range  , a(crm_user_id date_create_tim
-> e) vce(cl crm_user_id)
+.         reghdfe if_succeed ib0.bin_gap_range  , a(crm_user_id date_create_time) vce(cl crm_user_id)
 (dropped 18 singleton observations)
 (MWFE estimator converged in 12 iterations)
 
@@ -387,21 +335,21 @@ Statistics robust to heteroskedasticity           Prob > F        =     0.0000
                                                   Within R-sq.    =     0.0001
 Number of clusters (crm_user_id) =      1,465     Root MSE        =    17.5665
 
-                        (Std. err. adjusted for 1,465 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-  if_succeed | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
--------------+----------------------------------------------------------------
-bin_gap_ra~e |
-          1  |   .0195058   .1207732     0.16   0.872    -.2174012    .2564129
-          2  |   -.874684   .2188637    -4.00   0.000    -1.304004   -.4453641
-          3  |  -.8014985   .1945979    -4.12   0.000    -1.183219    -.419778
-          4  |  -.8298232   .2775714    -2.99   0.003    -1.374303   -.2853432
-          5  |  -2.245604   .3845797    -5.84   0.000     -2.99999   -1.491218
-          6  |  -2.527943   .5520797    -4.58   0.000    -3.610895   -1.444991
-             |
-       _cons |   3.321058   .0023083  1438.76   0.000      3.31653    3.325586
-------------------------------------------------------------------------------
+                         (Std. err. adjusted for 1,465 clusters in crm_user_id)
+-------------------------------------------------------------------------------
+              |               Robust
+   if_succeed | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+bin_gap_range |
+           1  |   .0195058   .1207732     0.16   0.872    -.2174012    .2564129
+           2  |   -.874684   .2188637    -4.00   0.000    -1.304004   -.4453641
+           3  |  -.8014985   .1945979    -4.12   0.000    -1.183219    -.419778
+           4  |  -.8298232   .2775714    -2.99   0.003    -1.374303   -.2853432
+           5  |  -2.245604   .3845797    -5.84   0.000     -2.99999   -1.491218
+           6  |  -2.527943   .5520797    -4.58   0.000    -3.610895   -1.444991
+              |
+        _cons |   3.321058   .0023083  1438.76   0.000      3.31653    3.325586
+-------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
@@ -419,10 +367,8 @@ Absorbed degrees of freedom:
 
 .         forvalues i=1(1)6{ 
   2.            scalar a`i'=_b[`i'.bin_gap_range] / `base'
-  3.            scalar b`i'=(_b[`i'.bin_gap_range]+1.96*_se[`i'.bin_gap_range])
->  / `base'
-  4.            scalar c`i'=(_b[`i'.bin_gap_range]-1.96*_se[`i'.bin_gap_range])
->  / `base'
+  3.            scalar b`i'=(_b[`i'.bin_gap_range]+1.96*_se[`i'.bin_gap_range]) / `base'
+  4.            scalar c`i'=(_b[`i'.bin_gap_range]-1.96*_se[`i'.bin_gap_range]) / `base'
   5.                 mat B[`i',1]=`i'
   6.                 mat B[`i',2]=a`i'
   7.                 mat B[`i',3]=b`i'
@@ -442,9 +388,7 @@ Number of observations (_N) was 0, now 7.
 (6 real changes made)
 
 .         save "$temp/temp_B" , replace
-file
-    <DATA_ROOT>/temp/
-    > temp_B.dta saved
+file <DATA_ROOT>/temp/temp_B.dta saved
 
 .         
 . restore
@@ -476,36 +420,18 @@ file
 . set scheme white_jet
 
 . 
-. twoway  /// 
->     (scatter A2 A1, mcolor(green%60) msize(small) connect(l) ///
->         lcolor(green%60) lpattern(dash) lw(medium)) ///
->     (rcap A3 A4 A1 if A1 != 0, lcolor(green%60) lpattern(solid)) ///
->     (scatter B2 B1,  ms(d) mcolor(orange) msize(small) ///
->         connect(l) lcolor(orange) lpattern(solid) lw(medthick)) ///
->     (rcap B3 B4 B1 if A1 != 0,lcolor(orange) ///
->         lpattern(solid) lw(medium)) ///
->     , ///
->     yscale(range(-100 0)) ///
->     ylabel(-100(20)0, nogrid) ///
->     yline(0, lcolor(gs10)) ///
->     xlabel(0 "< 10min" 1 "10 - 30min" 2 "30min - 1h" 3 "1 - 6h" ///
->            4 "6h - 1d" 5 "1d - 3d" 6 "> 3d", nogrid) ///
->     ytitle("Percentage Changes, %") ///
->     legend(order(2 "Connected Rate" 4 "Success Rate") ///
->            ring(0) pos(7) rows(1) size(medium)) ///
->     xtitle("")
+. twoway  ///     (scatter A2 A1, mcolor(green%60) msize(small) connect(l) ///        lcolor(green%60) lpattern(dash) lw(medium)) ///    (rcap A3 A4 A1 if A1 != 0, lcolor(green%60) lpattern(solid)) ///    (scatter B2 B1,  ms(d) mcolor(orange) msize(small) ///        connect(l) lcolor(orange) lpattern(solid) lw(medthick)) ///    (rcap B3 B4 B1 if A1 != 0,lcolor(orange) ///        lpattern(solid) lw(medium)) ///    , ///    yscale(range(-100 0)) ///    ylabel(-100(20)0, nogrid) ///    yline(0, lcolor(gs10)) ///    xlabel(0 "< 10min" 1 "10 - 30min" 2 "30min - 1h" 3 "1 - 6h" ///           4 "6h - 1d" 5 "1d - 3d" 6 "> 3d", nogrid) ///    ytitle("Percentage Changes, %") ///    legend(order(2 "Connected Rate" 4 "Success Rate") ///           ring(0) pos(7) rows(1) size(medium)) ///    xtitle("")
 
 . 
-. graph export "$figure_overleaf/rate_time_gap_relationsip_R1.png", as(png) nam
-> e("Graph") replace         
-file <REPLICATION_ROOT>/output/figu
-> re/rate_time_gap_relationsip_R1.png written in PNG format
-
-. graph export "$figure_overleaf/rate_time_gap_relationsip_R1.pdf", as(pdf) nam
-> e("Graph") replace
+. graph export "$figure_overleaf/rate_time_gap_relationsip_R1.png", as(png) name("Graph") replace         
 file
-    <REPLICATION_ROOT>/output/fig
-    > ure/rate_time_gap_relationsip_R1.pdf saved as PDF format
+    <REPLICATION_ROOT>/output/figure/rate_time_gap_relationsi
+    > p_R1.png saved as PNG format
+
+. graph export "$figure_overleaf/rate_time_gap_relationsip_R1.pdf", as(pdf) name("Graph") replace
+file
+    <REPLICATION_ROOT>/output/figure/rate_time_gap_relationsi
+    > p_R1.pdf saved as PDF format
 
 . 
 . capture log close

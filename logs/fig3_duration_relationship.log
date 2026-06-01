@@ -1,8 +1,8 @@
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig3_duration_relationship.log
   log type:  text
- opened on:  26 May 2026, 18:38:57
+ opened on:  31 May 2026, 09:29:23
 
 . 
 . **# Figure: Success Rate - time relationship
@@ -12,7 +12,6 @@
 . * the duration-vs-success-rate relationship and the duration distributions.
 . use  "$temp/vacation_connected_call_level"  , clear
 . 
-. * calcualte precentile
 . preserve
 . cap drop temp
 . gen temp = bridge_duration_num <= 450  // Target comparison
@@ -25,7 +24,7 @@
 . 
 . bys if_succeed: sum bridge_duration_num , de
 
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
 -> if_succeed = 0
 
                        bridge_duration
@@ -43,7 +42,7 @@
 95%          345           3276       Skewness       6.283063
 99%          823           3487       Kurtosis       65.75273
 
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
 -> if_succeed = 1
 
                        bridge_duration
@@ -224,7 +223,6 @@ file relation.gph saved
 .         
 . }
 . 
-.         * regression coefficent 
 .         reghdfe `y' if_AI , noa 
 (MWFE estimator converged in 1 iterations)
 
@@ -244,7 +242,6 @@ Absorbing 1 HDFE group                            F(   1,  40621) =       2.43
 ------------------------------------------------------------------------------
 .         local coe = round(_b[if_AI],0.01)
 .         
-.         * figure
 .         collapse (mean) mean= `y' (sem) sem= `y', by(`group_variable')
 .         gen lower_bound = mean - 1.96 * sem
 .         gen upper_bound = mean + 1.96 * sem
@@ -279,7 +276,6 @@ file ttest1.gph saved
 .         
 . }
 . 
-.         * regression coefficent 
 .         reghdfe `y' if_AI , noa 
 (MWFE estimator converged in 1 iterations)
 
@@ -299,7 +295,6 @@ Absorbing 1 HDFE group                            F(   1,   1905) =      65.48
 ------------------------------------------------------------------------------
 .         local coe = round(_b[if_AI],0.01)
 .         
-.         * figure
 .         collapse (mean) mean= `y' (sem) sem= `y', by(`group_variable')
 .         gen lower_bound = mean - 1.96 * sem
 .         gen upper_bound = mean + 1.96 * sem
@@ -314,165 +309,23 @@ file ttest2.gph saved
 . 
 . }
 . 
-.  graph combine  ttest1.gph ttest2.gph ///                ,    rows(1)  imargin(0 0 0 0) ///                graphregion(margin(zero)) fysize(60) ///                subtitle("Panel A. Success Rate Difference by Call Duration",size(small)) ///                   saving(ttest, replace) 
+.  graph combine  ttest1.gph ttest2.gph ///                ,    rows(1)  imargin(0 0 0 0) ///                graphregion(margin(zero)) fysize(60) ///                subtitle("Panel A. Success Rate Difference by Call Duration",size(small)) ///                saving(ttest, replace)
 (file ttest.gph not found)
 file ttest.gph saved
-.                 
-.                 
-. {
 . 
 . 
-. **## *Figure: Duration
-. use  "$temp/vacation_connected_call_level"  , clear
-. cap gen gender_customer_num = ( gender_customer == "Female" )
-. replace province_capital = 1 if missing(province_capital)
-(1,352 real changes made)
-. 
-. replace payment_amt_num = 0 if missing(payment_amt_num)
-(41,282 real changes made)
-. replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
-(0 real changes made)
-. 
-. * only succeed phone call
-. {
-.         
-. local y bridge_duration_num
-. local group_variable if_AI
-. 
-. if "`y'" == "bridge_duration_num"{
-.         
-.         global ytitle = " Seconds "
-.         
-. }
-. 
-. preserve
-. 
-. keep if if_succeed
-(41,282 observations deleted)
-. 
-.         * first tease out fixed effects
-.         cap drop `y'_res
-.         reghdfe `y' province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id) res(`y'_res)
-(MWFE estimator converged in 5 iterations)
-
-HDFE Linear regression                            Number of obs   =      1,255
-Absorbing 2 HDFE groups                           F(   2,    128) =       0.23
-Statistics robust to heteroskedasticity           Prob > F        =     0.7987
-                                                  R-squared       =     0.0820
-                                                  Adj R-squared   =     0.0572
-                                                  Within R-sq.    =     0.0003
-Number of clusters (crm_user_id) =        129     Root MSE        =   675.1868
-
-                                 (Std. err. adjusted for 129 clusters in crm_user_id)
--------------------------------------------------------------------------------------
-                    |               Robust
-bridge_duration_num | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
---------------------+----------------------------------------------------------------
-   province_capital |   21.99032    41.6016     0.53   0.598    -60.32555    104.3062
-gender_customer_num |   17.59728   42.59461     0.41   0.680    -66.68342     101.878
-              _cons |   603.3101   55.27918    10.91   0.000     493.9308    712.6894
--------------------------------------------------------------------------------------
-
-Absorbed degrees of freedom:
-----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs |
-------------------+---------------------------------------|
- date_create_time |        21           0          21     |
- hour_create_time |        12           1          11     |
-----------------------------------------------------------+
-. 
-.         replace `y'_res = `y'_res + _b[_cons]
-(1,255 real changes made)
-.         
-.         * regression coefficent with fixed effects
-.         reghdfe `y' if_AI province_capital gender_customer_num , absorb(date_create_time hour_create_time)  cl(crm_user_id)
-(MWFE estimator converged in 6 iterations)
-
-HDFE Linear regression                            Number of obs   =      1,255
-Absorbing 2 HDFE groups                           F(   3,    128) =      37.90
-Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.1255
-                                                  Adj R-squared   =     0.1011
-                                                  Within R-sq.    =     0.0477
-Number of clusters (crm_user_id) =        129     Root MSE        =   659.2540
-
-                                 (Std. err. adjusted for 129 clusters in crm_user_id)
--------------------------------------------------------------------------------------
-                    |               Robust
-bridge_duration_num | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
---------------------+----------------------------------------------------------------
-              if_AI |  -492.8251   51.28397    -9.61   0.000    -594.2992    -391.351
-   province_capital |   13.35418   43.52693     0.31   0.759    -72.77129    99.47965
-gender_customer_num |   19.85248   42.37402     0.47   0.640    -63.99176    103.6967
-              _cons |   717.4928   46.30165    15.50   0.000     625.8771    809.1086
--------------------------------------------------------------------------------------
-
-Absorbed degrees of freedom:
-----------------------------------------------------------+
-      Absorbed FE | Categories  - Redundant  = Num. Coefs |
-------------------+---------------------------------------|
- date_create_time |        21           0          21     |
- hour_create_time |        12           1          11     |
-----------------------------------------------------------+
-.         local coe = round(_b[if_AI],0.001)
-.         local mean_treat = _b[if_AI] + _b[_cons]
-.         local mean_control = _b[_cons]
-.         local se_control = _se[_cons]
-.         lincom if_AI + _cons
-
- ( 1)  if_AI + _cons = 0
-
-------------------------------------------------------------------------------
-bridge_dur~m | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
--------------+----------------------------------------------------------------
-         (1) |   224.6677   30.27528     7.42   0.000     164.7629    284.5725
-------------------------------------------------------------------------------
-.         local se_treat = r(se)
-. 
-.         * figure
-.         clear
-.         set obs 2
-Number of observations (_N) was 0, now 2.
-.         gen `group_variable' = 0 in 1
-(1 missing value generated)
-.         replace `group_variable' = 1 in 2
-(1 real change made)
-.         gen mean = `mean_control' if `group_variable' == 0 
-(1 missing value generated)
-.         replace mean = `mean_treat' if `group_variable' == 1 
-(1 real change made)
-.         gen sem = `se_control' if `group_variable' == 0 
-(1 missing value generated)
-.         replace sem = `se_treat' if `group_variable' == 1       
-(1 real change made)
-.         gen lower_bound = mean - 1.96 * sem
-.         gen upper_bound = mean + 1.96 * sem
-. 
-. 
-.         set scheme white_ptol
-.         twoway (bar mean `group_variable' if `group_variable' == 0 , barwidth(0.5) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 1 , barwidth(0.5) fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 0, lw(medium) lcolor($control_color) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 1 , lw(medium) lcolor($treat_color) lp(dash)) ///                   (scatteri 920 0 920 1,  recast(line) lw(medthin)  mc(none) lc(black) lp("-")) ///                   (scatteri 920 0 920 1,  recast(dropline) base(860) lw(medthin) mc(none) lc(black) lp(solid)) ///                   , legend(off ) xlabel( 0 "Human Representative " 1 "AI Representative " , nogrid)  ///                                   xtitle("")   ytitle( $ytitle ) ///                     ylabel(100(200)980, nogrid )                text(955 0.5 "diff = `coe', p{superscript:***} < 0.01") ///                   subtitle("Duration of Success Calls")  graphregion(margin(zero)) 
-.                 graph export "$figure_overleaf/Bar_plot2_duration_succeed_FE.png", as(png) name("Graph") replace                
-file <REPLICATION_ROOT>/output/figure/Bar_plot2_duration_succeed_FE.png saved as PNG format
-.                 graph export "$figure_overleaf/Bar_plot2_duration_succeed_FE.pdf", as(pdf) name("Graph") replace                
-file <REPLICATION_ROOT>/output/figure/Bar_plot2_duration_succeed_FE.pdf saved as PDF format
-. 
-. restore
-. 
-. 
-. }
-. 
-. 
-. }       
-. 
-.                 
 . **## Combine
 .                 
 .  graph combine    ttest.gph relation.gph  hx.gph ///                ,    cols(1)      imargin(0 0 0 0) ///                graphregion(margin(medium))   xsize(4)  ysize(3) 
 .                 
 .         graph export "$figure_overleaf/relationship_duration_succeed.png", as(png) name("Graph") replace                
-file <REPLICATION_ROOT>/output/figure/relationship_duration_succeed.png saved as PNG format
+file
+    <REPLICATION_ROOT>/output/figure/relationship_duration_su
+    > cceed.png saved as PNG format
 .         graph export "$figure_overleaf/relationship_duration_succeed.pdf", as(pdf) name("Graph") replace                
-file <REPLICATION_ROOT>/output/figure/relationship_duration_succeed.pdf saved as PDF format
+file
+    <REPLICATION_ROOT>/output/figure/relationship_duration_su
+    > cceed.pdf saved as PDF format
 . 
 . 
 . }

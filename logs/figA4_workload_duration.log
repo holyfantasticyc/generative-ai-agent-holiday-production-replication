@@ -1,8 +1,8 @@
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA4_workload_duration.log
   log type:  text
- opened on:  26 May 2026, 18:40:04
+ opened on:  31 May 2026, 09:30:28
 
 . 
 . **# Figure: Results: by workload
@@ -10,7 +10,7 @@
 . * duration version (Figure A.4) lines up with the success-rate version.
 . use  "$temp/vacation_connected_call_level"  , clear
 
-. keep if gap_creat_lastcallthrough < 3600 // get rid of follow-up calls that begin the next day
+. keep if gap_creat_lastcallthrough < 3600 // restrict to follow-up within 1 hour
 (3,384 observations deleted)
 
 . 
@@ -29,9 +29,6 @@
 . 
 . *-------------------------------------------------------------------
 . * Figure A.4: Coef_by_workload_duration
-. *  (this block was commented out with /* ... */ in the working
-. *   copy of analysis_data_vacation.do; it is restored here so the
-. *   replication package reproduces Figure A.4.)
 . *-------------------------------------------------------------------
 . * Call duration as Y
 .                 
@@ -75,9 +72,13 @@ Absorbed degrees of freedom:
 . coefplot, vertical keep(*.bin_task_order) ///                omitted  scheme(plotplain) ///                recast(connected) lcolor($control_color) ///                mcolor($control_color) ///                msymbol(diamond) msize(small)  ///                ciopt(recast(rcap)  lpattern(dash)      lw(medthick) lcolor($control_color) ) ///                yline(0, lpattern(solid) lcolor(gs12)) ///                xlabel( ///                        1 "1-3" 2 "4-6" 3 "7-10" 4 "11-15"  ///                        5 "15-20" 6 "21-30" 7 "31-50" 8 ">51" ) ///                xsca(alt )  ///                ytitle(" Effects Size: Second " , size(small)) ///                 graphregion(margin(small)) ///          xlabel(, nogrid) ylabel(, nogrid)
 .                 
 .         graph export "$figure_overleaf/Coef_by_workload_duration.png", as(png) name("Graph") replace            
-file <REPLICATION_ROOT>/output/figure/Coef_by_workload_duration.png saved as PNG format
+file
+    <REPLICATION_ROOT>/output/figure/Coef_by_workload_duratio
+    > n.png saved as PNG format
 .         graph export "$figure_overleaf/Coef_by_workload_duration.pdf", as(pdf) name("Graph") replace
-file <REPLICATION_ROOT>/output/figure/Coef_by_workload_duration.pdf saved as PDF format
+file
+    <REPLICATION_ROOT>/output/figure/Coef_by_workload_duratio
+    > n.pdf saved as PDF format
 . 
 . }
 

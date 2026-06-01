@@ -1,8 +1,8 @@
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA3_robust_notcontrols.log
   log type:  text
- opened on:  26 May 2026, 18:37:20
+ opened on:  31 May 2026, 09:27:50
 
 . 
 . **# Appendix Table: main results, robustness, no controls and fixed effects 
@@ -10,10 +10,10 @@
 . {
 . 
 . use  "$temp/vacation_connected_call_level"  , clear
+. keep if vacation == 1
+(0 observations deleted)
 . replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
 (0 real changes made)
-.         keep if vacation == 1 
-(0 observations deleted)
 . 
 . cap gen gender_customer_num = ( gender_customer == "Female" )
 . replace province_capital = 1 if missing(province_capital)
@@ -24,8 +24,6 @@
 . local i = 0
 . foreach y in if_succeed  bridge_duration_num bridge_duration_num n_policy_succeed payment_amt_num payment_amt_per if_refund scale_premium_num ins_amt_num {
   2. 
-. // foreach y in if_succeed n_policy_succeed {
-. 
 . dis   "`y'"
   3.         local i = `i' + 1
   4. 
@@ -421,7 +419,6 @@ added macro:
 . #delimit ; 
 delimiter now ;
 . esttab table_main_c1 table_main_c2 table_main_c3 table_main_c4 table_main_c5 table_main_c6 table_main_c7 table_main_c8  table_main_c9         using  "$table_overleaf/table_robust_notcontrols.tex", replace f compressb(%12.3f) se(%12.3f) star(* 0.10 ** 0.05 *** 0.01)  keep( if_AI province_capital gender_customer_num )   order( if_AI province_capital gender_customer_num ) coeflabels(                if_AI "$ \textit{AI} $"                 province_capital "Capital cities"                 gender_customer_num "Female customer"   ) label booktabs noobs nonotes collabels(none) alignment(D{.}{.}{-1})  stats(  mean_y date_fe hour_create_time r2_a N , labels(  "Mean of Y" "Date FE" "Hour FE" "\hline Adjusted R-squared"  "Obs" ) ) mtitles("Success rate" "Duration" "Duration (success)" "N succeed transcations"  "Payment amount" "Payment per second" "Refund rate" "Scale premium" "Insurance amount") nogaps  ;
-(file <REPLICATION_ROOT>/output/table/table_robust_notcontrols.tex not found)
 (output written to <REPLICATION_ROOT>/output/table/table_robust_notcontrols.tex)
 .  #delimit cr
 delimiter now cr

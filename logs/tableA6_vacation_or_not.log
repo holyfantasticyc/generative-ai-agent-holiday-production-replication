@@ -1,8 +1,8 @@
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA6_vacation_or_not.log
   log type:  text
- opened on:  26 May 2026, 18:37:22
+ opened on:  31 May 2026, 09:27:52
 
 . 
 . 
@@ -20,7 +20,7 @@
 . 
 . **# Connected Rate
 . 
-. use "$temp/full_data_no_collapse" , clear  
+. use "$temp/full_data_no_collapse" , clear
 
 . merge m:1 date_create_time using "$temp/vacation_date_create_time" , keep(3) nogen
 
@@ -30,8 +30,6 @@
     Matched                         3,136,794  
     -----------------------------------------
 
-. 
-. // codebook crm_user_id
 . 
 . bys crm_user_id : gen flag_n_calls = _N
 
@@ -180,8 +178,9 @@ date_creat~e |  1,810,293    23422.54    143.5693      23011      23679
 .         gen rank_ave_payment_amt = _n   
 
 .         save "$temp/temp_history_productivity" , replace
-(file <DATA_ROOT>/temp/temp_history_productivity.dta not found)
-file <DATA_ROOT>/temp/temp_history_productivity.dta saved
+file
+    <DATA_ROOT>/temp/temp_history_productivity.dt
+    > a saved
 
 .         
 . restore
@@ -642,71 +641,9 @@ added macro:
 
 . 
 . 
-. reg vacation_create_time ave_payment_amt_num  , r
-
-Linear regression                               Number of obs     =        596
-                                                F(1, 594)         =       5.93
-                                                Prob > F          =     0.0152
-                                                R-squared         =     0.0119
-                                                Root MSE          =     .07705
-
--------------------------------------------------------------------------------------
-                    |               Robust
-vacation_create_t~e | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
---------------------+----------------------------------------------------------------
-ave_payment_amt_num |    .000116   .0000476     2.44   0.015     .0000225    .0002096
-              _cons |    .163937   .0085243    19.23   0.000     .1471956    .1806784
--------------------------------------------------------------------------------------
-
-. sum vacation_create_time
-
-    Variable |        Obs        Mean    Std. dev.       Min        Max
--------------+---------------------------------------------------------
-vacation_c~e |      1,480    .1526176    .1416333          0          1
-
-. estadd local mean_y = string(r(mean), "%9.2f") , replace
-
-added macro:
-             e(mean_y) : "0.15"
-
-. estadd local crm_user_fe "No" , replace
-
-added macro:
-        e(crm_user_fe) : "No"
-
-. estadd local year_fe "No" , replace
-
-added macro:
-            e(year_fe) : "No"
-
-. estadd local month_fe "No" , replace
-
-added macro:
-           e(month_fe) : "No"
-
-. estadd local day_fe "No" , replace
-
-added macro:
-             e(day_fe) : "No"
-
-. estadd local dow_fe "No" , replace
-
-added macro:
-             e(dow_fe) : "No"
-
-. estadd local hour_fe "No" , replace
-
-added macro:
-            e(hour_fe) : "No"
-
-. eststo tab_vaction_or_not_c7
-
-. 
-. 
-. #delimit ; 
+. #delimit ;
 delimiter now ;
 . esttab tab_vaction_or_not_c1 tab_vaction_or_not_c2 tab_vaction_or_not_c3 tab_vaction_or_not_c4 tab_vaction_or_not_c5 tab_vaction_or_not_c6        using  "$table_overleaf/tab_vaction_or_not.tex", replace f compressb(%12.3f) se(%12.3f) star(* 0.10 ** 0.05 *** 0.01)  keep( vacation_create_time  ave_if_succeed )   order(  vacation_create_time  ave_if_succeed   ) coeflabels(                vacation_create_time  " If Holiday "                ave_if_succeed " Average succeed rate  " ) label booktabs noobs nonotes collabels(none) alignment(D{.}{.}{-1})  stats( mean_y crm_user_fe year_fe month_fe day_fe dow_fe hour_fe , labels(  "Mean of Y" "Representative FE" "Year FE" "Month FE" "Day FE" "Day-of-week FE" "Hour FE" "\hline Obs" ) ) mtitles("Connected rate" "Success rate" "Payment amount" "Duration" "Refund rate" "If Holiday") nogaps  ;
-(file <REPLICATION_ROOT>/output/table/tab_vaction_or_not.tex not found)
 (output written to <REPLICATION_ROOT>/output/table/tab_vaction_or_not.tex)
 
 .  #delimit cr
