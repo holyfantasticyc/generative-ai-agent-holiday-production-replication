@@ -7,11 +7,11 @@ if "${replication}" == "" {
 
 run "$replication/code/00_declare_path.do"
 
-capture log close
-log using "$replication_log/table2_revenue_decomposition_estimates.log", replace text
+capture log close standard
+log using "$replication_log/table2_revenue_decomposition_estimates.log", replace text name(standard)
 
-capture log close
-log using "$table_overleaf/delta.log", replace text
+capture log close delta
+log using "$table_overleaf/delta.log", replace text name(delta)
 **# Part 1
 
 {
@@ -191,7 +191,7 @@ display "p_h_med   = beta_0 + beta_6  = " %12.8f (_b[_cons] + _b[6.bin_gap_range
 display "--------------------------------------------------"
 
 * =========================================================
-* Optional: lincom standard errors for delayed human success rates
+* lincom standard errors for delayed human success rates
 * =========================================================
 display "SE for implied delayed human success rates"
 lincom _cons + 4.bin_gap_range
@@ -213,7 +213,8 @@ display "--------------------------------------------------"
 	}
 	
 	mat list B
-	
-log close
 
-capture log close
+log close delta
+log close standard
+
+capture log close _all

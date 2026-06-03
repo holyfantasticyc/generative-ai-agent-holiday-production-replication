@@ -147,7 +147,7 @@ if "`y'" == "if_succeed"{
 	
 }
 
-	reghdfe `y' if_AI , noa 
+	reghdfe `y' if_AI , absorb(date_create_time hour_create_time) cl(crm_user_id)
 	local coe = round(_b[if_AI],0.01)
 	
 	collapse (mean) mean= `y' (sem) sem= `y', by(`group_variable')
@@ -188,7 +188,7 @@ if "`y'" == "if_succeed"{
 	
 }
 
-	reghdfe `y' if_AI , noa 
+	reghdfe `y' if_AI , absorb(date_create_time hour_create_time) cl(crm_user_id)
 	local coe = round(_b[if_AI],0.01)
 	
 	collapse (mean) mean= `y' (sem) sem= `y', by(`group_variable')

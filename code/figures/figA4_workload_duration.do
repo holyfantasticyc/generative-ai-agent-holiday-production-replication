@@ -16,7 +16,7 @@ log using "$replication_log/figA4_workload_duration.log", replace text
 * Call-level data: same dataset and task_order convention as Figure 2, so the
 * duration version (Figure A.4) lines up with the success-rate version.
 use  "$temp/vacation_connected_call_level"  , clear
-keep if gap_creat_lastcallthrough < 3600 // restrict to follow-up within 1 hour
+keep if gap_creat_lastcallthrough < 3600 // restrict to leads whose last connected call occurs within 1 hour of lead creation
 
 {
 replace if_succeed = if_succeed * 100

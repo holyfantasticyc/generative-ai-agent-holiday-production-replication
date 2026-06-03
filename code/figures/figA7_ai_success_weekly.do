@@ -43,7 +43,7 @@ display "Base week used in regression: " %tw `baseweek'
 * Regression: AI interacted with week dummies
 *============================================================*
 reghdfe success_rate i.if_AI##ib`baseweek'.week province_capital gender_customer_num, ///
-    absorb(hour_create_time) vce(cluster crm_user_id)
+    absorb(date_create_time hour_create_time) vce(cluster crm_user_id)
 
 eststo ai_week_interact
 

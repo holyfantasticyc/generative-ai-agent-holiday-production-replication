@@ -19,7 +19,7 @@ log using "$replication_log/fig2_workload_coef.log", replace text
 * Call-level data (one row per call): used so within-day task_order counts each
 * call exactly once, rather than once per contract sold.
 use  "$temp/vacation_connected_call_level"  , clear
-keep if gap_creat_lastcallthrough < 3600 // restrict to follow-up within 1 hour
+keep if gap_creat_lastcallthrough < 3600 // restrict to leads whose last connected call occurs within 1 hour of lead creation
 
 {
 replace if_succeed = if_succeed * 100
@@ -51,7 +51,7 @@ tw bar fraction x ,  barwi(0.8)	color($control_color)	xlabel( ///
 restore
 
 
-* If success as Y
+* Success rate as outcome
 reghdfe if_succeed ib0.bin_task_order  ///
 		, absorb(date_create_time hour_create_time)   cl(crm_user_id)
 		

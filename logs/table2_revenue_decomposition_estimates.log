@@ -1,8 +1,525 @@
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
-      name:  <unnamed>
+      name:  standard
        log:  <REPLICATION_ROOT>/logs/table2_revenue_decomposition_estimates.log
   log type:  text
- opened on:   1 Jun 2026, 09:16:07
+ opened on:   3 Jun 2026, 11:18:25
 
 . 
-. capture log close
+. capture log close delta
+
+. log using "$table_overleaf/delta.log", replace text name(delta)
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  delta
+       log:  <REPLICATION_ROOT>/output/table/delta.log
+  log type:  text
+ opened on:   3 Jun 2026, 11:18:25
+
+. **# Part 1
+. 
+. {
+. 
+. use  "$temp/vacation_connected_call_level"  , clear
+. replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
+(0 real changes made)
+.         keep if vacation == 1 
+(0 observations deleted)
+. 
+. cap gen gender_customer_num = ( gender_customer == "Female" )
+. replace province_capital = 1 if missing(province_capital)
+(1,352 real changes made)
+. replace gap_creat_lastcallthrough = gap_creat_lastcallthrough / 1
+(0 real changes made)
+. 
+. local i = 0
+. foreach y in if_succeed  payment_amt_num  {
+  2. 
+. dis   "`y'"
+  3.         local i = `i' + 1
+  4. 
+. preserve
+  5. 
+. if "`y'" == "if_succeed"{
+  6.         local ytitle = "%"
+  7.         replace `y' = `y' * 100
+  8.         
+. }
+  9. if "`y'" == "payment_amt_num"{
+ 10.         
+.         local ytitle = "Chinese Yuan (CNY)"
+ 11. 
+. }
+ 12. if "`y'" == "bridge_duration_num" & `i' == 2{
+ 13.         global ytitle = " Seconds "
+ 14.         
+. }
+ 15. if "`y'" == "bridge_duration_num" & `i' == 3{
+ 16.         keep if if_succeed
+ 17.         global ytitle = " Seconds "
+ 18.         
+. }
+ 19. if "`y'" == "payment_amt_per"{
+ 20.         
+.         keep if if_succeed 
+ 21.         cap drop payment_amt_per
+ 22.         gen payment_amt_per = total_payment_amt_num / bridge_duration_num
+ 23. 
+.         global ytitle = "Chinese Yuan (CNY)"
+ 24.         
+. }
+ 25. if "`y'" == "if_refund"{
+ 26.         
+.         local ytitle = "%"
+ 27.         replace `y' = `y' * 100
+ 28.         
+. }
+ 29. 
+. 
+. if "`y'" == "n_policy_succeed"{
+ 30.         keep if if_succeed
+ 31. 
+.         global ytitle = "Count"
+ 32.         
+. }
+ 33. if "`y'" == "scale_premium_num"{
+ 34.         
+.         global ytitle = "Scale Premium (CNY)"
+ 35.         
+. }
+ 36. 
+. if "`y'" == "ins_amt_num"{
+ 37.         
+.         replace `y' = `y' / 10000
+ 38. 
+.         global ytitle = "Insurance Amount (10000 CNY)"
+ 39.         
+. }
+ 40. 
+.         reghdfe `y' if_AI province_capital gender_customer_num  ///        , absorb(date_create_time hour_create_time)  cl(crm_user_id)
+ 41. 
+.         
+.         matrix V = e(V)
+ 42.         matrix b = e(b)
+ 43. 
+.         display "Constant = " _b[_cons]
+ 44.         display "SE(Constant) = " _se[_cons]
+ 45. 
+.         display "if_AI = " _b[if_AI]
+ 46.         display "SE(if_AI) = " _se[if_AI]
+ 47. 
+.         display "Cov(Constant, if_AI) = " V[colnumb(V,"_cons"), colnumb(V,"if_AI")]
+ 48. 
+.         * AI success rate = Constant + if_AI
+.         lincom _cons + if_AI
+ 49.         
+. restore 
+ 50. }       
+if_succeed
+(1,255 real changes made)
+(MWFE estimator converged in 5 iterations)
+
+HDFE Linear regression                            Number of obs   =     42,537
+Absorbing 2 HDFE groups                           F(   3,    262) =       7.38
+Statistics robust to heteroskedasticity           Prob > F        =     0.0001
+                                                  R-squared       =     0.0038
+                                                  Adj R-squared   =     0.0030
+                                                  Within R-sq.    =     0.0009
+Number of clusters (crm_user_id) =        263     Root MSE        =    16.8961
+
+                                 (Std. err. adjusted for 263 clusters in crm_user_id)
+-------------------------------------------------------------------------------------
+                    |               Robust
+         if_succeed | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------+----------------------------------------------------------------
+              if_AI |  -1.230473   .3279628    -3.75   0.000    -1.876252   -.5846951
+   province_capital |   .3975954   .1873129     2.12   0.035     .0287652    .7664257
+gender_customer_num |  -.4645601   .1583266    -2.93   0.004    -.7763146   -.1528056
+              _cons |   3.546903   .3521026    10.07   0.000     2.853592    4.240214
+-------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+----------------------------------------------------------+
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
+------------------+---------------------------------------|
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
+----------------------------------------------------------+
+Constant = 3.5469033
+SE(Constant) = .35210258
+if_AI = -1.2304735
+SE(if_AI) = .32796284
+Cov(Constant, if_AI) = -.10658024
+
+ ( 1)  if_AI + _cons = 0
+
+------------------------------------------------------------------------------
+  if_succeed | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         (1) |    2.31643   .1355558    17.09   0.000     2.049512    2.583347
+------------------------------------------------------------------------------
+payment_amt_num
+(MWFE estimator converged in 6 iterations)
+
+HDFE Linear regression                            Number of obs   =      1,255
+Absorbing 2 HDFE groups                           F(   3,    128) =       4.11
+Statistics robust to heteroskedasticity           Prob > F        =     0.0080
+                                                  R-squared       =     0.0795
+                                                  Adj R-squared   =     0.0538
+                                                  Within R-sq.    =     0.0034
+Number of clusters (crm_user_id) =        129     Root MSE        =    86.8720
+
+                                 (Std. err. adjusted for 129 clusters in crm_user_id)
+-------------------------------------------------------------------------------------
+                    |               Robust
+    payment_amt_num | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------+----------------------------------------------------------------
+              if_AI |  -15.77753   4.859247    -3.25   0.001    -25.39238    -6.16268
+   province_capital |  -.1623712   5.753754    -0.03   0.978    -11.54716    11.22241
+gender_customer_num |  -3.651579   6.088198    -0.60   0.550    -15.69812    8.394961
+              _cons |   97.42616   4.851236    20.08   0.000     87.82716    107.0252
+-------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+----------------------------------------------------------+
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
+------------------+---------------------------------------|
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
+----------------------------------------------------------+
+Constant = 97.42616
+SE(Constant) = 4.8512363
+if_AI = -15.777532
+SE(if_AI) = 4.8592474
+Cov(Constant, if_AI) = -14.16922
+
+ ( 1)  if_AI + _cons = 0
+
+------------------------------------------------------------------------------
+payment_am~m | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         (1) |   81.64863   4.336858    18.83   0.000     73.06741    90.22984
+------------------------------------------------------------------------------
+.         
+.         
+. }
+
+. 
+. **# Part 2
+. 
+.         use "$temp/full_data_no_collapse" , clear  
+
+.         replace if_connected = 1 if if_succeed == 1
+(8,705 real changes made)
+
+.         replace if_connected = if_connected * 100
+(2,011,343 real changes made)
+
+.         replace if_succeed = if_succeed * 100
+(103,913 real changes made)
+
+.         
+.         
+.         gen if_call_w_1_day  = gap_create_first_call < 3600 * 24
+
+.         gen if_call_w_30_min  = gap_create_first_call < 3600 * 1/2      
+
+.         gen if_call_w_6_hour  = gap_create_first_call < 3600 * 6
+
+.         gen if_call_w_3_day  = gap_create_first_call < 3600 * 24 * 3
+
+. 
+.         * baseline within 10 min
+.         gen bin_gap_range = 0 if if_call_w_10_min
+(68,608 missing values generated)
+
+.         replace bin_gap_range = 1 if !if_call_w_10_min & if_call_w_30_min
+(28,577 real changes made)
+
+.         replace bin_gap_range = 2 if !if_call_w_30_min & if_call_w_1_hour
+(10,043 real changes made)
+
+.         replace bin_gap_range = 3 if !if_call_w_1_hour & if_call_w_6_hour
+(14,275 real changes made)
+
+.         replace bin_gap_range = 4 if !if_call_w_6_hour & if_call_w_1_day
+(8,133 real changes made)
+
+.         replace bin_gap_range = 5 if !if_call_w_1_day & if_call_w_3_day
+(7,400 real changes made)
+
+.         replace bin_gap_range = 6 if !if_call_w_3_day 
+(2,832 real changes made)
+
+.         
+.         reghdfe if_succeed ib0.bin_gap_range  , a(crm_user_id date_create_time) vce(cl crm_user_id)
+(dropped 18 singleton observations)
+(MWFE estimator converged in 12 iterations)
+
+HDFE Linear regression                            Number of obs   =  3,143,646
+Absorbing 2 HDFE groups                           F(   6,   1464) =      12.04
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.0351
+                                                  Adj R-squared   =     0.0345
+                                                  Within R-sq.    =     0.0001
+Number of clusters (crm_user_id) =      1,465     Root MSE        =    17.5665
+
+                         (Std. err. adjusted for 1,465 clusters in crm_user_id)
+-------------------------------------------------------------------------------
+              |               Robust
+   if_succeed | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+bin_gap_range |
+           1  |   .0195058   .1207732     0.16   0.872    -.2174012    .2564129
+           2  |   -.874684   .2188637    -4.00   0.000    -1.304004   -.4453641
+           3  |  -.8014985   .1945979    -4.12   0.000    -1.183219    -.419778
+           4  |  -.8298232   .2775714    -2.99   0.003    -1.374303   -.2853432
+           5  |  -2.245604   .3845797    -5.84   0.000     -2.99999   -1.491218
+           6  |  -2.527943   .5520797    -4.58   0.000    -3.610895   -1.444991
+              |
+        _cons |   3.321058   .0023083  1438.76   0.000      3.31653    3.325586
+-------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+----------------------------------------------------------+
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
+------------------+---------------------------------------|
+      crm_user_id |      1465        1465           0    *|
+ date_create_time |       516           1         515     |
+----------------------------------------------------------+
+* = FE nested within cluster; treated as redundant for DoF computation
+
+. 
+. * =========================================================
+. * Primitive coefficients and variance-covariance terms
+. * for Delta Method calculation
+. * =========================================================
+. 
+. reghdfe if_succeed ib0.bin_gap_range, a(crm_user_id date_create_time) vce(cl crm_user_id)
+(dropped 18 singleton observations)
+(MWFE estimator converged in 12 iterations)
+
+HDFE Linear regression                            Number of obs   =  3,143,646
+Absorbing 2 HDFE groups                           F(   6,   1464) =      12.04
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.0351
+                                                  Adj R-squared   =     0.0345
+                                                  Within R-sq.    =     0.0001
+Number of clusters (crm_user_id) =      1,465     Root MSE        =    17.5665
+
+                         (Std. err. adjusted for 1,465 clusters in crm_user_id)
+-------------------------------------------------------------------------------
+              |               Robust
+   if_succeed | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+bin_gap_range |
+           1  |   .0195058   .1207732     0.16   0.872    -.2174012    .2564129
+           2  |   -.874684   .2188637    -4.00   0.000    -1.304004   -.4453641
+           3  |  -.8014985   .1945979    -4.12   0.000    -1.183219    -.419778
+           4  |  -.8298232   .2775714    -2.99   0.003    -1.374303   -.2853432
+           5  |  -2.245604   .3845797    -5.84   0.000     -2.99999   -1.491218
+           6  |  -2.527943   .5520797    -4.58   0.000    -3.610895   -1.444991
+              |
+        _cons |   3.321058   .0023083  1438.76   0.000      3.31653    3.325586
+-------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+----------------------------------------------------------+
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
+------------------+---------------------------------------|
+      crm_user_id |      1465        1465           0    *|
+ date_create_time |       516           1         515     |
+----------------------------------------------------------+
+* = FE nested within cluster; treated as redundant for DoF computation
+
+. 
+. display "--------------------------------------------------"
+--------------------------------------------------
+
+. display "Baseline coefficient"
+Baseline coefficient
+
+. display "beta_0 (_cons)   = " %12.8f _b[_cons]
+beta_0 (_cons)   =   3.32105830
+
+. display "se_beta_0        = " %12.8f _se[_cons]
+se_beta_0        =   0.00230828
+
+. 
+. display "--------------------------------------------------"
+--------------------------------------------------
+
+. display "Delay-bucket coefficients"
+Delay-bucket coefficients
+
+. display "beta_4 (6h-1d)   = " %12.8f _b[4.bin_gap_range]
+beta_4 (6h-1d)   =  -0.82982320
+
+. display "se_beta_4        = " %12.8f _se[4.bin_gap_range]
+se_beta_4        =   0.27757135
+
+. 
+. display "beta_5 (<3d)     = " %12.8f _b[5.bin_gap_range]
+beta_5 (<3d)     =  -2.24560404
+
+. display "se_beta_5        = " %12.8f _se[5.bin_gap_range]
+se_beta_5        =   0.38457967
+
+. 
+. display "beta_6 (>3d)     = " %12.8f _b[6.bin_gap_range]
+beta_6 (>3d)     =  -2.52794294
+
+. display "se_beta_6        = " %12.8f _se[6.bin_gap_range]
+se_beta_6        =   0.55207974
+
+. 
+. * =========================================================
+. * Variance-covariance matrix elements
+. * =========================================================
+. matrix V = e(V)
+
+. 
+. local c_cons = colnumb(V, "_cons")
+
+. local c4     = colnumb(V, "4.bin_gap_range")
+
+. local c5     = colnumb(V, "5.bin_gap_range")
+
+. local c6     = colnumb(V, "6.bin_gap_range")
+
+. 
+. display "--------------------------------------------------"
+--------------------------------------------------
+
+. display "Covariances with baseline coefficient"
+Covariances with baseline coefficient
+
+. display "cov(_cons, beta_4) = " %12.8f V[`c_cons', `c4']
+cov(_cons, beta_4) =  -0.00023642
+
+. display "cov(_cons, beta_5) = " %12.8f V[`c_cons', `c5']
+cov(_cons, beta_5) =  -0.00053706
+
+. display "cov(_cons, beta_6) = " %12.8f V[`c_cons', `c6']
+cov(_cons, beta_6) =  -0.00036903
+
+. 
+. display "--------------------------------------------------"
+--------------------------------------------------
+
+. display "Variances of delay-bucket coefficients"
+Variances of delay-bucket coefficients
+
+. display "var(beta_4)        = " %12.8f V[`c4', `c4']
+var(beta_4)        =   0.07704585
+
+. display "var(beta_5)        = " %12.8f V[`c5', `c5']
+var(beta_5)        =   0.14790152
+
+. display "var(beta_6)        = " %12.8f V[`c6', `c6']
+var(beta_6)        =   0.30479204
+
+. 
+. display "--------------------------------------------------"
+--------------------------------------------------
+
+. display "Implied delayed human success rates"
+Implied delayed human success rates
+
+. display "p_h0      = beta_0            = " %12.8f _b[_cons]
+p_h0      = beta_0            =   3.32105830
+
+. display "p_h_ideal = beta_0 + beta_4  = " %12.8f (_b[_cons] + _b[4.bin_gap_range])
+p_h_ideal = beta_0 + beta_4  =   2.49123510
+
+. display "p_h_lower = beta_0 + beta_5  = " %12.8f (_b[_cons] + _b[5.bin_gap_range])
+p_h_lower = beta_0 + beta_5  =   1.07545426
+
+. display "p_h_med   = beta_0 + beta_6  = " %12.8f (_b[_cons] + _b[6.bin_gap_range])
+p_h_med   = beta_0 + beta_6  =   0.79311536
+
+. 
+. display "--------------------------------------------------"
+--------------------------------------------------
+
+. 
+. * =========================================================
+. * lincom standard errors for delayed human success rates
+. * =========================================================
+. display "SE for implied delayed human success rates"
+SE for implied delayed human success rates
+
+. lincom _cons + 4.bin_gap_range
+
+ ( 1)  4.bin_gap_range + _cons = 0
+
+------------------------------------------------------------------------------
+  if_succeed | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         (1) |   2.491235   .2767279     9.00   0.000      1.94841    3.034061
+------------------------------------------------------------------------------
+
+. lincom _cons + 5.bin_gap_range
+
+ ( 1)  5.bin_gap_range + _cons = 0
+
+------------------------------------------------------------------------------
+  if_succeed | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         (1) |   1.075454   .3831876     2.81   0.005      .323799     1.82711
+------------------------------------------------------------------------------
+
+. lincom _cons + 6.bin_gap_range
+
+ ( 1)  6.bin_gap_range + _cons = 0
+
+------------------------------------------------------------------------------
+  if_succeed | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         (1) |   .7931154   .5514157     1.44   0.151    -.2885339    1.874765
+------------------------------------------------------------------------------
+
+. 
+. display "--------------------------------------------------"
+--------------------------------------------------
+
+. 
+.                 
+.         local base = _b[_cons]
+
+.         
+.         matrix B=J(7,3,0)
+
+.         forvalues i=1(1)6{ 
+  2.            scalar a`i'=_b[`i'.bin_gap_range] / `base'
+  3.            scalar b`i'=_se[`i'.bin_gap_range] / `base'
+  4.                 mat B[`i',1]=`i'
+  5.                 mat B[`i',2]=a`i'
+  6.                 mat B[`i',3]=b`i'
+  7.         }
+
+.         
+.         mat list B
+
+B[7,3]
+            c1          c2          c3
+r1           1   .00587337   .03636589
+r2           2  -.26337508    .0659018
+r3           3  -.24133828   .05859516
+r4           4   -.2498671   .08357919
+r5           5  -.67617122   .11580034
+r6           6  -.76118596   .16623609
+r7           0           0           0
+
+. 
+. log close delta
+      name:  delta
+       log:  <REPLICATION_ROOT>/output/table/delta.log
+  log type:  text
+ closed on:   3 Jun 2026, 11:19:01
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+. log close standard
+      name:  standard
+       log:  <REPLICATION_ROOT>/logs/table2_revenue_decomposition_estimates.log
+  log type:  text
+ closed on:   3 Jun 2026, 11:19:01
+-----------------------------------------------------------------------------------------------------------------------------------------------------------

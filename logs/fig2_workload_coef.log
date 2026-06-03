@@ -2,7 +2,7 @@
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig2_workload_coef.log
   log type:  text
- opened on:   1 Jun 2026, 09:18:15
+ opened on:   3 Jun 2026, 11:20:34
 
 . 
 . *===================================================================
@@ -13,7 +13,7 @@
 . * call exactly once, rather than once per contract sold.
 . use  "$temp/vacation_connected_call_level"  , clear
 
-. keep if gap_creat_lastcallthrough < 3600 // restrict to follow-up within 1 hour
+. keep if gap_creat_lastcallthrough < 3600 // restrict to leads whose last connected call occurs within 1 hour of lead creation
 (3,384 observations deleted)
 
 . 

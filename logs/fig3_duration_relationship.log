@@ -2,7 +2,7 @@
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig3_duration_relationship.log
   log type:  text
- opened on:   1 Jun 2026, 09:18:17
+ opened on:   3 Jun 2026, 11:20:36
 
 . 
 . **# Figure: Success Rate - time relationship
@@ -223,23 +223,33 @@ file relation.gph saved
 .         
 . }
 . 
-.         reghdfe `y' if_AI , noa 
-(MWFE estimator converged in 1 iterations)
+.         reghdfe `y' if_AI , absorb(date_create_time hour_create_time) cl(crm_user_id)
+(MWFE estimator converged in 5 iterations)
 
 HDFE Linear regression                            Number of obs   =     40,623
-Absorbing 1 HDFE group                            F(   1,  40621) =       2.43
-                                                  Prob > F        =     0.1192
-                                                  R-squared       =     0.0001
-                                                  Adj R-squared   =     0.0000
-                                                  Within R-sq.    =     0.0001
-                                                  Root MSE        =    12.9950
+Absorbing 2 HDFE groups                           F(   1,    261) =       0.02
+Statistics robust to heteroskedasticity           Prob > F        =     0.8829
+                                                  R-squared       =     0.0018
+                                                  Adj R-squared   =     0.0010
+                                                  Within R-sq.    =     0.0000
+Number of clusters (crm_user_id) =        262     Root MSE        =    12.9888
 
+                          (Std. err. adjusted for 262 clusters in crm_user_id)
 ------------------------------------------------------------------------------
-  if_succeed | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+             |               Robust
+  if_succeed | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-       if_AI |    -.20867   .1339377    -1.56   0.119    -.4711908    .0538508
-       _cons |   1.794365   .0808986    22.18   0.000     1.635802    1.952928
+       if_AI |   .0212412   .1440069     0.15   0.883    -.2623221    .3048045
+       _cons |   1.710489   .1222993    13.99   0.000      1.46967    1.951308
 ------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+----------------------------------------------------------+
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
+------------------+---------------------------------------|
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
+----------------------------------------------------------+
 .         local coe = round(_b[if_AI],0.01)
 .         
 .         collapse (mean) mean= `y' (sem) sem= `y', by(`group_variable')
@@ -276,23 +286,33 @@ file ttest1.gph saved
 .         
 . }
 . 
-.         reghdfe `y' if_AI , noa 
-(MWFE estimator converged in 1 iterations)
+.         reghdfe `y' if_AI , absorb(date_create_time hour_create_time) cl(crm_user_id)
+(MWFE estimator converged in 6 iterations)
 
 HDFE Linear regression                            Number of obs   =      1,907
-Absorbing 1 HDFE group                            F(   1,   1905) =      65.48
-                                                  Prob > F        =     0.0000
-                                                  R-squared       =     0.0332
-                                                  Adj R-squared   =     0.0327
-                                                  Within R-sq.    =     0.0332
-                                                  Root MSE        =    44.7100
+Absorbing 2 HDFE groups                           F(   1,    191) =      35.48
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.0539
+                                                  Adj R-squared   =     0.0378
+                                                  Within R-sq.    =     0.0220
+Number of clusters (crm_user_id) =        192     Root MSE        =    44.5931
 
+                          (Std. err. adjusted for 192 clusters in crm_user_id)
 ------------------------------------------------------------------------------
-  if_succeed | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+             |               Robust
+  if_succeed | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-       if_AI |  -20.29278   2.507859    -8.09   0.000    -25.21122   -15.37435
-       _cons |   33.44415    1.15287    29.01   0.000     31.18313    35.70517
+       if_AI |  -24.18384   4.060045    -5.96   0.000    -32.19212   -16.17555
+       _cons |   34.26643   2.982588    11.49   0.000     28.38339    40.14947
 ------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+----------------------------------------------------------+
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
+------------------+---------------------------------------|
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
+----------------------------------------------------------+
 .         local coe = round(_b[if_AI],0.01)
 .         
 .         collapse (mean) mean= `y' (sem) sem= `y', by(`group_variable')

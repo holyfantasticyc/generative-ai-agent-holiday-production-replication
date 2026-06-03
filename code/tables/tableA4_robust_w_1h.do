@@ -18,7 +18,7 @@ log using "$replication_log/tableA4_robust_w_1h.log", replace text
 
 use  "$temp/vacation_connected_call_level"  , clear
 keep if vacation == 1
-keep if gap_creat_lastcallthrough < 3600 // restrict to follow-up within 1 hour
+keep if gap_creat_lastcallthrough < 3600 // restrict to leads whose last connected call occurs within 1 hour of lead creation
 replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
 
 cap gen gender_customer_num = ( gender_customer == "Female" )

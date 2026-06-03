@@ -156,7 +156,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/table1_balance.log
   log type:  text
- opened on:   1 Jun 2026, 09:16:06
+ opened on:   3 Jun 2026, 11:18:25
 
 . 
 . **# Table: balance test
@@ -362,24 +362,24 @@ end of do-file
 . run "$replication/code/00_declare_path.do"
 
 . 
-. capture log close
+. capture log close standard
 
-. log using "$replication_log/table2_revenue_decomposition_estimates.log", replace text
+. log using "$replication_log/table2_revenue_decomposition_estimates.log", replace text name(standard)
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
-      name:  <unnamed>
+      name:  standard
        log:  <REPLICATION_ROOT>/logs/table2_revenue_decomposition_estimates.log
   log type:  text
- opened on:   1 Jun 2026, 09:16:07
+ opened on:   3 Jun 2026, 11:18:25
 
 . 
-. capture log close
+. capture log close delta
 
-. log using "$table_overleaf/delta.log", replace text
+. log using "$table_overleaf/delta.log", replace text name(delta)
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
-      name:  <unnamed>
+      name:  delta
        log:  <REPLICATION_ROOT>/output/table/delta.log
   log type:  text
- opened on:   1 Jun 2026, 09:16:07
+ opened on:   3 Jun 2026, 11:18:25
 
 . **# Part 1
 . 
@@ -876,16 +876,23 @@ r5           5  -.67617122   .11580034
 r6           6  -.76118596   .16623609
 r7           0           0           0
 
-.         
-. log close
-      name:  <unnamed>
+. 
+. log close delta
+      name:  delta
        log:  <REPLICATION_ROOT>/output/table/delta.log
   log type:  text
- closed on:   1 Jun 2026, 09:16:43
+ closed on:   3 Jun 2026, 11:19:01
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+. log close standard
+      name:  standard
+       log:  <REPLICATION_ROOT>/logs/table2_revenue_decomposition_estimates.log
+  log type:  text
+ closed on:   3 Jun 2026, 11:19:01
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 . 
-. capture log close
+. capture log close _all
 
 . 
 end of do-file
@@ -916,7 +923,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA1_summary_statistics.log
   log type:  text
- opened on:   1 Jun 2026, 09:16:43
+ opened on:   3 Jun 2026, 11:19:01
 
 . 
 . **## Task/raw data level
@@ -1178,7 +1185,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA2_main.log
   log type:  text
- opened on:   1 Jun 2026, 09:16:43
+ opened on:   3 Jun 2026, 11:19:01
 
 . 
 . **# Appendix Table: main results  
@@ -1718,7 +1725,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA3_robust_notcontrols.log
   log type:  text
- opened on:   1 Jun 2026, 09:16:43
+ opened on:   3 Jun 2026, 11:19:02
 
 . 
 . **# Appendix Table: main results, robustness, no controls and fixed effects 
@@ -2169,7 +2176,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA4_robust_w_1h.log
   log type:  text
- opened on:   1 Jun 2026, 09:16:44
+ opened on:   3 Jun 2026, 11:19:02
 
 . 
 . **# Appendix Table: main results, robustness, only call within 1 hour
@@ -2179,7 +2186,7 @@ end of do-file
 . use  "$temp/vacation_connected_call_level"  , clear
 . keep if vacation == 1
 (0 observations deleted)
-. keep if gap_creat_lastcallthrough < 3600 // restrict to follow-up within 1 hour
+. keep if gap_creat_lastcallthrough < 3600 // restrict to leads whose last connected call occurs within 1 hour of lead creation
 (3,384 observations deleted)
 . replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
 (0 real changes made)
@@ -2719,7 +2726,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA5_by_gender.log
   log type:  text
- opened on:   1 Jun 2026, 09:16:44
+ opened on:   3 Jun 2026, 11:19:03
 
 . 
 . **# Appendix Table: gender effects
@@ -3369,7 +3376,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA6_vacation_or_not.log
   log type:  text
- opened on:   1 Jun 2026, 09:16:45
+ opened on:   3 Jun 2026, 11:19:04
 
 . 
 . 
@@ -4046,7 +4053,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig1_outcome_bars.log
   log type:  text
- opened on:   1 Jun 2026, 09:18:13
+ opened on:   3 Jun 2026, 11:20:32
 
 . 
 . **# Figure 1: Main Results 
@@ -4537,7 +4544,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig2_workload_coef.log
   log type:  text
- opened on:   1 Jun 2026, 09:18:15
+ opened on:   3 Jun 2026, 11:20:34
 
 . 
 . *===================================================================
@@ -4548,7 +4555,7 @@ end of do-file
 . * call exactly once, rather than once per contract sold.
 . use  "$temp/vacation_connected_call_level"  , clear
 
-. keep if gap_creat_lastcallthrough < 3600 // restrict to follow-up within 1 hour
+. keep if gap_creat_lastcallthrough < 3600 // restrict to leads whose last connected call occurs within 1 hour of lead creation
 (3,384 observations deleted)
 
 . 
@@ -4702,7 +4709,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig3_duration_relationship.log
   log type:  text
- opened on:   1 Jun 2026, 09:18:17
+ opened on:   3 Jun 2026, 11:20:36
 
 . 
 . **# Figure: Success Rate - time relationship
@@ -4923,23 +4930,33 @@ file relation.gph saved
 .         
 . }
 . 
-.         reghdfe `y' if_AI , noa 
-(MWFE estimator converged in 1 iterations)
+.         reghdfe `y' if_AI , absorb(date_create_time hour_create_time) cl(crm_user_id)
+(MWFE estimator converged in 5 iterations)
 
 HDFE Linear regression                            Number of obs   =     40,623
-Absorbing 1 HDFE group                            F(   1,  40621) =       2.43
-                                                  Prob > F        =     0.1192
-                                                  R-squared       =     0.0001
-                                                  Adj R-squared   =     0.0000
-                                                  Within R-sq.    =     0.0001
-                                                  Root MSE        =    12.9950
+Absorbing 2 HDFE groups                           F(   1,    261) =       0.02
+Statistics robust to heteroskedasticity           Prob > F        =     0.8829
+                                                  R-squared       =     0.0018
+                                                  Adj R-squared   =     0.0010
+                                                  Within R-sq.    =     0.0000
+Number of clusters (crm_user_id) =        262     Root MSE        =    12.9888
 
+                          (Std. err. adjusted for 262 clusters in crm_user_id)
 ------------------------------------------------------------------------------
-  if_succeed | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+             |               Robust
+  if_succeed | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-       if_AI |    -.20867   .1339377    -1.56   0.119    -.4711908    .0538508
-       _cons |   1.794365   .0808986    22.18   0.000     1.635802    1.952928
+       if_AI |   .0212412   .1440069     0.15   0.883    -.2623221    .3048045
+       _cons |   1.710489   .1222993    13.99   0.000      1.46967    1.951308
 ------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+----------------------------------------------------------+
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
+------------------+---------------------------------------|
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
+----------------------------------------------------------+
 .         local coe = round(_b[if_AI],0.01)
 .         
 .         collapse (mean) mean= `y' (sem) sem= `y', by(`group_variable')
@@ -4976,23 +4993,33 @@ file ttest1.gph saved
 .         
 . }
 . 
-.         reghdfe `y' if_AI , noa 
-(MWFE estimator converged in 1 iterations)
+.         reghdfe `y' if_AI , absorb(date_create_time hour_create_time) cl(crm_user_id)
+(MWFE estimator converged in 6 iterations)
 
 HDFE Linear regression                            Number of obs   =      1,907
-Absorbing 1 HDFE group                            F(   1,   1905) =      65.48
-                                                  Prob > F        =     0.0000
-                                                  R-squared       =     0.0332
-                                                  Adj R-squared   =     0.0327
-                                                  Within R-sq.    =     0.0332
-                                                  Root MSE        =    44.7100
+Absorbing 2 HDFE groups                           F(   1,    191) =      35.48
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.0539
+                                                  Adj R-squared   =     0.0378
+                                                  Within R-sq.    =     0.0220
+Number of clusters (crm_user_id) =        192     Root MSE        =    44.5931
 
+                          (Std. err. adjusted for 192 clusters in crm_user_id)
 ------------------------------------------------------------------------------
-  if_succeed | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+             |               Robust
+  if_succeed | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-       if_AI |  -20.29278   2.507859    -8.09   0.000    -25.21122   -15.37435
-       _cons |   33.44415    1.15287    29.01   0.000     31.18313    35.70517
+       if_AI |  -24.18384   4.060045    -5.96   0.000    -32.19212   -16.17555
+       _cons |   34.26643   2.982588    11.49   0.000     28.38339    40.14947
 ------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+----------------------------------------------------------+
+      Absorbed FE | Categories  - Redundant  = Num. Coefs |
+------------------+---------------------------------------|
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
+----------------------------------------------------------+
 .         local coe = round(_b[if_AI],0.01)
 .         
 .         collapse (mean) mean= `y' (sem) sem= `y', by(`group_variable')
@@ -5056,7 +5083,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig4_case_study.log
   log type:  text
- opened on:   1 Jun 2026, 09:18:27
+ opened on:   3 Jun 2026, 11:20:46
 
 . 
 . *===================================================================
@@ -5507,7 +5534,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA3_coef_alter_FEs.log
   log type:  text
- opened on:   1 Jun 2026, 09:19:19
+ opened on:   3 Jun 2026, 11:21:39
 
 . 
 . **# *Figure: Results with difference FEs and controls
@@ -6185,7 +6212,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA4_workload_duration.log
   log type:  text
- opened on:   1 Jun 2026, 09:19:22
+ opened on:   3 Jun 2026, 11:21:42
 
 . 
 . **# Figure: Results: by workload
@@ -6193,7 +6220,7 @@ end of do-file
 . * duration version (Figure A.4) lines up with the success-rate version.
 . use  "$temp/vacation_connected_call_level"  , clear
 
-. keep if gap_creat_lastcallthrough < 3600 // restrict to follow-up within 1 hour
+. keep if gap_creat_lastcallthrough < 3600 // restrict to leads whose last connected call occurs within 1 hour of lead creation
 (3,384 observations deleted)
 
 . 
@@ -6289,7 +6316,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA5_gender_succeed.log
   log type:  text
- opened on:   1 Jun 2026, 09:19:23
+ opened on:   3 Jun 2026, 11:21:43
 
 . 
 . **## Success rate
@@ -6585,7 +6612,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA6_gender_payment_refund.log
   log type:  text
- opened on:   1 Jun 2026, 09:19:24
+ opened on:   3 Jun 2026, 11:21:44
 
 . 
 . **## Amount (unconditional)
@@ -7114,7 +7141,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA7_ai_success_weekly.log
   log type:  text
- opened on:   1 Jun 2026, 09:19:25
+ opened on:   3 Jun 2026, 11:21:45
 
 . 
 . *============================================================*
@@ -7166,60 +7193,72 @@ Base week used in regression: 2024w30
 . *============================================================*
 . * Regression: AI interacted with week dummies
 . *============================================================*
-. reghdfe success_rate i.if_AI##ib`baseweek'.week province_capital gender_customer_num, ///    absorb(hour_create_time) vce(cluster crm_user_id)
-(MWFE estimator converged in 1 iterations)
+. reghdfe success_rate i.if_AI##ib`baseweek'.week province_capital gender_customer_num, ///    absorb(date_create_time hour_create_time) vce(cluster crm_user_id)
+(MWFE estimator converged in 5 iterations)
+note: 3358bn.week is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 3359bn.week is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 3360bn.week is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 3361bn.week is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 3362bn.week is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 3363bn.week is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 3364bn.week is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 3365bn.week is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 3367bn.week is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 3368bn.week is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 3369bn.week is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
 
 HDFE Linear regression                            Number of obs   =     42,537
-Absorbing 1 HDFE group                            F(  25,    262) = 4529088.93
+Absorbing 2 HDFE groups                           F(  14,    262) =       4.08
 Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.0039
+                                                  R-squared       =     0.0040
                                                   Adj R-squared   =     0.0030
-                                                  Within R-sq.    =     0.0034
-Number of clusters (crm_user_id) =        263     Root MSE        =    16.8960
+                                                  Within R-sq.    =     0.0011
+Number of clusters (crm_user_id) =        263     Root MSE        =    16.8964
 
                                  (Std. err. adjusted for 263 clusters in crm_user_id)
 -------------------------------------------------------------------------------------
                     |               Robust
        success_rate | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 --------------------+----------------------------------------------------------------
-            1.if_AI |   -1.02752   .5970133    -1.72   0.086    -2.203074    .1480354
+            1.if_AI |  -1.015064   .5913254    -1.72   0.087    -2.179419    .1492908
                     |
                week |
-              3358  |   .4076534   .8348774     0.49   0.626     -1.23627    2.051577
-              3359  |   .5719469   .8667133     0.66   0.510    -1.134663    2.278557
-              3360  |  -.2997169   .7528152    -0.40   0.691    -1.782055    1.182621
-              3361  |   -.825469   .6942701    -1.19   0.236    -2.192528    .5415904
-              3362  |   .3639086   1.030098     0.35   0.724    -1.664416    2.392234
-              3363  |   .1395194   .7916287     0.18   0.860    -1.419245    1.698284
-              3364  |  -.5833996   .7102363    -0.82   0.412    -1.981897    .8150981
-              3365  |  -1.776493   .7014333    -2.53   0.012    -3.157657   -.3953289
-              3367  |  -.7341072   .8273512    -0.89   0.376    -2.363211    .8949966
-              3368  |  -.3348922    1.59841    -0.21   0.834    -3.482257    2.812472
-              3369  |  -.0721748   .7678651    -0.09   0.925    -1.584147    1.439797
+              3358  |          0  (omitted)
+              3359  |          0  (omitted)
+              3360  |          0  (omitted)
+              3361  |          0  (omitted)
+              3362  |          0  (omitted)
+              3363  |          0  (omitted)
+              3364  |          0  (omitted)
+              3365  |          0  (omitted)
+              3367  |          0  (omitted)
+              3368  |          0  (omitted)
+              3369  |          0  (omitted)
                     |
          if_AI#week |
-            1 3358  |  -.2492595   .8368164    -0.30   0.766    -1.897001    1.398482
-            1 3359  |   -.810603   .8762056    -0.93   0.356    -2.535904    .9146981
-            1 3360  |   .0891442   .7503492     0.12   0.906    -1.388338    1.566627
-            1 3361  |   1.116555   .6907299     1.62   0.107    -.2435338    2.476643
-            1 3362  |   .5158979   1.029623     0.50   0.617    -1.511491    2.543287
-            1 3363  |   1.519171   .7921335     1.92   0.056    -.0405876    3.078929
-            1 3364  |  -.5714423   .7178179    -0.80   0.427    -1.984869     .841984
-            1 3365  |   .6887002   .7169664     0.96   0.338    -.7230494     2.10045
-            1 3367  |   -.626191   .8466776    -0.74   0.460     -2.29335    1.040968
-            1 3368  |  -.5784609   1.607689    -0.36   0.719    -3.744097    2.587175
-            1 3369  |  -.7849032   .7732655    -1.02   0.311    -2.307509    .7377028
+            1 3358  |  -.2484574   .8362604    -0.30   0.767    -1.895104    1.398189
+            1 3359  |  -.8039527   .8752408    -0.92   0.359    -2.527354    .9194487
+            1 3360  |   .1267278   .7393105     0.17   0.864    -1.329019    1.582474
+            1 3361  |    1.19727   .6873767     1.74   0.083    -.1562157    2.550756
+            1 3362  |   .5187252   1.030371     0.50   0.615    -1.510138    2.547588
+            1 3363  |   1.522375   .7909772     1.92   0.055    -.0351063    3.079856
+            1 3364  |  -.5267898   .8597387    -0.61   0.541    -2.219667    1.166087
+            1 3365  |   .3810639   .7487153     0.51   0.611    -1.093201    1.855329
+            1 3367  |  -.6630736   .8530668    -0.78   0.438    -2.342813    1.016666
+            1 3368  |  -.5858537   1.613694    -0.36   0.717    -3.763314    2.591607
+            1 3369  |  -.7812751   .7734585    -1.01   0.313    -2.304261     .741711
                     |
-   province_capital |   .3872342   .1877386     2.06   0.040     .0175657    .7569027
-gender_customer_num |   -.464154   .1591344    -2.92   0.004    -.7774991   -.1508089
-              _cons |   4.065673   .5838114     6.96   0.000     2.916114    5.215233
+   province_capital |   .3905792   .1874993     2.08   0.038     .0213819    .7597766
+gender_customer_num |  -.4637615   .1595196    -2.91   0.004    -.7778651    -.149658
+              _cons |   3.568032   .3425251    10.42   0.000      2.89358    4.242485
 -------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
       Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- hour_create_time |        12           0          12     |
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
 ----------------------------------------------------------+
 
 . 

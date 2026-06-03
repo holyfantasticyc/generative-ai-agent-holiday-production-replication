@@ -2,7 +2,7 @@
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA7_ai_success_weekly.log
   log type:  text
- opened on:   1 Jun 2026, 09:19:25
+ opened on:   3 Jun 2026, 11:21:45
 
 . 
 . *============================================================*
@@ -54,60 +54,72 @@ Base week used in regression: 2024w30
 . *============================================================*
 . * Regression: AI interacted with week dummies
 . *============================================================*
-. reghdfe success_rate i.if_AI##ib`baseweek'.week province_capital gender_customer_num, ///    absorb(hour_create_time) vce(cluster crm_user_id)
-(MWFE estimator converged in 1 iterations)
+. reghdfe success_rate i.if_AI##ib`baseweek'.week province_capital gender_customer_num, ///    absorb(date_create_time hour_create_time) vce(cluster crm_user_id)
+(MWFE estimator converged in 5 iterations)
+note: 3358bn.week is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 3359bn.week is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 3360bn.week is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 3361bn.week is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 3362bn.week is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 3363bn.week is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 3364bn.week is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 3365bn.week is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 3367bn.week is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 3368bn.week is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 3369bn.week is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
 
 HDFE Linear regression                            Number of obs   =     42,537
-Absorbing 1 HDFE group                            F(  25,    262) = 4529088.93
+Absorbing 2 HDFE groups                           F(  14,    262) =       4.08
 Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.0039
+                                                  R-squared       =     0.0040
                                                   Adj R-squared   =     0.0030
-                                                  Within R-sq.    =     0.0034
-Number of clusters (crm_user_id) =        263     Root MSE        =    16.8960
+                                                  Within R-sq.    =     0.0011
+Number of clusters (crm_user_id) =        263     Root MSE        =    16.8964
 
                                  (Std. err. adjusted for 263 clusters in crm_user_id)
 -------------------------------------------------------------------------------------
                     |               Robust
        success_rate | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 --------------------+----------------------------------------------------------------
-            1.if_AI |   -1.02752   .5970133    -1.72   0.086    -2.203074    .1480354
+            1.if_AI |  -1.015064   .5913254    -1.72   0.087    -2.179419    .1492908
                     |
                week |
-              3358  |   .4076534   .8348774     0.49   0.626     -1.23627    2.051577
-              3359  |   .5719469   .8667133     0.66   0.510    -1.134663    2.278557
-              3360  |  -.2997169   .7528152    -0.40   0.691    -1.782055    1.182621
-              3361  |   -.825469   .6942701    -1.19   0.236    -2.192528    .5415904
-              3362  |   .3639086   1.030098     0.35   0.724    -1.664416    2.392234
-              3363  |   .1395194   .7916287     0.18   0.860    -1.419245    1.698284
-              3364  |  -.5833996   .7102363    -0.82   0.412    -1.981897    .8150981
-              3365  |  -1.776493   .7014333    -2.53   0.012    -3.157657   -.3953289
-              3367  |  -.7341072   .8273512    -0.89   0.376    -2.363211    .8949966
-              3368  |  -.3348922    1.59841    -0.21   0.834    -3.482257    2.812472
-              3369  |  -.0721748   .7678651    -0.09   0.925    -1.584147    1.439797
+              3358  |          0  (omitted)
+              3359  |          0  (omitted)
+              3360  |          0  (omitted)
+              3361  |          0  (omitted)
+              3362  |          0  (omitted)
+              3363  |          0  (omitted)
+              3364  |          0  (omitted)
+              3365  |          0  (omitted)
+              3367  |          0  (omitted)
+              3368  |          0  (omitted)
+              3369  |          0  (omitted)
                     |
          if_AI#week |
-            1 3358  |  -.2492595   .8368164    -0.30   0.766    -1.897001    1.398482
-            1 3359  |   -.810603   .8762056    -0.93   0.356    -2.535904    .9146981
-            1 3360  |   .0891442   .7503492     0.12   0.906    -1.388338    1.566627
-            1 3361  |   1.116555   .6907299     1.62   0.107    -.2435338    2.476643
-            1 3362  |   .5158979   1.029623     0.50   0.617    -1.511491    2.543287
-            1 3363  |   1.519171   .7921335     1.92   0.056    -.0405876    3.078929
-            1 3364  |  -.5714423   .7178179    -0.80   0.427    -1.984869     .841984
-            1 3365  |   .6887002   .7169664     0.96   0.338    -.7230494     2.10045
-            1 3367  |   -.626191   .8466776    -0.74   0.460     -2.29335    1.040968
-            1 3368  |  -.5784609   1.607689    -0.36   0.719    -3.744097    2.587175
-            1 3369  |  -.7849032   .7732655    -1.02   0.311    -2.307509    .7377028
+            1 3358  |  -.2484574   .8362604    -0.30   0.767    -1.895104    1.398189
+            1 3359  |  -.8039527   .8752408    -0.92   0.359    -2.527354    .9194487
+            1 3360  |   .1267278   .7393105     0.17   0.864    -1.329019    1.582474
+            1 3361  |    1.19727   .6873767     1.74   0.083    -.1562157    2.550756
+            1 3362  |   .5187252   1.030371     0.50   0.615    -1.510138    2.547588
+            1 3363  |   1.522375   .7909772     1.92   0.055    -.0351063    3.079856
+            1 3364  |  -.5267898   .8597387    -0.61   0.541    -2.219667    1.166087
+            1 3365  |   .3810639   .7487153     0.51   0.611    -1.093201    1.855329
+            1 3367  |  -.6630736   .8530668    -0.78   0.438    -2.342813    1.016666
+            1 3368  |  -.5858537   1.613694    -0.36   0.717    -3.763314    2.591607
+            1 3369  |  -.7812751   .7734585    -1.01   0.313    -2.304261     .741711
                     |
-   province_capital |   .3872342   .1877386     2.06   0.040     .0175657    .7569027
-gender_customer_num |   -.464154   .1591344    -2.92   0.004    -.7774991   -.1508089
-              _cons |   4.065673   .5838114     6.96   0.000     2.916114    5.215233
+   province_capital |   .3905792   .1874993     2.08   0.038     .0213819    .7597766
+gender_customer_num |  -.4637615   .1595196    -2.91   0.004    -.7778651    -.149658
+              _cons |   3.568032   .3425251    10.42   0.000      2.89358    4.242485
 -------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
       Absorbed FE | Categories  - Redundant  = Num. Coefs |
 ------------------+---------------------------------------|
- hour_create_time |        12           0          12     |
+ date_create_time |        21           0          21     |
+ hour_create_time |        12           1          11     |
 ----------------------------------------------------------+
 
 . 
