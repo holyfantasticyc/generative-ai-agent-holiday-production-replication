@@ -38,7 +38,8 @@ if "`y'" == "if_succeed"{
 	
 }
 if "`y'" == "payment_amt_num"{
-	
+
+	replace payment_amt_num = 0 if if_succeed == 0
 	local ytitle = "Chinese Yuan (CNY)"
 
 }
@@ -92,8 +93,8 @@ if "`y'" == "ins_amt_num"{
 	, noa  cl(crm_user_id)
 	qui: sum  `y'
 	estadd local mean_y = string(r(mean), "%9.2f") , replace
-	estadd local date_fe "Yes" , replace
-	estadd local hour_create_time "Yes" , replace
+	estadd local date_fe "No" , replace
+	estadd local hour_create_time "No" , replace
 	estadd local r2_a =  string(e(r2_a), "%9.3f") , replace
 	estadd local N =  string(e(N), "%9.0f") , replace
 
@@ -112,10 +113,8 @@ esttab table_main_c1 table_main_c2 table_main_c3 table_main_c4 table_main_c5 tab
 	using  "$table_overleaf/table_robust_notcontrols.tex"
 , replace f compress
 b(%12.3f) se(%12.3f) star(* 0.10 ** 0.05 *** 0.01)  
-keep( if_AI province_capital gender_customer_num )   order( if_AI province_capital gender_customer_num ) coeflabels(
-		if_AI "$ \textit{AI} $" 
-		province_capital "Capital cities" 
-		gender_customer_num "Female customer"   )
+keep( if_AI )   order( if_AI ) coeflabels(
+		if_AI "$ \textit{AI} $"   )
  label booktabs noobs nonotes collabels(none) alignment(D{.}{.}{-1}) 
  stats(  mean_y date_fe hour_create_time r2_a N , labels(  "Mean of Y" "Date FE" "Hour FE" "\hline Adjusted R-squared"  "Obs" ) )
  mtitles("Success rate" "Duration" "Duration (success)" "N succeed transcations"  "Payment amount" "Payment per second" "Refund rate" "Scale premium" "Insurance amount")

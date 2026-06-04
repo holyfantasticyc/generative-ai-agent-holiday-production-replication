@@ -179,7 +179,7 @@ These are the only files an outside replicator needs to obtain from the partner 
 
 | File | Approx. size | Unit of observation | Used by |
 |---|---|---|---|
-| `vacation_connected_call_level.dta` | 17 MB | One row per *connected* phone call during the holiday and weekend sample. Most regressions in the paper use this. | Figure 1, Figure 2 Panel A, Figure 3, Figures A.3, A.5–A.7, Tables A.2–A.5, Table 2 estimates |
+| `vacation_connected_call_level.dta` | 17 MB | One row per *connected* phone call during the holiday and weekend sample. Most regressions in the paper use this. | Figure 1, Figure 2 Panel A, Figure 3, Figures A.3–A.7, Tables A.2–A.5, Table 2 estimates |
 | `vacation_full_data_no_collapse.dta` | 186 MB | One row per call attempt (including unconnected) during the holiday and weekend sample. Used wherever the connection rate or unconditional outcomes are needed. | Table 1, Table A.1 |
 | `vacation_date_create_time.dta` | 8 KB | One row per calendar date in the sample with a `vacation_create_time` flag (1 = holiday or weekend). | Table A.6, Figure 4 (joins) |
 | `full_data_no_collapse.dta` | 3.8 GB | Same as `vacation_full_data_no_collapse` but covering the full sample (not just holidays/weekends). | Figure 4 Panel B, Table A.6 |

@@ -128,7 +128,7 @@ twoway (bar mean `group_variable' if `group_variable' == 0 , barwidth(0.7) fcolo
 		xtitle("")  ytitle($ytitle ) title("Payment Amount per Call") 	 graphregion(margin(zero))
 		   
 		graph export "$figure_overleaf/Coef_by_gender_payment_amt_num.png", as(png) name("Graph") replace	
-		graph export "$figure_overleaf/Coef_by_gender_payment_amt_num.pdf", as(png) name("Graph") replace
+		graph export "$figure_overleaf/Coef_by_gender_payment_amt_num.pdf", as(pdf) name("Graph") replace
 
 }
 		
@@ -242,7 +242,7 @@ twoway (bar mean `group_variable' if `group_variable' == 0 , barwidth(0.7) fcolo
 		xtitle("")  ytitle($ytitle ) title("Refund Rate") 	 graphregion(margin(zero)) ///
 		 subtitle("{bf: Female Customer}                                          {bf: Male Customer}")  
 		graph export "$figure_overleaf/Coef_by_gender_if_refund.png", as(png) name("Graph") replace	
-		graph export "$figure_overleaf/Coef_by_gender_if_refund.pdf", as(png) name("Graph") replace
+		graph export "$figure_overleaf/Coef_by_gender_if_refund.pdf", as(pdf) name("Graph") replace
 
 }
 

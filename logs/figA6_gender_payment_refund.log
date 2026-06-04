@@ -1,8 +1,8 @@
------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA6_gender_payment_refund.log
   log type:  text
- opened on:   3 Jun 2026, 11:21:44
+ opened on:   3 Jun 2026, 21:52:00
 
 . 
 . **## Amount (unconditional)
@@ -264,8 +264,8 @@ payment_am~s | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
 .                    
 .                 graph export "$figure_overleaf/Coef_by_gender_payment_amt_num.png", as(png) name("Graph") replace       
 file <REPLICATION_ROOT>/output/figure/Coef_by_gender_payment_amt_num.png saved as PNG format
-.                 graph export "$figure_overleaf/Coef_by_gender_payment_amt_num.pdf", as(png) name("Graph") replace
-file <REPLICATION_ROOT>/output/figure/Coef_by_gender_payment_amt_num.pdf saved as PNG format
+.                 graph export "$figure_overleaf/Coef_by_gender_payment_amt_num.pdf", as(pdf) name("Graph") replace
+file <REPLICATION_ROOT>/output/figure/Coef_by_gender_payment_amt_num.pdf saved as PDF format
 . 
 . }
 
@@ -500,8 +500,8 @@ if_refund_~s | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
 . twoway (bar mean `group_variable' if `group_variable' == 0 , barwidth(0.7) fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 1, barwidth(0.7) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 2 , barwidth(0.7) fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                        (bar mean `group_variable' if `group_variable' == 4 , barwidth(0.7)  fcolor($treat_color) lcolor($treat_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 5 , barwidth(0.7)  fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (bar mean `group_variable' if `group_variable' == 6 , barwidth(0.7)  fcolor($control_color) lcolor($control_color) lwidth(medium)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 0, lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 1 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 2 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 4 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 5 , lw(medium) lcolor(black) lp(dash)) ///                   (rcap lower_bound upper_bound `group_variable' if `group_variable' == 6 , lw(medium) lcolor(black) lp(dash)) ///                   , legend(off )  ///                        ylabel(,nogrid) ///                        xlabel( ///                        0 `"AI (Female-voice)"' 1 `"Female"' 2  `"Male"'  3 " " 4 `"AI (Female-voice)"' 5 `"Female "' 6 `"Male"', nogrid labsize(small)) ///                xtitle("")  ytitle($ytitle ) title("Refund Rate")        graphregion(margin(zero)) ///                 subtitle("{bf: Female Customer}                                          {bf: Male Customer}")  
 .                 graph export "$figure_overleaf/Coef_by_gender_if_refund.png", as(png) name("Graph") replace     
 file <REPLICATION_ROOT>/output/figure/Coef_by_gender_if_refund.png saved as PNG format
-.                 graph export "$figure_overleaf/Coef_by_gender_if_refund.pdf", as(png) name("Graph") replace
-file <REPLICATION_ROOT>/output/figure/Coef_by_gender_if_refund.pdf saved as PNG format
+.                 graph export "$figure_overleaf/Coef_by_gender_if_refund.pdf", as(pdf) name("Graph") replace
+file <REPLICATION_ROOT>/output/figure/Coef_by_gender_if_refund.pdf saved as PDF format
 . 
 . }
 

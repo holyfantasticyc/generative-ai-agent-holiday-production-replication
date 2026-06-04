@@ -1,8 +1,8 @@
------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig3_duration_relationship.log
   log type:  text
- opened on:   3 Jun 2026, 11:20:36
+ opened on:   3 Jun 2026, 21:50:53
 
 . 
 . **# Figure: Success Rate - time relationship
@@ -24,7 +24,7 @@
 . 
 . bys if_succeed: sum bridge_duration_num , de
 
------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 -> if_succeed = 0
 
                        bridge_duration
@@ -42,7 +42,7 @@
 95%          345           3276       Skewness       6.283063
 99%          823           3487       Kurtosis       65.75273
 
------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 -> if_succeed = 1
 
                        bridge_duration
@@ -202,6 +202,9 @@ file relation.gph saved
 . * Reload call-level data for the Panel A t-test (success-rate difference by
 . * call-duration bin, AI vs human).
 . use  "$temp/vacation_connected_call_level"  , clear
+. cap gen gender_customer_num = ( gender_customer == "Female" )
+. replace province_capital = 1 if missing(province_capital)
+(1,352 real changes made)
 . 
 . **### < 450
 . 
@@ -223,25 +226,27 @@ file relation.gph saved
 .         
 . }
 . 
-.         reghdfe `y' if_AI , absorb(date_create_time hour_create_time) cl(crm_user_id)
+.         reghdfe `y' if_AI province_capital gender_customer_num , absorb(date_create_time hour_create_time) cl(crm_user_id)
 (MWFE estimator converged in 5 iterations)
 
 HDFE Linear regression                            Number of obs   =     40,623
-Absorbing 2 HDFE groups                           F(   1,    261) =       0.02
-Statistics robust to heteroskedasticity           Prob > F        =     0.8829
-                                                  R-squared       =     0.0018
-                                                  Adj R-squared   =     0.0010
-                                                  Within R-sq.    =     0.0000
-Number of clusters (crm_user_id) =        262     Root MSE        =    12.9888
+Absorbing 2 HDFE groups                           F(   3,    261) =       3.07
+Statistics robust to heteroskedasticity           Prob > F        =     0.0285
+                                                  R-squared       =     0.0020
+                                                  Adj R-squared   =     0.0011
+                                                  Within R-sq.    =     0.0002
+Number of clusters (crm_user_id) =        262     Root MSE        =    12.9880
 
-                          (Std. err. adjusted for 262 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-  if_succeed | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
--------------+----------------------------------------------------------------
-       if_AI |   .0212412   .1440069     0.15   0.883    -.2623221    .3048045
-       _cons |   1.710489   .1222993    13.99   0.000      1.46967    1.951308
-------------------------------------------------------------------------------
+                                 (Std. err. adjusted for 262 clusters in crm_user_id)
+-------------------------------------------------------------------------------------
+                    |               Robust
+         if_succeed | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------+----------------------------------------------------------------
+              if_AI |   .0258576   .1430363     0.18   0.857    -.2557944    .3075096
+   province_capital |    .267138   .1317168     2.03   0.044      .007775    .5265009
+gender_customer_num |  -.2469452   .1127479    -2.19   0.029    -.4689566   -.0249338
+              _cons |   1.779389     .15249    11.67   0.000     1.479121    2.079656
+-------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+
@@ -286,25 +291,27 @@ file ttest1.gph saved
 .         
 . }
 . 
-.         reghdfe `y' if_AI , absorb(date_create_time hour_create_time) cl(crm_user_id)
+.         reghdfe `y' if_AI province_capital gender_customer_num , absorb(date_create_time hour_create_time) cl(crm_user_id)
 (MWFE estimator converged in 6 iterations)
 
 HDFE Linear regression                            Number of obs   =      1,907
-Absorbing 2 HDFE groups                           F(   1,    191) =      35.48
+Absorbing 2 HDFE groups                           F(   3,    191) =      12.46
 Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.0539
-                                                  Adj R-squared   =     0.0378
-                                                  Within R-sq.    =     0.0220
-Number of clusters (crm_user_id) =        192     Root MSE        =    44.5931
+                                                  R-squared       =     0.0569
+                                                  Adj R-squared   =     0.0398
+                                                  Within R-sq.    =     0.0251
+Number of clusters (crm_user_id) =        192     Root MSE        =    44.5458
 
-                          (Std. err. adjusted for 192 clusters in crm_user_id)
-------------------------------------------------------------------------------
-             |               Robust
-  if_succeed | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
--------------+----------------------------------------------------------------
-       if_AI |  -24.18384   4.060045    -5.96   0.000    -32.19212   -16.17555
-       _cons |   34.26643   2.982588    11.49   0.000     28.38339    40.14947
-------------------------------------------------------------------------------
+                                 (Std. err. adjusted for 192 clusters in crm_user_id)
+-------------------------------------------------------------------------------------
+                    |               Robust
+         if_succeed | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------------+----------------------------------------------------------------
+              if_AI |  -24.56987   4.076261    -6.03   0.000    -32.61014    -16.5296
+   province_capital |   4.593374   2.791501     1.65   0.102    -.9127565     10.0995
+gender_customer_num |  -3.058185   1.902451    -1.61   0.110    -6.810697    .6943284
+              _cons |   34.86385   3.396399    10.26   0.000     28.16458    41.56311
+-------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
 ----------------------------------------------------------+

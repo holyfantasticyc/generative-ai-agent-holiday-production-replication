@@ -129,6 +129,8 @@ tw || ///
 * Reload call-level data for the Panel A t-test (success-rate difference by
 * call-duration bin, AI vs human).
 use  "$temp/vacation_connected_call_level"  , clear
+cap gen gender_customer_num = ( gender_customer == "Female" )
+replace province_capital = 1 if missing(province_capital)
 
 **### < 450
 
@@ -147,7 +149,7 @@ if "`y'" == "if_succeed"{
 	
 }
 
-	reghdfe `y' if_AI , absorb(date_create_time hour_create_time) cl(crm_user_id)
+	reghdfe `y' if_AI province_capital gender_customer_num , absorb(date_create_time hour_create_time) cl(crm_user_id)
 	local coe = round(_b[if_AI],0.01)
 	
 	collapse (mean) mean= `y' (sem) sem= `y', by(`group_variable')
@@ -188,7 +190,7 @@ if "`y'" == "if_succeed"{
 	
 }
 
-	reghdfe `y' if_AI , absorb(date_create_time hour_create_time) cl(crm_user_id)
+	reghdfe `y' if_AI province_capital gender_customer_num , absorb(date_create_time hour_create_time) cl(crm_user_id)
 	local coe = round(_b[if_AI],0.01)
 	
 	collapse (mean) mean= `y' (sem) sem= `y', by(`group_variable')

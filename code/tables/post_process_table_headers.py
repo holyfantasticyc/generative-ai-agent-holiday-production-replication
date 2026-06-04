@@ -23,7 +23,7 @@ from pathlib import Path
 
 REPL = os.environ.get(
     "REPLICATION_PATH",
-    "<REPLICATION_ROOT>",
+    "/Users/holyfantastic/Dropbox/AI/PNAS_NEXUS/replication_package",
 )
 TABLE_DIR = Path(REPL) / "output" / "table"
 
@@ -111,10 +111,55 @@ def process(fname, splits):
     print(f"  [done] {fname}: split header into 2 rows")
 
 
+def process_summary_table():
+    """
+    Tidy up table_summary_statistics.tex:
+      1. Blank out the dot cells in the four Panel-header rows ('Panel A.', etc.)
+         so the header rows read as bold labels rather than rows of "." values.
+      2. Render the Obs column as integers (drop the trailing ".00" on the first
+         numeric cell of every data row); leave the four statistics columns
+         (Mean / SD / Min / Max) at two decimal places.
+    """
+    fname = "table_summary_statistics.tex"
+    path = TABLE_DIR / fname
+    if not path.exists():
+        print(f"  [skip] {fname}: not found")
+        return
+
+    lines = path.read_text().split("\n")
+    n_blanked = 0
+    n_obs_fixed = 0
+
+    for i, line in enumerate(lines):
+        if r"\textbf{Panel" in line:
+            # Panel-header row: cells look like  "&           .&  .... &           .\\"
+            # Strip every "& <spaces> .<spaces?>" cell down to "&" (empty cell).
+            new_line = re.sub(r"&\s*\.\s*(?=&|\\\\)", "&            ", line)
+            if new_line != line:
+                n_blanked += 1
+            lines[i] = new_line
+        else:
+            # Data row: the first numeric cell after the row label is the Obs
+            # count.  esttab emits it as e.g.  "&    42537.00&".  Strip ".00".
+            new_line, k = re.subn(
+                r"(&\s*\d+)\.00(\s*&)",
+                r"\1\2",
+                line, count=1,
+            )
+            if k:
+                n_obs_fixed += 1
+            lines[i] = new_line
+
+    path.write_text("\n".join(lines))
+    print(f"  [done] {fname}: blanked {n_blanked} panel-header rows, "
+          f"integer-formatted Obs on {n_obs_fixed} data rows")
+
+
 def main():
     print(f"Splitting long table headers in {TABLE_DIR}")
     for fname, splits in FILE_SPLITS.items():
         process(fname, splits)
+    process_summary_table()
 
 
 if __name__ == "__main__":

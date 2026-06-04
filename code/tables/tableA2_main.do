@@ -37,7 +37,8 @@ if "`y'" == "if_succeed"{
 	
 }
 if "`y'" == "payment_amt_num"{
-	
+
+	replace payment_amt_num = 0 if if_succeed == 0
 	local ytitle = "Chinese Yuan (CNY)"
 
 }
