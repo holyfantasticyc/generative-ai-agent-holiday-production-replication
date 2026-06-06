@@ -152,11 +152,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/table1_balance.log", replace text
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/table1_balance.log
   log type:  text
- opened on:   3 Jun 2026, 21:48:42
+ opened on:   6 Jun 2026, 20:46:52
 
 . 
 . **# Table: balance test
@@ -365,21 +365,21 @@ end of do-file
 . capture log close standard
 
 . log using "$replication_log/table2_revenue_decomposition_estimates.log", replace text name(standard)
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  standard
        log:  <REPLICATION_ROOT>/logs/table2_revenue_decomposition_estimates.log
   log type:  text
- opened on:   3 Jun 2026, 21:48:43
+ opened on:   6 Jun 2026, 20:46:53
 
 . 
 . capture log close delta
 
 . log using "$table_overleaf/delta.log", replace text name(delta)
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  delta
        log:  <REPLICATION_ROOT>/output/table/delta.log
   log type:  text
- opened on:   3 Jun 2026, 21:48:43
+ opened on:   6 Jun 2026, 20:46:53
 
 . **# Part 1
 . 
@@ -881,15 +881,15 @@ r7           0           0           0
       name:  delta
        log:  <REPLICATION_ROOT>/output/table/delta.log
   log type:  text
- closed on:   3 Jun 2026, 21:49:18
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ closed on:   6 Jun 2026, 20:47:29
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 . log close standard
       name:  standard
        log:  <REPLICATION_ROOT>/logs/table2_revenue_decomposition_estimates.log
   log type:  text
- closed on:   3 Jun 2026, 21:49:18
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ closed on:   6 Jun 2026, 20:47:29
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 . 
 . capture log close _all
@@ -919,11 +919,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/tableA1_summary_statistics.log", replace text
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA1_summary_statistics.log
   log type:  text
- opened on:   3 Jun 2026, 21:49:18
+ opened on:   6 Jun 2026, 20:47:29
 
 . 
 . **## Task/raw data level
@@ -1181,11 +1181,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/tableA2_main.log", replace text
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA2_main.log
   log type:  text
- opened on:   3 Jun 2026, 21:49:19
+ opened on:   6 Jun 2026, 20:47:29
 
 . 
 . **# Appendix Table: main results  
@@ -1723,11 +1723,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/tableA3_robust_notcontrols.log", replace text
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA3_robust_notcontrols.log
   log type:  text
- opened on:   3 Jun 2026, 21:49:19
+ opened on:   6 Jun 2026, 20:47:30
 
 . 
 . **# Appendix Table: main results, robustness, no controls and fixed effects 
@@ -1760,69 +1760,70 @@ end of do-file
   8.         
 . }
   9. if "`y'" == "payment_amt_num"{
- 10.         
-.         local ytitle = "Chinese Yuan (CNY)"
- 11. 
+ 10. 
+.         replace payment_amt_num = 0 if if_succeed == 0
+ 11.         local ytitle = "Chinese Yuan (CNY)"
+ 12. 
 . }
- 12. if "`y'" == "bridge_duration_num" & `i' == 2{
- 13.         global ytitle = " Seconds "
- 14.         
+ 13. if "`y'" == "bridge_duration_num" & `i' == 2{
+ 14.         global ytitle = " Seconds "
+ 15.         
 . }
- 15. if "`y'" == "bridge_duration_num" & `i' == 3{
- 16.         keep if if_succeed
- 17.         global ytitle = " Seconds "
- 18.         
+ 16. if "`y'" == "bridge_duration_num" & `i' == 3{
+ 17.         keep if if_succeed
+ 18.         global ytitle = " Seconds "
+ 19.         
 . }
- 19. if "`y'" == "payment_amt_per"{
- 20.         
+ 20. if "`y'" == "payment_amt_per"{
+ 21.         
 .         keep if if_succeed 
- 21.         cap drop payment_amt_per
- 22.         gen payment_amt_per = total_payment_amt_num / bridge_duration_num
- 23. 
+ 22.         cap drop payment_amt_per
+ 23.         gen payment_amt_per = total_payment_amt_num / bridge_duration_num
+ 24. 
 .         global ytitle = "Chinese Yuan (CNY)"
- 24.         
+ 25.         
 . }
- 25. if "`y'" == "if_refund"{
- 26.         
+ 26. if "`y'" == "if_refund"{
+ 27.         
 .         local ytitle = "%"
- 27.         replace `y' = `y' * 100
- 28.         
+ 28.         replace `y' = `y' * 100
+ 29.         
 . }
- 29. 
+ 30. 
 . 
 . if "`y'" == "n_policy_succeed"{
- 30.         keep if if_succeed
- 31. 
+ 31.         keep if if_succeed
+ 32. 
 .         global ytitle = "Count"
- 32.         
+ 33.         
 . }
- 33. if "`y'" == "scale_premium_num"{
- 34.         
-.         global ytitle = "Scale Premium (CNY)"
+ 34. if "`y'" == "scale_premium_num"{
  35.         
+.         global ytitle = "Scale Premium (CNY)"
+ 36.         
 . }
- 36. 
+ 37. 
 . if "`y'" == "ins_amt_num"{
- 37.         
+ 38.         
 .         replace `y' = `y' / 10000
- 38. 
+ 39. 
 .         global ytitle = "Insurance Amount (10000 CNY)"
- 39.         
+ 40.         
 . }
- 40. 
+ 41. 
 .         reghdfe `y' if_AI    ///        , noa  cl(crm_user_id)
- 41.         qui: sum  `y'
- 42.         estadd local mean_y = string(r(mean), "%9.2f") , replace
- 43.         estadd local date_fe "Yes" , replace
- 44.         estadd local hour_create_time "Yes" , replace
- 45.         estadd local r2_a =  string(e(r2_a), "%9.3f") , replace
- 46.         estadd local N =  string(e(N), "%9.0f") , replace
- 47. 
-.         eststo table_main_c`i'
+ 42.         qui: sum  `y'
+ 43.         estadd local mean_y = string(r(mean), "%9.2f") , replace
+ 44.         estadd local date_fe "No" , replace
+ 45.         estadd local hour_create_time "No" , replace
+ 46.         estadd local r2_a =  string(e(r2_a), "%9.3f") , replace
+ 47.         estadd local N =  string(e(N), "%9.0f") , replace
  48. 
+.         eststo table_main_c`i'
+ 49. 
 .         
 . restore 
- 49. }       
+ 50. }       
 if_succeed
 (1,255 real changes made)
 (MWFE estimator converged in 1 iterations)
@@ -1848,10 +1849,10 @@ added macro:
              e(mean_y) : "2.95"
 
 added macro:
-            e(date_fe) : "Yes"
+            e(date_fe) : "No"
 
 added macro:
-   e(hour_create_time) : "Yes"
+   e(hour_create_time) : "No"
 
 added macro:
                e(r2_a) : "0.002"
@@ -1882,10 +1883,10 @@ added macro:
              e(mean_y) : "108.72"
 
 added macro:
-            e(date_fe) : "Yes"
+            e(date_fe) : "No"
 
 added macro:
-   e(hour_create_time) : "Yes"
+   e(hour_create_time) : "No"
 
 added macro:
                e(r2_a) : "0.004"
@@ -1917,10 +1918,10 @@ added macro:
              e(mean_y) : "617.54"
 
 added macro:
-            e(date_fe) : "Yes"
+            e(date_fe) : "No"
 
 added macro:
-   e(hour_create_time) : "Yes"
+   e(hour_create_time) : "No"
 
 added macro:
                e(r2_a) : "0.089"
@@ -1952,10 +1953,10 @@ added macro:
              e(mean_y) : "1.24"
 
 added macro:
-            e(date_fe) : "Yes"
+            e(date_fe) : "No"
 
 added macro:
-   e(hour_create_time) : "Yes"
+   e(hour_create_time) : "No"
 
 added macro:
                e(r2_a) : "-0.001"
@@ -1963,39 +1964,40 @@ added macro:
 added macro:
                   e(N) : "1255"
 payment_amt_num
+(41,282 real changes made)
 (MWFE estimator converged in 1 iterations)
 
-HDFE Linear regression                            Number of obs   =      1,255
-Absorbing 1 HDFE group                            F(   1,    128) =      47.11
+HDFE Linear regression                            Number of obs   =     42,537
+Absorbing 1 HDFE group                            F(   1,    262) =      44.11
 Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.0158
-                                                  Adj R-squared   =     0.0150
-                                                  Within R-sq.    =     0.0158
-Number of clusters (crm_user_id) =        129     Root MSE        =    88.6379
+                                                  R-squared       =     0.0022
+                                                  Adj R-squared   =     0.0021
+                                                  Within R-sq.    =     0.0022
+Number of clusters (crm_user_id) =        263     Root MSE        =    21.8250
 
-                          (Std. err. adjusted for 129 clusters in crm_user_id)
+                          (Std. err. adjusted for 263 clusters in crm_user_id)
 ------------------------------------------------------------------------------
              |               Robust
 payment_am~m | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-       if_AI |  -26.65597   3.883833    -6.86   0.000    -34.34079   -18.97114
-       _cons |   98.08897   3.883833    25.26   0.000     90.40414    105.7738
+       if_AI |  -2.121446   .3194157    -6.64   0.000    -2.750394   -1.492497
+       _cons |    3.47278   .3194157    10.87   0.000     2.843831    4.101728
 ------------------------------------------------------------------------------
 
 added macro:
-             e(mean_y) : "91.97"
+             e(mean_y) : "2.71"
 
 added macro:
-            e(date_fe) : "Yes"
+            e(date_fe) : "No"
 
 added macro:
-   e(hour_create_time) : "Yes"
+   e(hour_create_time) : "No"
 
 added macro:
-               e(r2_a) : "0.015"
+               e(r2_a) : "0.002"
 
 added macro:
-                  e(N) : "1255"
+                  e(N) : "42537"
 payment_amt_per
 (41,282 observations deleted)
 (MWFE estimator converged in 1 iterations)
@@ -2021,10 +2023,10 @@ added macro:
              e(mean_y) : "1.06"
 
 added macro:
-            e(date_fe) : "Yes"
+            e(date_fe) : "No"
 
 added macro:
-   e(hour_create_time) : "Yes"
+   e(hour_create_time) : "No"
 
 added macro:
                e(r2_a) : "0.007"
@@ -2056,10 +2058,10 @@ added macro:
              e(mean_y) : "17.61"
 
 added macro:
-            e(date_fe) : "Yes"
+            e(date_fe) : "No"
 
 added macro:
-   e(hour_create_time) : "Yes"
+   e(hour_create_time) : "No"
 
 added macro:
                e(r2_a) : "-0.000"
@@ -2090,10 +2092,10 @@ added macro:
              e(mean_y) : "553.93"
 
 added macro:
-            e(date_fe) : "Yes"
+            e(date_fe) : "No"
 
 added macro:
-   e(hour_create_time) : "Yes"
+   e(hour_create_time) : "No"
 
 added macro:
                e(r2_a) : "0.004"
@@ -2125,10 +2127,10 @@ added macro:
              e(mean_y) : "584.21"
 
 added macro:
-            e(date_fe) : "Yes"
+            e(date_fe) : "No"
 
 added macro:
-   e(hour_create_time) : "Yes"
+   e(hour_create_time) : "No"
 
 added macro:
                e(r2_a) : "0.006"
@@ -2143,7 +2145,7 @@ added macro:
 . 
 . #delimit ; 
 delimiter now ;
-. esttab table_main_c1 table_main_c2 table_main_c3 table_main_c4 table_main_c5 table_main_c6 table_main_c7 table_main_c8  table_main_c9         using  "$table_overleaf/table_robust_notcontrols.tex", replace f compressb(%12.3f) se(%12.3f) star(* 0.10 ** 0.05 *** 0.01)  keep( if_AI province_capital gender_customer_num )   order( if_AI province_capital gender_customer_num ) coeflabels(                if_AI "$ \textit{AI} $"                 province_capital "Capital cities"                 gender_customer_num "Female customer"   ) label booktabs noobs nonotes collabels(none) alignment(D{.}{.}{-1})  stats(  mean_y date_fe hour_create_time r2_a N , labels(  "Mean of Y" "Date FE" "Hour FE" "\hline Adjusted R-squared"  "Obs" ) ) mtitles("Success rate" "Duration" "Duration (success)" "N succeed transcations"  "Payment amount" "Payment per second" "Refund rate" "Scale premium" "Insurance amount") nogaps  ;
+. esttab table_main_c1 table_main_c2 table_main_c3 table_main_c4 table_main_c5 table_main_c6 table_main_c7 table_main_c8  table_main_c9         using  "$table_overleaf/table_robust_notcontrols.tex", replace f compressb(%12.3f) se(%12.3f) star(* 0.10 ** 0.05 *** 0.01)  keep( if_AI )   order( if_AI ) coeflabels(                if_AI "$ \textit{AI} $"   ) label booktabs noobs nonotes collabels(none) alignment(D{.}{.}{-1})  stats(  mean_y date_fe hour_create_time r2_a N , labels(  "Mean of Y" "Date FE" "Hour FE" "\hline Adjusted R-squared"  "Obs" ) ) mtitles("Success rate" "Duration" "Duration (success)" "N succeed transcations"  "Payment amount" "Payment per second" "Refund rate" "Scale premium" "Insurance amount") nogaps  ;
 (output written to <REPLICATION_ROOT>/output/table/table_robust_notcontrols.tex)
 .  #delimit cr
 delimiter now cr
@@ -2174,11 +2176,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/tableA4_robust_w_1h.log", replace text
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA4_robust_w_1h.log
   log type:  text
- opened on:   3 Jun 2026, 21:49:20
+ opened on:   6 Jun 2026, 20:47:30
 
 . 
 . **# Appendix Table: main results, robustness, only call within 1 hour
@@ -2213,69 +2215,70 @@ end of do-file
   8.         
 . }
   9. if "`y'" == "payment_amt_num"{
- 10.         
-.         local ytitle = "Chinese Yuan (CNY)"
- 11. 
+ 10. 
+.         replace payment_amt_num = 0 if if_succeed == 0
+ 11.         local ytitle = "Chinese Yuan (CNY)"
+ 12. 
 . }
- 12. if "`y'" == "bridge_duration_num" & `i' == 2{
- 13.         global ytitle = " Seconds "
- 14.         
+ 13. if "`y'" == "bridge_duration_num" & `i' == 2{
+ 14.         global ytitle = " Seconds "
+ 15.         
 . }
- 15. if "`y'" == "bridge_duration_num" & `i' == 3{
- 16.         keep if if_succeed
- 17.         global ytitle = " Seconds "
- 18.         
+ 16. if "`y'" == "bridge_duration_num" & `i' == 3{
+ 17.         keep if if_succeed
+ 18.         global ytitle = " Seconds "
+ 19.         
 . }
- 19. if "`y'" == "payment_amt_per"{
- 20.         
+ 20. if "`y'" == "payment_amt_per"{
+ 21.         
 .         keep if if_succeed 
- 21.         cap drop payment_amt_per
- 22.         gen payment_amt_per = total_payment_amt_num / bridge_duration_num
- 23. 
+ 22.         cap drop payment_amt_per
+ 23.         gen payment_amt_per = total_payment_amt_num / bridge_duration_num
+ 24. 
 .         global ytitle = "Chinese Yuan (CNY)"
- 24.         
+ 25.         
 . }
- 25. if "`y'" == "if_refund"{
- 26.         
+ 26. if "`y'" == "if_refund"{
+ 27.         
 .         local ytitle = "%"
- 27.         replace `y' = `y' * 100
- 28.         
+ 28.         replace `y' = `y' * 100
+ 29.         
 . }
- 29. 
+ 30. 
 . 
 . if "`y'" == "n_policy_succeed"{
- 30.         keep if if_succeed
- 31. 
+ 31.         keep if if_succeed
+ 32. 
 .         global ytitle = "Count"
- 32.         
+ 33.         
 . }
- 33. if "`y'" == "scale_premium_num"{
- 34.         
-.         global ytitle = "Scale Premium (CNY)"
+ 34. if "`y'" == "scale_premium_num"{
  35.         
+.         global ytitle = "Scale Premium (CNY)"
+ 36.         
 . }
- 36. 
+ 37. 
 . if "`y'" == "ins_amt_num"{
- 37.         
+ 38.         
 .         replace `y' = `y' / 10000
- 38. 
+ 39. 
 .         global ytitle = "Insurance Amount (10000 CNY)"
- 39.         
+ 40.         
 . }
- 40. 
+ 41. 
 .         reghdfe `y' if_AI province_capital gender_customer_num  ///        , absorb(date_create_time hour_create_time)  cl(crm_user_id)
- 41.         qui: sum  `y'
- 42.         estadd local mean_y = string(r(mean), "%9.2f") , replace
- 43.         estadd local date_fe "Yes" , replace
- 44.         estadd local hour_create_time "Yes" , replace
- 45.         estadd local r2_a =  string(e(r2_a), "%9.3f") , replace
- 46.         estadd local N =  string(e(N), "%9.0f") , replace
- 47. 
-.         eststo table_main_c`i'
+ 42.         qui: sum  `y'
+ 43.         estadd local mean_y = string(r(mean), "%9.2f") , replace
+ 44.         estadd local date_fe "Yes" , replace
+ 45.         estadd local hour_create_time "Yes" , replace
+ 46.         estadd local r2_a =  string(e(r2_a), "%9.3f") , replace
+ 47.         estadd local N =  string(e(N), "%9.0f") , replace
  48. 
+.         eststo table_main_c`i'
+ 49. 
 .         
 . restore 
- 49. }       
+ 50. }       
 if_succeed
 (1,208 real changes made)
 (MWFE estimator converged in 5 iterations)
@@ -2456,25 +2459,26 @@ added macro:
 added macro:
                   e(N) : "1208"
 payment_amt_num
-(MWFE estimator converged in 6 iterations)
+(37,945 real changes made)
+(MWFE estimator converged in 5 iterations)
 
-HDFE Linear regression                            Number of obs   =      1,208
-Absorbing 2 HDFE groups                           F(   3,    125) =       4.63
-Statistics robust to heteroskedasticity           Prob > F        =     0.0042
-                                                  R-squared       =     0.0865
-                                                  Adj R-squared   =     0.0601
-                                                  Within R-sq.    =     0.0040
-Number of clusters (crm_user_id) =        126     Root MSE        =    85.8364
+HDFE Linear regression                            Number of obs   =     39,153
+Absorbing 2 HDFE groups                           F(   3,    262) =      11.67
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.0058
+                                                  Adj R-squared   =     0.0049
+                                                  Within R-sq.    =     0.0008
+Number of clusters (crm_user_id) =        263     Root MSE        =    22.1241
 
-                                 (Std. err. adjusted for 126 clusters in crm_user_id)
+                                 (Std. err. adjusted for 263 clusters in crm_user_id)
 -------------------------------------------------------------------------------------
                     |               Robust
     payment_amt_num | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 --------------------+----------------------------------------------------------------
-              if_AI |   -15.9668   4.513721    -3.54   0.001    -24.90001   -7.033582
-   province_capital |  -4.315488    5.15687    -0.84   0.404    -14.52157    5.890597
-gender_customer_num |  -4.362884   5.946123    -0.73   0.464      -16.131    7.405232
-              _cons |   98.51714   4.704107    20.94   0.000     89.20713    107.8272
+              if_AI |   -1.56515   .3256175    -4.81   0.000    -2.206311     -.92399
+   province_capital |   .2485302   .2924656     0.85   0.396    -.3273521    .8244125
+gender_customer_num |  -.5947876   .1936145    -3.07   0.002    -.9760261   -.2135491
+              _cons |   3.689198   .3595106    10.26   0.000       2.9813    4.397096
 -------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
@@ -2486,7 +2490,7 @@ Absorbed degrees of freedom:
 ----------------------------------------------------------+
 
 added macro:
-             e(mean_y) : "91.48"
+             e(mean_y) : "2.82"
 
 added macro:
             e(date_fe) : "Yes"
@@ -2495,10 +2499,10 @@ added macro:
    e(hour_create_time) : "Yes"
 
 added macro:
-               e(r2_a) : "0.060"
+               e(r2_a) : "0.005"
 
 added macro:
-                  e(N) : "1208"
+                  e(N) : "39153"
 payment_amt_per
 (37,945 observations deleted)
 (MWFE estimator converged in 6 iterations)
@@ -2724,11 +2728,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/tableA5_by_gender.log", replace text
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA5_by_gender.log
   log type:  text
- opened on:   3 Jun 2026, 21:49:20
+ opened on:   6 Jun 2026, 20:47:31
 
 . 
 . **# Appendix Table: gender effects
@@ -2759,73 +2763,74 @@ end of do-file
   8.         
 . }
   9. if "`y'" == "payment_amt_num"{
- 10.         
-.         local ytitle = "Chinese Yuan (CNY)"
- 11. 
+ 10. 
+.         replace payment_amt_num = 0 if if_succeed == 0
+ 11.         local ytitle = "Chinese Yuan (CNY)"
+ 12. 
 . }
- 12. if "`y'" == "bridge_duration_num" & `i' == 2{
- 13.         global ytitle = " Seconds "
- 14.         
+ 13. if "`y'" == "bridge_duration_num" & `i' == 2{
+ 14.         global ytitle = " Seconds "
+ 15.         
 . }
- 15. if "`y'" == "bridge_duration_num" & `i' == 3{
- 16.         keep if if_succeed
- 17.         global ytitle = " Seconds "
- 18.         
+ 16. if "`y'" == "bridge_duration_num" & `i' == 3{
+ 17.         keep if if_succeed
+ 18.         global ytitle = " Seconds "
+ 19.         
 . }
- 19. if "`y'" == "payment_amt_per"{
- 20.         
+ 20. if "`y'" == "payment_amt_per"{
+ 21.         
 .         keep if if_succeed 
- 21.         cap drop payment_amt_per
- 22.         gen payment_amt_per = total_payment_amt_num / bridge_duration_num
- 23. 
+ 22.         cap drop payment_amt_per
+ 23.         gen payment_amt_per = total_payment_amt_num / bridge_duration_num
+ 24. 
 .         global ytitle = "Chinese Yuan (CNY)"
- 24.         
+ 25.         
 . }
- 25. if "`y'" == "if_refund"{
- 26.         
+ 26. if "`y'" == "if_refund"{
+ 27.         
 .         local ytitle = "%"
- 27.         replace `y' = `y' * 100
- 28.         
+ 28.         replace `y' = `y' * 100
+ 29.         
 . }
- 29. 
+ 30. 
 . 
 . if "`y'" == "n_policy_succeed"{
- 30.         keep if if_succeed
- 31. 
+ 31.         keep if if_succeed
+ 32. 
 .         global ytitle = "Count"
- 32.         
+ 33.         
 . }
- 33. if "`y'" == "scale_premium_num"{
- 34.         
-.         global ytitle = "Scale Premium (CNY)"
+ 34. if "`y'" == "scale_premium_num"{
  35.         
+.         global ytitle = "Scale Premium (CNY)"
+ 36.         
 . }
- 36. 
+ 37. 
 . if "`y'" == "ins_amt_num"{
- 37.         
+ 38.         
 .         replace `y' = `y' / 10000
- 38. 
+ 39. 
 .         global ytitle = "Insurance Amount (10000 CNY)"
- 39.         
+ 40.         
 . }
- 40. 
+ 41. 
 . gen gender_group = . 
- 41. replace gender_group = 1 if if_AI
- 42. replace gender_group = 2 if !if_AI  & gender_customer == "Female" 
- 43. replace gender_group = 3 if !if_AI  & gender_customer == "Male"
- 44. 
+ 42. replace gender_group = 1 if if_AI
+ 43. replace gender_group = 2 if !if_AI  & gender_customer == "Female" 
+ 44. replace gender_group = 3 if !if_AI  & gender_customer == "Male"
+ 45. 
 . 
 . reghdfe  `y'  i.if_AI##i.gender_customer_num   province_capital  gap_create_first_call ///                , absorb(date_create_time hour_create_time ) cl(crm_user_id)
- 45.         estadd local mean_y = string(r(mean), "%9.2f") , replace
- 46.         estadd local date_fe "Yes" , replace
- 47.         estadd local control "Yes" , replace
- 48.         estadd local hour_create_time "Yes" , replace
- 49.         estadd local r2_a =  string(e(r2), "%9.3f") , replace
- 50.         estadd local N =  string(e(N), "%9.0f") , replace
- 51. 
+ 46.         estadd local mean_y = string(r(mean), "%9.2f") , replace
+ 47.         estadd local date_fe "Yes" , replace
+ 48.         estadd local control "Yes" , replace
+ 49.         estadd local hour_create_time "Yes" , replace
+ 50.         estadd local r2_a =  string(e(r2), "%9.3f") , replace
+ 51.         estadd local N =  string(e(N), "%9.0f") , replace
+ 52. 
 .         eststo table_by_gender_c`i'     
- 52. restore
- 53. 
+ 53. restore
+ 54. 
 . }       
 if_succeed
 (1,092 real changes made)
@@ -3055,34 +3060,35 @@ added macro:
 added macro:
                   e(N) : "1092"
 payment_amt_num
+(37,616 real changes made)
 (38,708 missing values generated)
 (14,866 real changes made)
 (13,054 real changes made)
 (10,717 real changes made)
-(MWFE estimator converged in 6 iterations)
+(MWFE estimator converged in 5 iterations)
 
-HDFE Linear regression                            Number of obs   =      1,092
-Absorbing 2 HDFE groups                           F(   5,    111) =      35.79
+HDFE Linear regression                            Number of obs   =     38,708
+Absorbing 2 HDFE groups                           F(   5,    226) =     195.22
 Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.0886
-                                                  Adj R-squared   =     0.0575
-                                                  Within R-sq.    =     0.0065
-Number of clusters (crm_user_id) =        112     Root MSE        =    86.7915
+                                                  R-squared       =     0.0045
+                                                  Adj R-squared   =     0.0036
+                                                  Within R-sq.    =     0.0006
+Number of clusters (crm_user_id) =        227     Root MSE        =    21.3686
 
-                                       (Std. err. adjusted for 112 clusters in crm_user_id)
+                                       (Std. err. adjusted for 227 clusters in crm_user_id)
 -------------------------------------------------------------------------------------------
                           |               Robust
           payment_amt_num | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 --------------------------+----------------------------------------------------------------
-                  1.if_AI |  -3.248339   4.809743    -0.68   0.501    -12.77917    6.282489
-    1.gender_customer_num |   3.724791   7.405229     0.50   0.616    -10.94916    18.39875
+                  1.if_AI |  -1.213844   .3899739    -3.11   0.002    -1.982294   -.4453945
+    1.gender_customer_num |  -.5712941   .2955578    -1.93   0.054    -1.153696    .0111074
                           |
 if_AI#gender_customer_num |
-                     1 1  |   -21.7205   7.906636    -2.75   0.007    -37.38803   -6.052972
+                     1 1  |   .0122403   .2988192     0.04   0.967    -.5765877    .6010683
                           |
-         province_capital |  -5.862478   5.305447    -1.10   0.272    -16.37558     4.65062
-    gap_create_first_call |  -.0080054   .0287232    -0.28   0.781    -.0649223    .0489115
-                    _cons |   95.61392   4.965824    19.25   0.000     85.77381     105.454
+         province_capital |    .014586   .2327001     0.06   0.950    -.4439532    .4731253
+    gap_create_first_call |  -.0011396   .0015101    -0.75   0.451    -.0041152     .001836
+                    _cons |   3.434761   .3771853     9.11   0.000     2.691512    4.178011
 -------------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
@@ -3106,10 +3112,10 @@ added macro:
    e(hour_create_time) : "Yes"
 
 added macro:
-               e(r2_a) : "0.089"
+               e(r2_a) : "0.005"
 
 added macro:
-                  e(N) : "1092"
+                  e(N) : "38708"
 payment_amt_per
 (37,616 observations deleted)
 (1,092 missing values generated)
@@ -3374,11 +3380,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/tableA6_vacation_or_not.log", replace text
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA6_vacation_or_not.log
   log type:  text
- opened on:   3 Jun 2026, 21:49:21
+ opened on:   6 Jun 2026, 20:47:32
 
 . 
 . 
@@ -4051,11 +4057,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/fig1_outcome_bars.log", replace text
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig1_outcome_bars.log
   log type:  text
- opened on:   3 Jun 2026, 21:50:50
+ opened on:   6 Jun 2026, 20:49:01
 
 . 
 . **# Figure 1: Main Results 
@@ -4542,11 +4548,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/fig2_workload_coef.log", replace text
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig2_workload_coef.log
   log type:  text
- opened on:   3 Jun 2026, 21:50:51
+ opened on:   6 Jun 2026, 20:49:03
 
 . 
 . *===================================================================
@@ -4707,11 +4713,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/fig3_duration_relationship.log", replace text
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig3_duration_relationship.log
   log type:  text
- opened on:   3 Jun 2026, 21:50:53
+ opened on:   6 Jun 2026, 20:49:05
 
 . 
 . **# Figure: Success Rate - time relationship
@@ -4733,7 +4739,7 @@ end of do-file
 . 
 . bys if_succeed: sum bridge_duration_num , de
 
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -> if_succeed = 0
 
                        bridge_duration
@@ -4751,7 +4757,7 @@ end of do-file
 95%          345           3276       Skewness       6.283063
 99%          823           3487       Kurtosis       65.75273
 
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -> if_succeed = 1
 
                        bridge_duration
@@ -5088,11 +5094,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/fig4_case_study.log", replace text
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig4_case_study.log
   log type:  text
- opened on:   3 Jun 2026, 21:51:03
+ opened on:   6 Jun 2026, 20:49:15
 
 . 
 . *===================================================================
@@ -5539,11 +5545,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/figA3_coef_alter_FEs.log", replace text
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA3_coef_alter_FEs.log
   log type:  text
- opened on:   3 Jun 2026, 21:51:55
+ opened on:   6 Jun 2026, 20:50:07
 
 . 
 . **# *Figure: Results with difference FEs and controls
@@ -6217,11 +6223,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/figA4_workload_duration.log", replace text
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA4_workload_duration.log
   log type:  text
- opened on:   3 Jun 2026, 21:51:58
+ opened on:   6 Jun 2026, 20:50:10
 
 . 
 . **# Figure: Results: by workload
@@ -6321,11 +6327,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/figA5_gender_succeed.log", replace text
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA5_gender_succeed.log
   log type:  text
- opened on:   3 Jun 2026, 21:51:59
+ opened on:   6 Jun 2026, 20:50:11
 
 . 
 . **## Success rate
@@ -6617,11 +6623,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/figA6_gender_payment_refund.log", replace text
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA6_gender_payment_refund.log
   log type:  text
- opened on:   3 Jun 2026, 21:52:00
+ opened on:   6 Jun 2026, 20:50:12
 
 . 
 . **## Amount (unconditional)
@@ -7146,11 +7152,11 @@ end of do-file
 . capture log close
 
 . log using "$replication_log/figA7_ai_success_weekly.log", replace text
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA7_ai_success_weekly.log
   log type:  text
- opened on:   3 Jun 2026, 21:52:01
+ opened on:   6 Jun 2026, 20:50:13
 
 . 
 . *============================================================*

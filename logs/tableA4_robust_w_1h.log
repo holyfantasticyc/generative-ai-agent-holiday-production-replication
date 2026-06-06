@@ -1,8 +1,8 @@
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA4_robust_w_1h.log
   log type:  text
- opened on:   3 Jun 2026, 21:49:20
+ opened on:   6 Jun 2026, 20:47:30
 
 . 
 . **# Appendix Table: main results, robustness, only call within 1 hour
@@ -37,69 +37,70 @@
   8.         
 . }
   9. if "`y'" == "payment_amt_num"{
- 10.         
-.         local ytitle = "Chinese Yuan (CNY)"
- 11. 
+ 10. 
+.         replace payment_amt_num = 0 if if_succeed == 0
+ 11.         local ytitle = "Chinese Yuan (CNY)"
+ 12. 
 . }
- 12. if "`y'" == "bridge_duration_num" & `i' == 2{
- 13.         global ytitle = " Seconds "
- 14.         
+ 13. if "`y'" == "bridge_duration_num" & `i' == 2{
+ 14.         global ytitle = " Seconds "
+ 15.         
 . }
- 15. if "`y'" == "bridge_duration_num" & `i' == 3{
- 16.         keep if if_succeed
- 17.         global ytitle = " Seconds "
- 18.         
+ 16. if "`y'" == "bridge_duration_num" & `i' == 3{
+ 17.         keep if if_succeed
+ 18.         global ytitle = " Seconds "
+ 19.         
 . }
- 19. if "`y'" == "payment_amt_per"{
- 20.         
+ 20. if "`y'" == "payment_amt_per"{
+ 21.         
 .         keep if if_succeed 
- 21.         cap drop payment_amt_per
- 22.         gen payment_amt_per = total_payment_amt_num / bridge_duration_num
- 23. 
+ 22.         cap drop payment_amt_per
+ 23.         gen payment_amt_per = total_payment_amt_num / bridge_duration_num
+ 24. 
 .         global ytitle = "Chinese Yuan (CNY)"
- 24.         
+ 25.         
 . }
- 25. if "`y'" == "if_refund"{
- 26.         
+ 26. if "`y'" == "if_refund"{
+ 27.         
 .         local ytitle = "%"
- 27.         replace `y' = `y' * 100
- 28.         
+ 28.         replace `y' = `y' * 100
+ 29.         
 . }
- 29. 
+ 30. 
 . 
 . if "`y'" == "n_policy_succeed"{
- 30.         keep if if_succeed
- 31. 
+ 31.         keep if if_succeed
+ 32. 
 .         global ytitle = "Count"
- 32.         
+ 33.         
 . }
- 33. if "`y'" == "scale_premium_num"{
- 34.         
-.         global ytitle = "Scale Premium (CNY)"
+ 34. if "`y'" == "scale_premium_num"{
  35.         
+.         global ytitle = "Scale Premium (CNY)"
+ 36.         
 . }
- 36. 
+ 37. 
 . if "`y'" == "ins_amt_num"{
- 37.         
+ 38.         
 .         replace `y' = `y' / 10000
- 38. 
+ 39. 
 .         global ytitle = "Insurance Amount (10000 CNY)"
- 39.         
+ 40.         
 . }
- 40. 
+ 41. 
 .         reghdfe `y' if_AI province_capital gender_customer_num  ///        , absorb(date_create_time hour_create_time)  cl(crm_user_id)
- 41.         qui: sum  `y'
- 42.         estadd local mean_y = string(r(mean), "%9.2f") , replace
- 43.         estadd local date_fe "Yes" , replace
- 44.         estadd local hour_create_time "Yes" , replace
- 45.         estadd local r2_a =  string(e(r2_a), "%9.3f") , replace
- 46.         estadd local N =  string(e(N), "%9.0f") , replace
- 47. 
-.         eststo table_main_c`i'
+ 42.         qui: sum  `y'
+ 43.         estadd local mean_y = string(r(mean), "%9.2f") , replace
+ 44.         estadd local date_fe "Yes" , replace
+ 45.         estadd local hour_create_time "Yes" , replace
+ 46.         estadd local r2_a =  string(e(r2_a), "%9.3f") , replace
+ 47.         estadd local N =  string(e(N), "%9.0f") , replace
  48. 
+.         eststo table_main_c`i'
+ 49. 
 .         
 . restore 
- 49. }       
+ 50. }       
 if_succeed
 (1,208 real changes made)
 (MWFE estimator converged in 5 iterations)
@@ -280,25 +281,26 @@ added macro:
 added macro:
                   e(N) : "1208"
 payment_amt_num
-(MWFE estimator converged in 6 iterations)
+(37,945 real changes made)
+(MWFE estimator converged in 5 iterations)
 
-HDFE Linear regression                            Number of obs   =      1,208
-Absorbing 2 HDFE groups                           F(   3,    125) =       4.63
-Statistics robust to heteroskedasticity           Prob > F        =     0.0042
-                                                  R-squared       =     0.0865
-                                                  Adj R-squared   =     0.0601
-                                                  Within R-sq.    =     0.0040
-Number of clusters (crm_user_id) =        126     Root MSE        =    85.8364
+HDFE Linear regression                            Number of obs   =     39,153
+Absorbing 2 HDFE groups                           F(   3,    262) =      11.67
+Statistics robust to heteroskedasticity           Prob > F        =     0.0000
+                                                  R-squared       =     0.0058
+                                                  Adj R-squared   =     0.0049
+                                                  Within R-sq.    =     0.0008
+Number of clusters (crm_user_id) =        263     Root MSE        =    22.1241
 
-                                 (Std. err. adjusted for 126 clusters in crm_user_id)
+                                 (Std. err. adjusted for 263 clusters in crm_user_id)
 -------------------------------------------------------------------------------------
                     |               Robust
     payment_amt_num | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 --------------------+----------------------------------------------------------------
-              if_AI |   -15.9668   4.513721    -3.54   0.001    -24.90001   -7.033582
-   province_capital |  -4.315488    5.15687    -0.84   0.404    -14.52157    5.890597
-gender_customer_num |  -4.362884   5.946123    -0.73   0.464      -16.131    7.405232
-              _cons |   98.51714   4.704107    20.94   0.000     89.20713    107.8272
+              if_AI |   -1.56515   .3256175    -4.81   0.000    -2.206311     -.92399
+   province_capital |   .2485302   .2924656     0.85   0.396    -.3273521    .8244125
+gender_customer_num |  -.5947876   .1936145    -3.07   0.002    -.9760261   -.2135491
+              _cons |   3.689198   .3595106    10.26   0.000       2.9813    4.397096
 -------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
@@ -310,7 +312,7 @@ Absorbed degrees of freedom:
 ----------------------------------------------------------+
 
 added macro:
-             e(mean_y) : "91.48"
+             e(mean_y) : "2.82"
 
 added macro:
             e(date_fe) : "Yes"
@@ -319,10 +321,10 @@ added macro:
    e(hour_create_time) : "Yes"
 
 added macro:
-               e(r2_a) : "0.060"
+               e(r2_a) : "0.005"
 
 added macro:
-                  e(N) : "1208"
+                  e(N) : "39153"
 payment_amt_per
 (37,945 observations deleted)
 (MWFE estimator converged in 6 iterations)

@@ -1,8 +1,8 @@
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA5_by_gender.log
   log type:  text
- opened on:   3 Jun 2026, 21:49:20
+ opened on:   6 Jun 2026, 20:47:31
 
 . 
 . **# Appendix Table: gender effects
@@ -33,73 +33,74 @@
   8.         
 . }
   9. if "`y'" == "payment_amt_num"{
- 10.         
-.         local ytitle = "Chinese Yuan (CNY)"
- 11. 
+ 10. 
+.         replace payment_amt_num = 0 if if_succeed == 0
+ 11.         local ytitle = "Chinese Yuan (CNY)"
+ 12. 
 . }
- 12. if "`y'" == "bridge_duration_num" & `i' == 2{
- 13.         global ytitle = " Seconds "
- 14.         
+ 13. if "`y'" == "bridge_duration_num" & `i' == 2{
+ 14.         global ytitle = " Seconds "
+ 15.         
 . }
- 15. if "`y'" == "bridge_duration_num" & `i' == 3{
- 16.         keep if if_succeed
- 17.         global ytitle = " Seconds "
- 18.         
+ 16. if "`y'" == "bridge_duration_num" & `i' == 3{
+ 17.         keep if if_succeed
+ 18.         global ytitle = " Seconds "
+ 19.         
 . }
- 19. if "`y'" == "payment_amt_per"{
- 20.         
+ 20. if "`y'" == "payment_amt_per"{
+ 21.         
 .         keep if if_succeed 
- 21.         cap drop payment_amt_per
- 22.         gen payment_amt_per = total_payment_amt_num / bridge_duration_num
- 23. 
+ 22.         cap drop payment_amt_per
+ 23.         gen payment_amt_per = total_payment_amt_num / bridge_duration_num
+ 24. 
 .         global ytitle = "Chinese Yuan (CNY)"
- 24.         
+ 25.         
 . }
- 25. if "`y'" == "if_refund"{
- 26.         
+ 26. if "`y'" == "if_refund"{
+ 27.         
 .         local ytitle = "%"
- 27.         replace `y' = `y' * 100
- 28.         
+ 28.         replace `y' = `y' * 100
+ 29.         
 . }
- 29. 
+ 30. 
 . 
 . if "`y'" == "n_policy_succeed"{
- 30.         keep if if_succeed
- 31. 
+ 31.         keep if if_succeed
+ 32. 
 .         global ytitle = "Count"
- 32.         
+ 33.         
 . }
- 33. if "`y'" == "scale_premium_num"{
- 34.         
-.         global ytitle = "Scale Premium (CNY)"
+ 34. if "`y'" == "scale_premium_num"{
  35.         
+.         global ytitle = "Scale Premium (CNY)"
+ 36.         
 . }
- 36. 
+ 37. 
 . if "`y'" == "ins_amt_num"{
- 37.         
+ 38.         
 .         replace `y' = `y' / 10000
- 38. 
+ 39. 
 .         global ytitle = "Insurance Amount (10000 CNY)"
- 39.         
+ 40.         
 . }
- 40. 
+ 41. 
 . gen gender_group = . 
- 41. replace gender_group = 1 if if_AI
- 42. replace gender_group = 2 if !if_AI  & gender_customer == "Female" 
- 43. replace gender_group = 3 if !if_AI  & gender_customer == "Male"
- 44. 
+ 42. replace gender_group = 1 if if_AI
+ 43. replace gender_group = 2 if !if_AI  & gender_customer == "Female" 
+ 44. replace gender_group = 3 if !if_AI  & gender_customer == "Male"
+ 45. 
 . 
 . reghdfe  `y'  i.if_AI##i.gender_customer_num   province_capital  gap_create_first_call ///                , absorb(date_create_time hour_create_time ) cl(crm_user_id)
- 45.         estadd local mean_y = string(r(mean), "%9.2f") , replace
- 46.         estadd local date_fe "Yes" , replace
- 47.         estadd local control "Yes" , replace
- 48.         estadd local hour_create_time "Yes" , replace
- 49.         estadd local r2_a =  string(e(r2), "%9.3f") , replace
- 50.         estadd local N =  string(e(N), "%9.0f") , replace
- 51. 
+ 46.         estadd local mean_y = string(r(mean), "%9.2f") , replace
+ 47.         estadd local date_fe "Yes" , replace
+ 48.         estadd local control "Yes" , replace
+ 49.         estadd local hour_create_time "Yes" , replace
+ 50.         estadd local r2_a =  string(e(r2), "%9.3f") , replace
+ 51.         estadd local N =  string(e(N), "%9.0f") , replace
+ 52. 
 .         eststo table_by_gender_c`i'     
- 52. restore
- 53. 
+ 53. restore
+ 54. 
 . }       
 if_succeed
 (1,092 real changes made)
@@ -329,34 +330,35 @@ added macro:
 added macro:
                   e(N) : "1092"
 payment_amt_num
+(37,616 real changes made)
 (38,708 missing values generated)
 (14,866 real changes made)
 (13,054 real changes made)
 (10,717 real changes made)
-(MWFE estimator converged in 6 iterations)
+(MWFE estimator converged in 5 iterations)
 
-HDFE Linear regression                            Number of obs   =      1,092
-Absorbing 2 HDFE groups                           F(   5,    111) =      35.79
+HDFE Linear regression                            Number of obs   =     38,708
+Absorbing 2 HDFE groups                           F(   5,    226) =     195.22
 Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.0886
-                                                  Adj R-squared   =     0.0575
-                                                  Within R-sq.    =     0.0065
-Number of clusters (crm_user_id) =        112     Root MSE        =    86.7915
+                                                  R-squared       =     0.0045
+                                                  Adj R-squared   =     0.0036
+                                                  Within R-sq.    =     0.0006
+Number of clusters (crm_user_id) =        227     Root MSE        =    21.3686
 
-                                       (Std. err. adjusted for 112 clusters in crm_user_id)
+                                       (Std. err. adjusted for 227 clusters in crm_user_id)
 -------------------------------------------------------------------------------------------
                           |               Robust
           payment_amt_num | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 --------------------------+----------------------------------------------------------------
-                  1.if_AI |  -3.248339   4.809743    -0.68   0.501    -12.77917    6.282489
-    1.gender_customer_num |   3.724791   7.405229     0.50   0.616    -10.94916    18.39875
+                  1.if_AI |  -1.213844   .3899739    -3.11   0.002    -1.982294   -.4453945
+    1.gender_customer_num |  -.5712941   .2955578    -1.93   0.054    -1.153696    .0111074
                           |
 if_AI#gender_customer_num |
-                     1 1  |   -21.7205   7.906636    -2.75   0.007    -37.38803   -6.052972
+                     1 1  |   .0122403   .2988192     0.04   0.967    -.5765877    .6010683
                           |
-         province_capital |  -5.862478   5.305447    -1.10   0.272    -16.37558     4.65062
-    gap_create_first_call |  -.0080054   .0287232    -0.28   0.781    -.0649223    .0489115
-                    _cons |   95.61392   4.965824    19.25   0.000     85.77381     105.454
+         province_capital |    .014586   .2327001     0.06   0.950    -.4439532    .4731253
+    gap_create_first_call |  -.0011396   .0015101    -0.75   0.451    -.0041152     .001836
+                    _cons |   3.434761   .3771853     9.11   0.000     2.691512    4.178011
 -------------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
@@ -380,10 +382,10 @@ added macro:
    e(hour_create_time) : "Yes"
 
 added macro:
-               e(r2_a) : "0.089"
+               e(r2_a) : "0.005"
 
 added macro:
-                  e(N) : "1092"
+                  e(N) : "38708"
 payment_amt_per
 (37,616 observations deleted)
 (1,092 missing values generated)
