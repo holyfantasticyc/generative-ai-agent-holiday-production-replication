@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------
 if "${replication}" == "" {
-    global replication "/Users/holyfantastic/Dropbox/AI/PNAS_NEXUS/replication_package"
+    global replication "<REPLICATION_ROOT>"
 }
 run "$replication/code/00_declare_path.do"
 
@@ -18,7 +18,6 @@ log using "$replication_log/tableA3_robust_notcontrols.log", replace text
 
 use  "$temp/vacation_connected_call_level"  , clear
 keep if vacation == 1
-replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
 
 cap gen gender_customer_num = ( gender_customer == "Female" )
 replace province_capital = 1 if missing(province_capital)
@@ -56,7 +55,7 @@ if "`y'" == "payment_amt_per"{
 	
 	keep if if_succeed 
 	cap drop payment_amt_per
-	gen payment_amt_per = total_payment_amt_num / bridge_duration_num
+	gen payment_amt_per = payment_amt_num / bridge_duration_num
 
 	global ytitle = "Chinese Yuan (CNY)"
 	

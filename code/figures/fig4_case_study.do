@@ -7,7 +7,7 @@
 *   Panel B: rate_time_gap_relationsip_R1.pdf (delay-vs-success)
 *-------------------------------------------------------------------
 if "${replication}" == "" {
-    global replication "/Users/holyfantastic/Dropbox/AI/PNAS_NEXUS/replication_package"
+    global replication "<REPLICATION_ROOT>"
 }
 run "$replication/code/00_declare_path.do"
 

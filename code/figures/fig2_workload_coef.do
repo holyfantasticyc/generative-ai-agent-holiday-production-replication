@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------
 if "${replication}" == "" {
-    global replication "/Users/holyfantastic/Dropbox/AI/PNAS_NEXUS/replication_package"
+    global replication "<REPLICATION_ROOT>"
 }
 run "$replication/code/00_declare_path.do"
 

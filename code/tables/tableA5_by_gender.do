@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------
 if "${replication}" == "" {
-    global replication "/Users/holyfantastic/Dropbox/AI/PNAS_NEXUS/replication_package"
+    global replication "<REPLICATION_ROOT>"
 }
 run "$replication/code/00_declare_path.do"
 
@@ -55,7 +55,7 @@ if "`y'" == "payment_amt_per"{
 	
 	keep if if_succeed 
 	cap drop payment_amt_per
-	gen payment_amt_per = total_payment_amt_num / bridge_duration_num
+	gen payment_amt_per = payment_amt_num / bridge_duration_num
 
 	global ytitle = "Chinese Yuan (CNY)"
 	

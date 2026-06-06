@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------
 if "${replication}" == "" {
-    global replication "/Users/holyfantastic/Dropbox/AI/PNAS_NEXUS/replication_package"
+    global replication "<REPLICATION_ROOT>"
 }
 run "$replication/code/00_declare_path.do"
 
@@ -45,7 +45,7 @@ restore
 global variable_list3  bridge_duration_num  n_policy_succeed payment_amt_num payment_amt_per if_refund scale_premium_num ins_amt_num
 use  "$temp/vacation_connected_call_level"  , clear
 keep if if_succeed
-gen payment_amt_per = total_payment_amt_num / bridge_duration_num
+gen payment_amt_per = payment_amt_num / bridge_duration_num
 replace ins_amt_num = ins_amt_num / 10000
 preserve
 	tabstat $variable_list3  ,  stat(N mean sd min max ) save

@@ -2,7 +2,7 @@
 * table2_revenue_decomposition_estimates.do  --  PNAS Nexus replication package
 *-------------------------------------------------------------------
 if "${replication}" == "" {
-    global replication "/Users/holyfantastic/Dropbox/AI/PNAS_NEXUS/replication_package"
+    global replication "<REPLICATION_ROOT>"
 }
 
 run "$replication/code/00_declare_path.do"
@@ -17,7 +17,6 @@ log using "$table_overleaf/delta.log", replace text name(delta)
 {
 
 use  "$temp/vacation_connected_call_level"  , clear
-replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
 	keep if vacation == 1 
 
 cap gen gender_customer_num = ( gender_customer == "Female" )

@@ -5,7 +5,7 @@
 *
 *-------------------------------------------------------------------
 if "${replication}" == "" {
-    global replication "/Users/holyfantastic/Dropbox/AI/PNAS_NEXUS/replication_package"
+    global replication "<REPLICATION_ROOT>"
 }
 run "$replication/code/00_declare_path.do"
 
@@ -190,7 +190,6 @@ cap gen gender_customer_num = ( gender_customer == "Female" )
 replace province_capital = 1 if missing(province_capital)
 
 replace payment_amt_num = 0 if missing(payment_amt_num)
-replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
 * only succeed phone call
 {		
 local y  if_refund

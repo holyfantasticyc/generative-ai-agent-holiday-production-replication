@@ -23,7 +23,7 @@ from pathlib import Path
 
 REPL = os.environ.get(
     "REPLICATION_PATH",
-    "/Users/holyfantastic/Dropbox/AI/PNAS_NEXUS/replication_package",
+    "<REPLICATION_ROOT>",
 )
 TABLE_DIR = Path(REPL) / "output" / "table"
 

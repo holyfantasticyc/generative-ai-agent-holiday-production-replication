@@ -16,7 +16,6 @@ log using "$replication_log/figA3_coef_alter_FEs.log", replace text
 {
 
 use  "$temp/vacation_connected_call_level"  , clear
-replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
 
 cap gen gender_customer_num = ( gender_customer == "Female" )
 replace province_capital = 1 if missing(province_capital)
@@ -43,15 +42,6 @@ if "`y'" == "bridge_duration_num"{
 	
 }
 
-if "`y'" == "payment_amt_per"{
-	
-	keep if if_succeed 
-	cap drop payment_amt_per
-	gen payment_amt_per = total_payment_amt_num / bridge_duration_num
-
-	global ytitle = "Chinese Yuan (CNY)"
-	
-}
 if "`y'" == "if_refund"{
 	
 	local ytitle = "%"
@@ -83,7 +73,7 @@ if "`y'" == "if_refund"{
 	
 	}
 	
-	*with controls
+	* With controls
 
 	{
 
@@ -98,7 +88,7 @@ if "`y'" == "if_refund"{
 	
 	}
 
-	* add date fixed effects
+	* Add date fixed effects
 	{
 
 	reghdfe `y' if_AI province_capital gender_customer_num ///
@@ -112,7 +102,7 @@ if "`y'" == "if_refund"{
 
 	}
 
-	* add hour fixed effects
+	* Add hour fixed effects
 	{
 
 	reghdfe `y' if_AI province_capital gender_customer_num ///
