@@ -2,7 +2,7 @@
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA7_ai_success_weekly.log
   log type:  text
- opened on:   6 Jun 2026, 20:50:13
+ opened on:   6 Jun 2026, 22:02:42
 
 . 
 . *============================================================*
@@ -13,9 +13,6 @@
 . use "$temp/vacation_connected_call_level", clear
 
 . 
-. replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
-(0 real changes made)
-
 . keep if vacation == 1
 (0 observations deleted)
 

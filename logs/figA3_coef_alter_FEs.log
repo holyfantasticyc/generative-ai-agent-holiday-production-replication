@@ -2,15 +2,13 @@
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA3_coef_alter_FEs.log
   log type:  text
- opened on:   6 Jun 2026, 20:50:07
+ opened on:   6 Jun 2026, 22:02:36
 
 . 
 . **# *Figure: Results with difference FEs and controls
 . {
 . 
 . use  "$temp/vacation_connected_call_level"  , clear
-. replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
-(0 real changes made)
 . 
 . cap gen gender_customer_num = ( gender_customer == "Female" )
 . replace province_capital = 1 if missing(province_capital)
@@ -39,148 +37,139 @@
  14.         
 . }
  15. 
-. if "`y'" == "payment_amt_per"{
+. if "`y'" == "if_refund"{
  16.         
-.         keep if if_succeed 
- 17.         cap drop payment_amt_per
- 18.         gen payment_amt_per = total_payment_amt_num / bridge_duration_num
- 19. 
-.         global ytitle = "Chinese Yuan (CNY)"
- 20.         
-. }
- 21. if "`y'" == "if_refund"{
- 22.         
 .         local ytitle = "%"
- 23.         replace `y' = `y' * 100
- 24.         
+ 17.         replace `y' = `y' * 100
+ 18.         
 . }
- 25. 
+ 19. 
 . {
- 26.         matrix A=J(5,3,.)
- 27.         local k = 1
- 28. 
+ 20.         matrix A=J(5,3,.)
+ 21.         local k = 1
+ 22. 
 .         /*Gap line*/
 .         mat A[`k',1]=`k'
- 29.         mat A[`k',2]=.
- 30.         mat A[`k',3]=.
- 31.         local k = `k' + 1
- 32.         
+ 23.         mat A[`k',2]=.
+ 24.         mat A[`k',3]=.
+ 25.         local k = `k' + 1
+ 26.         
 .         * Parsimonious
 .         {
- 33. 
+ 27. 
 .         reghdfe `y' if_AI ///        , noa cl(crm_user_id)
- 34. 
+ 28. 
 .         mat A[`k',1]=`k'
- 35.         mat A[`k',2]=_b[if_AI]
- 36.         mat A[`k',3]=_se[if_AI]
- 37.         local k = `k' + 1
- 38.         
+ 29.         mat A[`k',2]=_b[if_AI]
+ 30.         mat A[`k',3]=_se[if_AI]
+ 31.         local k = `k' + 1
+ 32.         
 .         
 .         }
- 39.         
+ 33.         
 .         * With controls
 . 
 .         {
- 40. 
+ 34. 
 .         reghdfe `y' if_AI province_capital gender_customer_num ///        , noa cl(crm_user_id)
- 41. 
+ 35. 
 .         mat A[`k',1]=`k'
- 42.         mat A[`k',2]=_b[if_AI]
- 43.         mat A[`k',3]=_se[if_AI]
- 44.         local k = `k' + 1
- 45.         
+ 36.         mat A[`k',2]=_b[if_AI]
+ 37.         mat A[`k',3]=_se[if_AI]
+ 38.         local k = `k' + 1
+ 39.         
 .         
 .         }
- 46. 
+ 40. 
 .         * Add date fixed effects
 .         {
- 47. 
+ 41. 
 .         reghdfe `y' if_AI province_capital gender_customer_num ///        , absorb(date_create_time )  cl(crm_user_id)
- 48. 
+ 42. 
 .         mat A[`k',1]=`k'
- 49.         mat A[`k',2]=_b[if_AI]
- 50.         mat A[`k',3]=_se[if_AI]
- 51.         local k = `k' + 1
- 52.         
+ 43.         mat A[`k',2]=_b[if_AI]
+ 44.         mat A[`k',3]=_se[if_AI]
+ 45.         local k = `k' + 1
+ 46.         
 . 
 .         }
- 53. 
+ 47. 
 .         * Add hour fixed effects
 .         {
- 54. 
+ 48. 
 .         reghdfe `y' if_AI province_capital gender_customer_num ///        , absorb(date_create_time hour_create_time)  cl(crm_user_id)
- 55. 
+ 49. 
 .         mat A[`k',1]=`k'
- 56.         mat A[`k',2]=_b[if_AI]
- 57.         mat A[`k',3]=_se[if_AI]
- 58.         local k = `k' + 1
- 59. 
+ 50.         mat A[`k',2]=_b[if_AI]
+ 51.         mat A[`k',3]=_se[if_AI]
+ 52.         local k = `k' + 1
+ 53. 
 .         }
- 60. 
+ 54. 
 . }       
- 61. 
+ 55. 
 .         mat list A
- 62.         clear
- 63.         svmat A
- 64.         sum A1 
- 65.         drop if A1>r(max)
- 66.         drop if A2 == .
- 67.         keep A1 A2 A3
- 68.         
+ 56.         clear
+ 57.         svmat A
+ 58.         sum A1 
+ 59.         drop if A1>r(max)
+ 60.         drop if A2 == .
+ 61.         keep A1 A2 A3
+ 62.         
 .         rename A2 coef
- 69.         rename A3 se
- 70.         rename A1 n1
- 71.         gen up = coef + 1.96 * se
- 72.         gen low = coef - 1.96 * se
- 73.         replace n1 = - n1
- 74.         
+ 63.         rename A3 se
+ 64.         rename A1 n1
+ 65.         gen up = coef + 1.96 * se
+ 66.         gen low = coef - 1.96 * se
+ 67.         replace n1 = - n1
+ 68.         
 .         set scheme white_ptol
- 75. 
+ 69. 
 .         *------------------------------------------------------begin------------
 .         if "`y'" == "if_succeed"{       
- 76.                 
+ 70.                 
 .         #delimit ;      
 delimiter now ;
 .         tw         (bar  coef n1 , barwidth(0.7) color(orange%50) hori lwidth(medium)   )        (rcap up low n1 , lp(dash) lc(black) hori  lw(medthick))                , legend(off)        ylabel( -2 "No Controls" -3 "Add Controls" -4 `""Controls" "+ Date FE""'  -5 `""Controls" "+ Date FE" "+ Hours FE" "'    , nogrid) ytitle("")        xlabel( -3(0.5)0 , nogrid) xtitle("Difference in Success Rate, %")         saving(f_`y', replace)         ;
- 77.         #delimit cr
+ 71.         #delimit cr
 delimiter now cr
 .         
 .         }
- 78.         
+ 72.         
 .         if "`y'" == "payment_amt_num"{
- 79. 
+ 73. 
 .         #delimit ;      
 delimiter now ;
 .         tw         (bar  coef n1 , barwidth(0.7) color(orange%50) hori lwidth(medium)   )        (rcap up low n1 , lp(dash) lc(black) hori  lw(medthick))                , legend(off)        ylabel( -2 "No Controls" -3 "Add Controls" -4 `""Controls" "+ Date FE""'  -5 `""Controls" "+ Date FE" "+ Hours FE" "'    , nogrid) ytitle("")        xlabel(  , nogrid) xtitle("Difference in Payment Amount per calling, CNY")        saving(f_`y', replace)         ;
- 80.         #delimit cr
+ 74.         #delimit cr
 delimiter now cr
 .         
 .         }       
- 81.                 
+ 75.                 
 .         if "`y'" == "bridge_duration_num"{
- 82. 
+ 76. 
 .         #delimit ;      
 delimiter now ;
 .         tw         (bar  coef n1 , barwidth(0.7) color(orange%50) hori lwidth(medium)   )        (rcap up low n1 , lp(dash) lc(black) hori  lw(medthick))                , legend(off)        ylabel( -2 "No Controls" -3 "Add Controls" -4 `""Controls" "+ Date FE""'  -5 `""Controls" "+ Date FE" "+ Hours FE" "'    , nogrid) ytitle("")          xlabel(-650(100)-350, nogrid) xtitle("Difference in  Duration of Success Calls, s")        saving(f_`y', replace)         ;
- 83.         #delimit cr
+ 77.         #delimit cr
 delimiter now cr
 .         
 .         }       
- 84.         
+ 78.         
 . 
 .         if "`y'" == "if_refund"{
- 85. 
+ 79. 
 .         #delimit ;      
 delimiter now ;
 .         tw         (bar  coef n1 , barwidth(0.7) color(orange%50) hori lwidth(medium)   )        (rcap up low n1 , lp(dash) lc(black) hori  lw(medthick))                , legend(off)        ylabel( -2 "No Controls" -3 "Add Controls" -4 `""Controls" "+ Date FE""'  -5 `""Controls" "+ Date FE" "+ Hours FE" "'    , nogrid) ytitle("")        xlabel(  , nogrid) xtitle("Difference in Refund Rate , %")        saving(f_`y', replace)         ;
- 86.         #delimit cr
+ 80.         #delimit cr
 delimiter now cr
 .         
 .         }                       
- 87.         *------------------------------------------------------over------------
+ 81.         *------------------------------------------------------over------------
 .         
 . restore 
- 88. }       
+ 82. }       
 if_succeed
 (1,255 real changes made)
 (MWFE estimator converged in 1 iterations)

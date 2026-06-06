@@ -156,7 +156,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/table1_balance.log
   log type:  text
- opened on:   6 Jun 2026, 20:46:52
+ opened on:   6 Jun 2026, 21:59:26
 
 . 
 . **# Table: balance test
@@ -369,7 +369,7 @@ end of do-file
       name:  standard
        log:  <REPLICATION_ROOT>/logs/table2_revenue_decomposition_estimates.log
   log type:  text
- opened on:   6 Jun 2026, 20:46:53
+ opened on:   6 Jun 2026, 21:59:26
 
 . 
 . capture log close delta
@@ -379,15 +379,13 @@ end of do-file
       name:  delta
        log:  <REPLICATION_ROOT>/output/table/delta.log
   log type:  text
- opened on:   6 Jun 2026, 20:46:53
+ opened on:   6 Jun 2026, 21:59:26
 
 . **# Part 1
 . 
 . {
 . 
 . use  "$temp/vacation_connected_call_level"  , clear
-. replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
-(0 real changes made)
 .         keep if vacation == 1 
 (0 observations deleted)
 . 
@@ -424,62 +422,53 @@ end of do-file
  17.         global ytitle = " Seconds "
  18.         
 . }
- 19. if "`y'" == "payment_amt_per"{
+ 19. if "`y'" == "if_refund"{
  20.         
-.         keep if if_succeed 
- 21.         cap drop payment_amt_per
- 22.         gen payment_amt_per = total_payment_amt_num / bridge_duration_num
- 23. 
-.         global ytitle = "Chinese Yuan (CNY)"
- 24.         
-. }
- 25. if "`y'" == "if_refund"{
- 26.         
 .         local ytitle = "%"
- 27.         replace `y' = `y' * 100
- 28.         
+ 21.         replace `y' = `y' * 100
+ 22.         
 . }
- 29. 
+ 23. 
 . 
 . if "`y'" == "n_policy_succeed"{
- 30.         keep if if_succeed
- 31. 
+ 24.         keep if if_succeed
+ 25. 
 .         global ytitle = "Count"
- 32.         
+ 26.         
 . }
- 33. if "`y'" == "scale_premium_num"{
- 34.         
+ 27. if "`y'" == "scale_premium_num"{
+ 28.         
 .         global ytitle = "Scale Premium (CNY)"
- 35.         
+ 29.         
 . }
- 36. 
+ 30. 
 . if "`y'" == "ins_amt_num"{
- 37.         
+ 31.         
 .         replace `y' = `y' / 10000
- 38. 
+ 32. 
 .         global ytitle = "Insurance Amount (10000 CNY)"
- 39.         
+ 33.         
 . }
- 40. 
+ 34. 
 .         reghdfe `y' if_AI province_capital gender_customer_num  ///        , absorb(date_create_time hour_create_time)  cl(crm_user_id)
- 41. 
+ 35. 
 .         
 .         matrix V = e(V)
- 42.         matrix b = e(b)
- 43. 
+ 36.         matrix b = e(b)
+ 37. 
 .         display "Constant = " _b[_cons]
- 44.         display "SE(Constant) = " _se[_cons]
- 45. 
+ 38.         display "SE(Constant) = " _se[_cons]
+ 39. 
 .         display "if_AI = " _b[if_AI]
- 46.         display "SE(if_AI) = " _se[if_AI]
- 47. 
+ 40.         display "SE(if_AI) = " _se[if_AI]
+ 41. 
 .         display "Cov(Constant, if_AI) = " V[colnumb(V,"_cons"), colnumb(V,"if_AI")]
- 48. 
+ 42. 
 .         * AI success rate = Constant + if_AI
 .         lincom _cons + if_AI
- 49.         
+ 43.         
 . restore 
- 50. }       
+ 44. }       
 if_succeed
 (1,255 real changes made)
 (MWFE estimator converged in 5 iterations)
@@ -881,14 +870,14 @@ r7           0           0           0
       name:  delta
        log:  <REPLICATION_ROOT>/output/table/delta.log
   log type:  text
- closed on:   6 Jun 2026, 20:47:29
+ closed on:   6 Jun 2026, 22:00:02
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 . log close standard
       name:  standard
        log:  <REPLICATION_ROOT>/logs/table2_revenue_decomposition_estimates.log
   log type:  text
- closed on:   6 Jun 2026, 20:47:29
+ closed on:   6 Jun 2026, 22:00:02
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 . 
@@ -923,7 +912,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA1_summary_statistics.log
   log type:  text
- opened on:   6 Jun 2026, 20:47:29
+ opened on:   6 Jun 2026, 22:00:02
 
 . 
 . **## Task/raw data level
@@ -1003,7 +992,7 @@ end of do-file
 . keep if if_succeed
 (41,282 observations deleted)
 
-. gen payment_amt_per = total_payment_amt_num / bridge_duration_num
+. gen payment_amt_per = payment_amt_num / bridge_duration_num
 
 . replace ins_amt_num = ins_amt_num / 10000
 (1,255 real changes made)
@@ -1015,8 +1004,8 @@ end of do-file
    Stats |  bridge~m  n_po~eed  paymen~m  paymen~r  if_ref~d  scale_~m  ins_am~m
 ---------+----------------------------------------------------------------------
        N |      1255      1255      1255      1255      1255      1255      1255
-    Mean |  617.5371  1.236653   91.9719  1.061945  .1760956  553.9284  584.2136
-      SD |  695.3553  .6686855  89.30933  2.741191  .3810533  446.8815  161.6238
+    Mean |  617.5371  1.236653   91.9719  .8809289  .1760956  553.9284  584.2136
+      SD |  695.3553  .6686855  89.30933  2.203067  .3810533  446.8815  161.6238
      Min |        11         1        .1  .0005133         0       1.2        10
      Max |      3582        10     962.4  39.96923         1    3849.6      1585
 --------------------------------------------------------------------------------
@@ -1131,7 +1120,7 @@ Duration, ~)  42537.00    108.72    222.02     11.00   3582.00
 Duration, ~)   1255.00    617.54    695.36     11.00   3582.00
 Number of ~s   1255.00      1.24      0.67      1.00     10.00
 Payment am~)   1255.00     91.97     89.31      0.10    962.40
-Payment pe~)   1255.00      1.06      2.74      0.00     39.97
+Payment pe~)   1255.00      0.88      2.20      0.00     39.97
       Refund   1255.00      0.18      0.38      0.00      1.00
 Scale prem~)   1255.00    553.93    446.88      1.20   3849.60
 Insurance ~)   1255.00    584.21    161.62     10.00   1585.00
@@ -1185,7 +1174,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA2_main.log
   log type:  text
- opened on:   6 Jun 2026, 20:47:29
+ opened on:   6 Jun 2026, 22:00:02
 
 . 
 . **# Appendix Table: main results  
@@ -1194,8 +1183,6 @@ end of do-file
 . use  "$temp/vacation_connected_call_level"  , clear
 . keep if vacation == 1
 (0 observations deleted)
-. replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
-(0 real changes made)
 . 
 . cap gen gender_customer_num = ( gender_customer == "Female" )
 . replace province_capital = 1 if missing(province_capital)
@@ -1235,7 +1222,7 @@ end of do-file
  21.         
 .         keep if if_succeed 
  22.         cap drop payment_amt_per
- 23.         gen payment_amt_per = total_payment_amt_num / bridge_duration_num
+ 23.         gen payment_amt_per = payment_amt_num / bridge_duration_num
  24. 
 .         global ytitle = "Chinese Yuan (CNY)"
  25.         
@@ -1510,22 +1497,22 @@ payment_amt_per
 (MWFE estimator converged in 6 iterations)
 
 HDFE Linear regression                            Number of obs   =      1,255
-Absorbing 2 HDFE groups                           F(   3,    128) =       1.95
-Statistics robust to heteroskedasticity           Prob > F        =     0.1248
-                                                  R-squared       =     0.0400
-                                                  Adj R-squared   =     0.0132
-                                                  Within R-sq.    =     0.0025
-Number of clusters (crm_user_id) =        129     Root MSE        =     2.7230
+Absorbing 2 HDFE groups                           F(   3,    128) =       5.75
+Statistics robust to heteroskedasticity           Prob > F        =     0.0010
+                                                  R-squared       =     0.0416
+                                                  Adj R-squared   =     0.0149
+                                                  Within R-sq.    =     0.0046
+Number of clusters (crm_user_id) =        129     Root MSE        =     2.1866
 
                                  (Std. err. adjusted for 129 clusters in crm_user_id)
 -------------------------------------------------------------------------------------
                     |               Robust
     payment_amt_per | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 --------------------+----------------------------------------------------------------
-              if_AI |   .4387621   .1931311     2.27   0.025     .0566191     .820905
-   province_capital |   .1044644   .1675086     0.62   0.534      -.22698    .4359089
-gender_customer_num |    .011201   .1534184     0.07   0.942    -.2923635    .3147655
-              _cons |   .9292056   .1368669     6.79   0.000      .658391     1.20002
+              if_AI |   .4767353   .1565359     3.05   0.003     .1670023    .7864683
+   province_capital |   .0848048   .1227481     0.69   0.491    -.1580734    .3276829
+gender_customer_num |  -.0491342   .1314024    -0.37   0.709    -.3091364     .210868
+              _cons |   .7740876   .1196569     6.47   0.000      .537326    1.010849
 -------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
@@ -1537,7 +1524,7 @@ Absorbed degrees of freedom:
 ----------------------------------------------------------+
 
 added macro:
-             e(mean_y) : "1.06"
+             e(mean_y) : "0.88"
 
 added macro:
             e(date_fe) : "Yes"
@@ -1546,7 +1533,7 @@ added macro:
    e(hour_create_time) : "Yes"
 
 added macro:
-               e(r2_a) : "0.013"
+               e(r2_a) : "0.015"
 
 added macro:
                   e(N) : "1255"
@@ -1727,7 +1714,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA3_robust_notcontrols.log
   log type:  text
- opened on:   6 Jun 2026, 20:47:30
+ opened on:   6 Jun 2026, 22:00:03
 
 . 
 . **# Appendix Table: main results, robustness, no controls and fixed effects 
@@ -1737,8 +1724,6 @@ end of do-file
 . use  "$temp/vacation_connected_call_level"  , clear
 . keep if vacation == 1
 (0 observations deleted)
-. replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
-(0 real changes made)
 . 
 . cap gen gender_customer_num = ( gender_customer == "Female" )
 . replace province_capital = 1 if missing(province_capital)
@@ -1778,7 +1763,7 @@ end of do-file
  21.         
 .         keep if if_succeed 
  22.         cap drop payment_amt_per
- 23.         gen payment_amt_per = total_payment_amt_num / bridge_duration_num
+ 23.         gen payment_amt_per = payment_amt_num / bridge_duration_num
  24. 
 .         global ytitle = "Chinese Yuan (CNY)"
  25.         
@@ -2003,24 +1988,24 @@ payment_amt_per
 (MWFE estimator converged in 1 iterations)
 
 HDFE Linear regression                            Number of obs   =      1,255
-Absorbing 1 HDFE group                            F(   1,    128) =      38.78
+Absorbing 1 HDFE group                            F(   1,    128) =      81.93
 Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.0073
-                                                  Adj R-squared   =     0.0066
-                                                  Within R-sq.    =     0.0073
-Number of clusters (crm_user_id) =        129     Root MSE        =     2.7322
+                                                  R-squared       =     0.0134
+                                                  Adj R-squared   =     0.0127
+                                                  Within R-sq.    =     0.0134
+Number of clusters (crm_user_id) =        129     Root MSE        =     2.1891
 
                           (Std. err. adjusted for 129 clusters in crm_user_id)
 ------------------------------------------------------------------------------
              |               Robust
 payment_am~r | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------+----------------------------------------------------------------
-       if_AI |   .5584258   .0896705     6.23   0.000     .3809974    .7358543
-       _cons |   .9337959   .0896705    10.41   0.000     .7563675    1.111224
+       if_AI |   .6071354   .0670752     9.05   0.000     .4744158    .7398551
+       _cons |   .7416022   .0670752    11.06   0.000     .6088825    .8743219
 ------------------------------------------------------------------------------
 
 added macro:
-             e(mean_y) : "1.06"
+             e(mean_y) : "0.88"
 
 added macro:
             e(date_fe) : "No"
@@ -2029,7 +2014,7 @@ added macro:
    e(hour_create_time) : "No"
 
 added macro:
-               e(r2_a) : "0.007"
+               e(r2_a) : "0.013"
 
 added macro:
                   e(N) : "1255"
@@ -2180,7 +2165,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA4_robust_w_1h.log
   log type:  text
- opened on:   6 Jun 2026, 20:47:30
+ opened on:   6 Jun 2026, 22:00:03
 
 . 
 . **# Appendix Table: main results, robustness, only call within 1 hour
@@ -2192,8 +2177,6 @@ end of do-file
 (0 observations deleted)
 . keep if gap_creat_lastcallthrough < 3600 // restrict to leads whose last connected call occurs within 1 hour of lead creation
 (3,384 observations deleted)
-. replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
-(0 real changes made)
 . 
 . cap gen gender_customer_num = ( gender_customer == "Female" )
 . replace province_capital = 1 if missing(province_capital)
@@ -2233,7 +2216,7 @@ end of do-file
  21.         
 .         keep if if_succeed 
  22.         cap drop payment_amt_per
- 23.         gen payment_amt_per = total_payment_amt_num / bridge_duration_num
+ 23.         gen payment_amt_per = payment_amt_num / bridge_duration_num
  24. 
 .         global ytitle = "Chinese Yuan (CNY)"
  25.         
@@ -2508,22 +2491,22 @@ payment_amt_per
 (MWFE estimator converged in 6 iterations)
 
 HDFE Linear regression                            Number of obs   =      1,208
-Absorbing 2 HDFE groups                           F(   3,    125) =       1.55
-Statistics robust to heteroskedasticity           Prob > F        =     0.2057
-                                                  R-squared       =     0.0427
-                                                  Adj R-squared   =     0.0149
-                                                  Within R-sq.    =     0.0019
-Number of clusters (crm_user_id) =        126     Root MSE        =     2.7376
+Absorbing 2 HDFE groups                           F(   3,    125) =       5.30
+Statistics robust to heteroskedasticity           Prob > F        =     0.0018
+                                                  R-squared       =     0.0451
+                                                  Adj R-squared   =     0.0174
+                                                  Within R-sq.    =     0.0041
+Number of clusters (crm_user_id) =        126     Root MSE        =     2.1833
 
                                  (Std. err. adjusted for 126 clusters in crm_user_id)
 -------------------------------------------------------------------------------------
                     |               Robust
     payment_amt_per | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 --------------------+----------------------------------------------------------------
-              if_AI |   .3973496   .1913164     2.08   0.040     .0187106    .7759886
-   province_capital |   .0393899   .1597657     0.25   0.806    -.2768063    .3555861
-gender_customer_num |  -.0121387   .1544126    -0.08   0.937    -.3177405     .293463
-              _cons |   .9658088   .1363275     7.08   0.000     .6959998    1.235618
+              if_AI |   .4521453    .152167     2.97   0.004      .150988    .7533026
+   province_capital |   .0178772   .1091349     0.16   0.870    -.1981142    .2338686
+gender_customer_num |  -.0796246   .1299977    -0.61   0.541    -.3369063     .177657
+              _cons |   .8055176   .1174466     6.86   0.000     .5730761    1.037959
 -------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
@@ -2535,7 +2518,7 @@ Absorbed degrees of freedom:
 ----------------------------------------------------------+
 
 added macro:
-             e(mean_y) : "1.06"
+             e(mean_y) : "0.88"
 
 added macro:
             e(date_fe) : "Yes"
@@ -2544,7 +2527,7 @@ added macro:
    e(hour_create_time) : "Yes"
 
 added macro:
-               e(r2_a) : "0.015"
+               e(r2_a) : "0.017"
 
 added macro:
                   e(N) : "1208"
@@ -2732,7 +2715,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA5_by_gender.log
   log type:  text
- opened on:   6 Jun 2026, 20:47:31
+ opened on:   6 Jun 2026, 22:00:04
 
 . 
 . **# Appendix Table: gender effects
@@ -2781,7 +2764,7 @@ end of do-file
  21.         
 .         keep if if_succeed 
  22.         cap drop payment_amt_per
- 23.         gen payment_amt_per = total_payment_amt_num / bridge_duration_num
+ 23.         gen payment_amt_per = payment_amt_num / bridge_duration_num
  24. 
 .         global ytitle = "Chinese Yuan (CNY)"
  25.         
@@ -3125,27 +3108,27 @@ payment_amt_per
 (MWFE estimator converged in 6 iterations)
 
 HDFE Linear regression                            Number of obs   =      1,092
-Absorbing 2 HDFE groups                           F(   5,    111) =      18.98
+Absorbing 2 HDFE groups                           F(   5,    111) =      67.90
 Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.0366
-                                                  Adj R-squared   =     0.0038
-                                                  Within R-sq.    =     0.0053
-Number of clusters (crm_user_id) =        112     Root MSE        =     2.6688
+                                                  R-squared       =     0.0453
+                                                  Adj R-squared   =     0.0128
+                                                  Within R-sq.    =     0.0093
+Number of clusters (crm_user_id) =        112     Root MSE        =     2.2108
 
                                        (Std. err. adjusted for 112 clusters in crm_user_id)
 -------------------------------------------------------------------------------------------
                           |               Robust
           payment_amt_per | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 --------------------------+----------------------------------------------------------------
-                  1.if_AI |   .6385107   .2097867     3.04   0.003     .2228042    1.054217
-    1.gender_customer_num |   .1132118    .146767     0.77   0.442    -.1776168    .4040403
+                  1.if_AI |   .6553125    .185643     3.53   0.001     .2874485    1.023177
+    1.gender_customer_num |   .0527126   .1100038     0.48   0.633    -.1652673    .2706925
                           |
 if_AI#gender_customer_num |
-                     1 1  |  -.5824044   .1725351    -3.38   0.001    -.9242942   -.2405147
+                     1 1  |  -.5949077    .133308    -4.46   0.000    -.8590664    -.330749
                           |
-         province_capital |  -.0676232   .1218197    -0.56   0.580    -.3090171    .1737706
-    gap_create_first_call |   .0008516   .0006498     1.31   0.193     -.000436    .0021392
-                    _cons |   .9050298   .1148017     7.88   0.000     .6775425    1.132517
+         province_capital |  -.0637286   .0989646    -0.64   0.521    -.2598335    .1323764
+    gap_create_first_call |   .0011175   .0005732     1.95   0.054    -.0000184    .0022535
+                    _cons |   .7432909   .0967074     7.69   0.000     .5516586    .9349231
 -------------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
@@ -3169,7 +3152,7 @@ added macro:
    e(hour_create_time) : "Yes"
 
 added macro:
-               e(r2_a) : "0.037"
+               e(r2_a) : "0.045"
 
 added macro:
                   e(N) : "1092"
@@ -3384,7 +3367,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA6_vacation_or_not.log
   log type:  text
- opened on:   6 Jun 2026, 20:47:32
+ opened on:   6 Jun 2026, 22:00:05
 
 . 
 . 
@@ -4061,7 +4044,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig1_outcome_bars.log
   log type:  text
- opened on:   6 Jun 2026, 20:49:01
+ opened on:   6 Jun 2026, 22:01:32
 
 . 
 . **# Figure 1: Main Results 
@@ -4396,8 +4379,6 @@ file <REPLICATION_ROOT>/output/figure/Bar_plot_outcome_payment_amt_num_uncon_FE.
 . 
 . replace payment_amt_num = 0 if missing(payment_amt_num)
 (41,282 real changes made)
-. replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
-(0 real changes made)
 . * only succeed phone call
 . {               
 . local y  if_refund
@@ -4552,7 +4533,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig2_workload_coef.log
   log type:  text
- opened on:   6 Jun 2026, 20:49:03
+ opened on:   6 Jun 2026, 22:01:34
 
 . 
 . *===================================================================
@@ -4717,7 +4698,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig3_duration_relationship.log
   log type:  text
- opened on:   6 Jun 2026, 20:49:05
+ opened on:   6 Jun 2026, 22:01:36
 
 . 
 . **# Figure: Success Rate - time relationship
@@ -5098,7 +5079,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/fig4_case_study.log
   log type:  text
- opened on:   6 Jun 2026, 20:49:15
+ opened on:   6 Jun 2026, 22:01:45
 
 . 
 . *===================================================================
@@ -5549,15 +5530,13 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA3_coef_alter_FEs.log
   log type:  text
- opened on:   6 Jun 2026, 20:50:07
+ opened on:   6 Jun 2026, 22:02:36
 
 . 
 . **# *Figure: Results with difference FEs and controls
 . {
 . 
 . use  "$temp/vacation_connected_call_level"  , clear
-. replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
-(0 real changes made)
 . 
 . cap gen gender_customer_num = ( gender_customer == "Female" )
 . replace province_capital = 1 if missing(province_capital)
@@ -5586,148 +5565,139 @@ end of do-file
  14.         
 . }
  15. 
-. if "`y'" == "payment_amt_per"{
+. if "`y'" == "if_refund"{
  16.         
-.         keep if if_succeed 
- 17.         cap drop payment_amt_per
- 18.         gen payment_amt_per = total_payment_amt_num / bridge_duration_num
- 19. 
-.         global ytitle = "Chinese Yuan (CNY)"
- 20.         
-. }
- 21. if "`y'" == "if_refund"{
- 22.         
 .         local ytitle = "%"
- 23.         replace `y' = `y' * 100
- 24.         
+ 17.         replace `y' = `y' * 100
+ 18.         
 . }
- 25. 
+ 19. 
 . {
- 26.         matrix A=J(5,3,.)
- 27.         local k = 1
- 28. 
+ 20.         matrix A=J(5,3,.)
+ 21.         local k = 1
+ 22. 
 .         /*Gap line*/
 .         mat A[`k',1]=`k'
- 29.         mat A[`k',2]=.
- 30.         mat A[`k',3]=.
- 31.         local k = `k' + 1
- 32.         
+ 23.         mat A[`k',2]=.
+ 24.         mat A[`k',3]=.
+ 25.         local k = `k' + 1
+ 26.         
 .         * Parsimonious
 .         {
- 33. 
+ 27. 
 .         reghdfe `y' if_AI ///        , noa cl(crm_user_id)
- 34. 
+ 28. 
 .         mat A[`k',1]=`k'
- 35.         mat A[`k',2]=_b[if_AI]
- 36.         mat A[`k',3]=_se[if_AI]
- 37.         local k = `k' + 1
- 38.         
+ 29.         mat A[`k',2]=_b[if_AI]
+ 30.         mat A[`k',3]=_se[if_AI]
+ 31.         local k = `k' + 1
+ 32.         
 .         
 .         }
- 39.         
+ 33.         
 .         * With controls
 . 
 .         {
- 40. 
+ 34. 
 .         reghdfe `y' if_AI province_capital gender_customer_num ///        , noa cl(crm_user_id)
- 41. 
+ 35. 
 .         mat A[`k',1]=`k'
- 42.         mat A[`k',2]=_b[if_AI]
- 43.         mat A[`k',3]=_se[if_AI]
- 44.         local k = `k' + 1
- 45.         
+ 36.         mat A[`k',2]=_b[if_AI]
+ 37.         mat A[`k',3]=_se[if_AI]
+ 38.         local k = `k' + 1
+ 39.         
 .         
 .         }
- 46. 
+ 40. 
 .         * Add date fixed effects
 .         {
- 47. 
+ 41. 
 .         reghdfe `y' if_AI province_capital gender_customer_num ///        , absorb(date_create_time )  cl(crm_user_id)
- 48. 
+ 42. 
 .         mat A[`k',1]=`k'
- 49.         mat A[`k',2]=_b[if_AI]
- 50.         mat A[`k',3]=_se[if_AI]
- 51.         local k = `k' + 1
- 52.         
+ 43.         mat A[`k',2]=_b[if_AI]
+ 44.         mat A[`k',3]=_se[if_AI]
+ 45.         local k = `k' + 1
+ 46.         
 . 
 .         }
- 53. 
+ 47. 
 .         * Add hour fixed effects
 .         {
- 54. 
+ 48. 
 .         reghdfe `y' if_AI province_capital gender_customer_num ///        , absorb(date_create_time hour_create_time)  cl(crm_user_id)
- 55. 
+ 49. 
 .         mat A[`k',1]=`k'
- 56.         mat A[`k',2]=_b[if_AI]
- 57.         mat A[`k',3]=_se[if_AI]
- 58.         local k = `k' + 1
- 59. 
+ 50.         mat A[`k',2]=_b[if_AI]
+ 51.         mat A[`k',3]=_se[if_AI]
+ 52.         local k = `k' + 1
+ 53. 
 .         }
- 60. 
+ 54. 
 . }       
- 61. 
+ 55. 
 .         mat list A
- 62.         clear
- 63.         svmat A
- 64.         sum A1 
- 65.         drop if A1>r(max)
- 66.         drop if A2 == .
- 67.         keep A1 A2 A3
- 68.         
+ 56.         clear
+ 57.         svmat A
+ 58.         sum A1 
+ 59.         drop if A1>r(max)
+ 60.         drop if A2 == .
+ 61.         keep A1 A2 A3
+ 62.         
 .         rename A2 coef
- 69.         rename A3 se
- 70.         rename A1 n1
- 71.         gen up = coef + 1.96 * se
- 72.         gen low = coef - 1.96 * se
- 73.         replace n1 = - n1
- 74.         
+ 63.         rename A3 se
+ 64.         rename A1 n1
+ 65.         gen up = coef + 1.96 * se
+ 66.         gen low = coef - 1.96 * se
+ 67.         replace n1 = - n1
+ 68.         
 .         set scheme white_ptol
- 75. 
+ 69. 
 .         *------------------------------------------------------begin------------
 .         if "`y'" == "if_succeed"{       
- 76.                 
+ 70.                 
 .         #delimit ;      
 delimiter now ;
 .         tw         (bar  coef n1 , barwidth(0.7) color(orange%50) hori lwidth(medium)   )        (rcap up low n1 , lp(dash) lc(black) hori  lw(medthick))                , legend(off)        ylabel( -2 "No Controls" -3 "Add Controls" -4 `""Controls" "+ Date FE""'  -5 `""Controls" "+ Date FE" "+ Hours FE" "'    , nogrid) ytitle("")        xlabel( -3(0.5)0 , nogrid) xtitle("Difference in Success Rate, %")         saving(f_`y', replace)         ;
- 77.         #delimit cr
+ 71.         #delimit cr
 delimiter now cr
 .         
 .         }
- 78.         
+ 72.         
 .         if "`y'" == "payment_amt_num"{
- 79. 
+ 73. 
 .         #delimit ;      
 delimiter now ;
 .         tw         (bar  coef n1 , barwidth(0.7) color(orange%50) hori lwidth(medium)   )        (rcap up low n1 , lp(dash) lc(black) hori  lw(medthick))                , legend(off)        ylabel( -2 "No Controls" -3 "Add Controls" -4 `""Controls" "+ Date FE""'  -5 `""Controls" "+ Date FE" "+ Hours FE" "'    , nogrid) ytitle("")        xlabel(  , nogrid) xtitle("Difference in Payment Amount per calling, CNY")        saving(f_`y', replace)         ;
- 80.         #delimit cr
+ 74.         #delimit cr
 delimiter now cr
 .         
 .         }       
- 81.                 
+ 75.                 
 .         if "`y'" == "bridge_duration_num"{
- 82. 
+ 76. 
 .         #delimit ;      
 delimiter now ;
 .         tw         (bar  coef n1 , barwidth(0.7) color(orange%50) hori lwidth(medium)   )        (rcap up low n1 , lp(dash) lc(black) hori  lw(medthick))                , legend(off)        ylabel( -2 "No Controls" -3 "Add Controls" -4 `""Controls" "+ Date FE""'  -5 `""Controls" "+ Date FE" "+ Hours FE" "'    , nogrid) ytitle("")          xlabel(-650(100)-350, nogrid) xtitle("Difference in  Duration of Success Calls, s")        saving(f_`y', replace)         ;
- 83.         #delimit cr
+ 77.         #delimit cr
 delimiter now cr
 .         
 .         }       
- 84.         
+ 78.         
 . 
 .         if "`y'" == "if_refund"{
- 85. 
+ 79. 
 .         #delimit ;      
 delimiter now ;
 .         tw         (bar  coef n1 , barwidth(0.7) color(orange%50) hori lwidth(medium)   )        (rcap up low n1 , lp(dash) lc(black) hori  lw(medthick))                , legend(off)        ylabel( -2 "No Controls" -3 "Add Controls" -4 `""Controls" "+ Date FE""'  -5 `""Controls" "+ Date FE" "+ Hours FE" "'    , nogrid) ytitle("")        xlabel(  , nogrid) xtitle("Difference in Refund Rate , %")        saving(f_`y', replace)         ;
- 86.         #delimit cr
+ 80.         #delimit cr
 delimiter now cr
 .         
 .         }                       
- 87.         *------------------------------------------------------over------------
+ 81.         *------------------------------------------------------over------------
 .         
 . restore 
- 88. }       
+ 82. }       
 if_succeed
 (1,255 real changes made)
 (MWFE estimator converged in 1 iterations)
@@ -6227,7 +6197,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA4_workload_duration.log
   log type:  text
- opened on:   6 Jun 2026, 20:50:10
+ opened on:   6 Jun 2026, 22:02:39
 
 . 
 . **# Figure: Results: by workload
@@ -6331,7 +6301,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA5_gender_succeed.log
   log type:  text
- opened on:   6 Jun 2026, 20:50:11
+ opened on:   6 Jun 2026, 22:02:40
 
 . 
 . **## Success rate
@@ -6627,7 +6597,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA6_gender_payment_refund.log
   log type:  text
- opened on:   6 Jun 2026, 20:50:12
+ opened on:   6 Jun 2026, 22:02:41
 
 . 
 . **## Amount (unconditional)
@@ -7156,7 +7126,7 @@ end of do-file
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/figA7_ai_success_weekly.log
   log type:  text
- opened on:   6 Jun 2026, 20:50:13
+ opened on:   6 Jun 2026, 22:02:42
 
 . 
 . *============================================================*
@@ -7167,9 +7137,6 @@ end of do-file
 . use "$temp/vacation_connected_call_level", clear
 
 . 
-. replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
-(0 real changes made)
-
 . keep if vacation == 1
 (0 observations deleted)
 

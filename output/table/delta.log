@@ -2,15 +2,13 @@
       name:  delta
        log:  <REPLICATION_ROOT>/output/table/delta.log
   log type:  text
- opened on:   6 Jun 2026, 20:46:53
+ opened on:   6 Jun 2026, 21:59:26
 
 . **# Part 1
 . 
 . {
 . 
 . use  "$temp/vacation_connected_call_level"  , clear
-. replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
-(0 real changes made)
 .         keep if vacation == 1 
 (0 observations deleted)
 . 
@@ -47,62 +45,53 @@
  17.         global ytitle = " Seconds "
  18.         
 . }
- 19. if "`y'" == "payment_amt_per"{
+ 19. if "`y'" == "if_refund"{
  20.         
-.         keep if if_succeed 
- 21.         cap drop payment_amt_per
- 22.         gen payment_amt_per = total_payment_amt_num / bridge_duration_num
- 23. 
-.         global ytitle = "Chinese Yuan (CNY)"
- 24.         
-. }
- 25. if "`y'" == "if_refund"{
- 26.         
 .         local ytitle = "%"
- 27.         replace `y' = `y' * 100
- 28.         
+ 21.         replace `y' = `y' * 100
+ 22.         
 . }
- 29. 
+ 23. 
 . 
 . if "`y'" == "n_policy_succeed"{
- 30.         keep if if_succeed
- 31. 
+ 24.         keep if if_succeed
+ 25. 
 .         global ytitle = "Count"
- 32.         
+ 26.         
 . }
- 33. if "`y'" == "scale_premium_num"{
- 34.         
+ 27. if "`y'" == "scale_premium_num"{
+ 28.         
 .         global ytitle = "Scale Premium (CNY)"
- 35.         
+ 29.         
 . }
- 36. 
+ 30. 
 . if "`y'" == "ins_amt_num"{
- 37.         
+ 31.         
 .         replace `y' = `y' / 10000
- 38. 
+ 32. 
 .         global ytitle = "Insurance Amount (10000 CNY)"
- 39.         
+ 33.         
 . }
- 40. 
+ 34. 
 .         reghdfe `y' if_AI province_capital gender_customer_num  ///        , absorb(date_create_time hour_create_time)  cl(crm_user_id)
- 41. 
+ 35. 
 .         
 .         matrix V = e(V)
- 42.         matrix b = e(b)
- 43. 
+ 36.         matrix b = e(b)
+ 37. 
 .         display "Constant = " _b[_cons]
- 44.         display "SE(Constant) = " _se[_cons]
- 45. 
+ 38.         display "SE(Constant) = " _se[_cons]
+ 39. 
 .         display "if_AI = " _b[if_AI]
- 46.         display "SE(if_AI) = " _se[if_AI]
- 47. 
+ 40.         display "SE(if_AI) = " _se[if_AI]
+ 41. 
 .         display "Cov(Constant, if_AI) = " V[colnumb(V,"_cons"), colnumb(V,"if_AI")]
- 48. 
+ 42. 
 .         * AI success rate = Constant + if_AI
 .         lincom _cons + if_AI
- 49.         
+ 43.         
 . restore 
- 50. }       
+ 44. }       
 if_succeed
 (1,255 real changes made)
 (MWFE estimator converged in 5 iterations)
@@ -504,5 +493,5 @@ r7           0           0           0
       name:  delta
        log:  <REPLICATION_ROOT>/output/table/delta.log
   log type:  text
- closed on:   6 Jun 2026, 20:47:29
+ closed on:   6 Jun 2026, 22:00:02
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

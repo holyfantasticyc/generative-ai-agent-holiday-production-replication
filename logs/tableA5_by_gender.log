@@ -2,7 +2,7 @@
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA5_by_gender.log
   log type:  text
- opened on:   6 Jun 2026, 20:47:31
+ opened on:   6 Jun 2026, 22:00:04
 
 . 
 . **# Appendix Table: gender effects
@@ -51,7 +51,7 @@
  21.         
 .         keep if if_succeed 
  22.         cap drop payment_amt_per
- 23.         gen payment_amt_per = total_payment_amt_num / bridge_duration_num
+ 23.         gen payment_amt_per = payment_amt_num / bridge_duration_num
  24. 
 .         global ytitle = "Chinese Yuan (CNY)"
  25.         
@@ -395,27 +395,27 @@ payment_amt_per
 (MWFE estimator converged in 6 iterations)
 
 HDFE Linear regression                            Number of obs   =      1,092
-Absorbing 2 HDFE groups                           F(   5,    111) =      18.98
+Absorbing 2 HDFE groups                           F(   5,    111) =      67.90
 Statistics robust to heteroskedasticity           Prob > F        =     0.0000
-                                                  R-squared       =     0.0366
-                                                  Adj R-squared   =     0.0038
-                                                  Within R-sq.    =     0.0053
-Number of clusters (crm_user_id) =        112     Root MSE        =     2.6688
+                                                  R-squared       =     0.0453
+                                                  Adj R-squared   =     0.0128
+                                                  Within R-sq.    =     0.0093
+Number of clusters (crm_user_id) =        112     Root MSE        =     2.2108
 
                                        (Std. err. adjusted for 112 clusters in crm_user_id)
 -------------------------------------------------------------------------------------------
                           |               Robust
           payment_amt_per | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 --------------------------+----------------------------------------------------------------
-                  1.if_AI |   .6385107   .2097867     3.04   0.003     .2228042    1.054217
-    1.gender_customer_num |   .1132118    .146767     0.77   0.442    -.1776168    .4040403
+                  1.if_AI |   .6553125    .185643     3.53   0.001     .2874485    1.023177
+    1.gender_customer_num |   .0527126   .1100038     0.48   0.633    -.1652673    .2706925
                           |
 if_AI#gender_customer_num |
-                     1 1  |  -.5824044   .1725351    -3.38   0.001    -.9242942   -.2405147
+                     1 1  |  -.5949077    .133308    -4.46   0.000    -.8590664    -.330749
                           |
-         province_capital |  -.0676232   .1218197    -0.56   0.580    -.3090171    .1737706
-    gap_create_first_call |   .0008516   .0006498     1.31   0.193     -.000436    .0021392
-                    _cons |   .9050298   .1148017     7.88   0.000     .6775425    1.132517
+         province_capital |  -.0637286   .0989646    -0.64   0.521    -.2598335    .1323764
+    gap_create_first_call |   .0011175   .0005732     1.95   0.054    -.0000184    .0022535
+                    _cons |   .7432909   .0967074     7.69   0.000     .5516586    .9349231
 -------------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
@@ -439,7 +439,7 @@ added macro:
    e(hour_create_time) : "Yes"
 
 added macro:
-               e(r2_a) : "0.037"
+               e(r2_a) : "0.045"
 
 added macro:
                   e(N) : "1092"

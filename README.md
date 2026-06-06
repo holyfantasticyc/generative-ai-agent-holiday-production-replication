@@ -198,7 +198,6 @@ Below are the column names that the analysis code references most often. Every d
 | `if_refund` | 1 if any of the resulting transactions was refunded within one month. |
 | `bridge_duration_num` | Call duration in seconds (talk time only). |
 | `payment_amt_num` | Payment amount on the call (CNY). Per-transaction average for `*_per`. |
-| `total_payment_amt_num` | Sum of payment across all transactions on the call. |
 | `n_policy_succeed` | Number of transactions completed on the call. |
 | `scale_premium_num`, `ins_amt_num` | Scale premium and insurance amount per contract. |
 | `gender_customer` | "Female" / "Male" / "Unknown" — customer gender as recorded. |

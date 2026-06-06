@@ -2,7 +2,7 @@
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA1_summary_statistics.log
   log type:  text
- opened on:   6 Jun 2026, 20:47:29
+ opened on:   6 Jun 2026, 22:00:02
 
 . 
 . **## Task/raw data level
@@ -82,7 +82,7 @@
 . keep if if_succeed
 (41,282 observations deleted)
 
-. gen payment_amt_per = total_payment_amt_num / bridge_duration_num
+. gen payment_amt_per = payment_amt_num / bridge_duration_num
 
 . replace ins_amt_num = ins_amt_num / 10000
 (1,255 real changes made)
@@ -94,8 +94,8 @@
    Stats |  bridge~m  n_po~eed  paymen~m  paymen~r  if_ref~d  scale_~m  ins_am~m
 ---------+----------------------------------------------------------------------
        N |      1255      1255      1255      1255      1255      1255      1255
-    Mean |  617.5371  1.236653   91.9719  1.061945  .1760956  553.9284  584.2136
-      SD |  695.3553  .6686855  89.30933  2.741191  .3810533  446.8815  161.6238
+    Mean |  617.5371  1.236653   91.9719  .8809289  .1760956  553.9284  584.2136
+      SD |  695.3553  .6686855  89.30933  2.203067  .3810533  446.8815  161.6238
      Min |        11         1        .1  .0005133         0       1.2        10
      Max |      3582        10     962.4  39.96923         1    3849.6      1585
 --------------------------------------------------------------------------------
@@ -210,7 +210,7 @@ Duration, ~)  42537.00    108.72    222.02     11.00   3582.00
 Duration, ~)   1255.00    617.54    695.36     11.00   3582.00
 Number of ~s   1255.00      1.24      0.67      1.00     10.00
 Payment am~)   1255.00     91.97     89.31      0.10    962.40
-Payment pe~)   1255.00      1.06      2.74      0.00     39.97
+Payment pe~)   1255.00      0.88      2.20      0.00     39.97
       Refund   1255.00      0.18      0.38      0.00      1.00
 Scale prem~)   1255.00    553.93    446.88      1.20   3849.60
 Insurance ~)   1255.00    584.21    161.62     10.00   1585.00

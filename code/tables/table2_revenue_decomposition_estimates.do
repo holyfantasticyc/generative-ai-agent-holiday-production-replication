@@ -51,15 +51,6 @@ if "`y'" == "bridge_duration_num" & `i' == 3{
 	global ytitle = " Seconds "
 	
 }
-if "`y'" == "payment_amt_per"{
-	
-	keep if if_succeed 
-	cap drop payment_amt_per
-	gen payment_amt_per = total_payment_amt_num / bridge_duration_num
-
-	global ytitle = "Chinese Yuan (CNY)"
-	
-}
 if "`y'" == "if_refund"{
 	
 	local ytitle = "%"

@@ -2,7 +2,7 @@
       name:  <unnamed>
        log:  <REPLICATION_ROOT>/logs/tableA4_robust_w_1h.log
   log type:  text
- opened on:   6 Jun 2026, 20:47:30
+ opened on:   6 Jun 2026, 22:00:03
 
 . 
 . **# Appendix Table: main results, robustness, only call within 1 hour
@@ -14,8 +14,6 @@
 (0 observations deleted)
 . keep if gap_creat_lastcallthrough < 3600 // restrict to leads whose last connected call occurs within 1 hour of lead creation
 (3,384 observations deleted)
-. replace total_payment_amt_num = 0 if missing(total_payment_amt_num)
-(0 real changes made)
 . 
 . cap gen gender_customer_num = ( gender_customer == "Female" )
 . replace province_capital = 1 if missing(province_capital)
@@ -55,7 +53,7 @@
  21.         
 .         keep if if_succeed 
  22.         cap drop payment_amt_per
- 23.         gen payment_amt_per = total_payment_amt_num / bridge_duration_num
+ 23.         gen payment_amt_per = payment_amt_num / bridge_duration_num
  24. 
 .         global ytitle = "Chinese Yuan (CNY)"
  25.         
@@ -330,22 +328,22 @@ payment_amt_per
 (MWFE estimator converged in 6 iterations)
 
 HDFE Linear regression                            Number of obs   =      1,208
-Absorbing 2 HDFE groups                           F(   3,    125) =       1.55
-Statistics robust to heteroskedasticity           Prob > F        =     0.2057
-                                                  R-squared       =     0.0427
-                                                  Adj R-squared   =     0.0149
-                                                  Within R-sq.    =     0.0019
-Number of clusters (crm_user_id) =        126     Root MSE        =     2.7376
+Absorbing 2 HDFE groups                           F(   3,    125) =       5.30
+Statistics robust to heteroskedasticity           Prob > F        =     0.0018
+                                                  R-squared       =     0.0451
+                                                  Adj R-squared   =     0.0174
+                                                  Within R-sq.    =     0.0041
+Number of clusters (crm_user_id) =        126     Root MSE        =     2.1833
 
                                  (Std. err. adjusted for 126 clusters in crm_user_id)
 -------------------------------------------------------------------------------------
                     |               Robust
     payment_amt_per | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 --------------------+----------------------------------------------------------------
-              if_AI |   .3973496   .1913164     2.08   0.040     .0187106    .7759886
-   province_capital |   .0393899   .1597657     0.25   0.806    -.2768063    .3555861
-gender_customer_num |  -.0121387   .1544126    -0.08   0.937    -.3177405     .293463
-              _cons |   .9658088   .1363275     7.08   0.000     .6959998    1.235618
+              if_AI |   .4521453    .152167     2.97   0.004      .150988    .7533026
+   province_capital |   .0178772   .1091349     0.16   0.870    -.1981142    .2338686
+gender_customer_num |  -.0796246   .1299977    -0.61   0.541    -.3369063     .177657
+              _cons |   .8055176   .1174466     6.86   0.000     .5730761    1.037959
 -------------------------------------------------------------------------------------
 
 Absorbed degrees of freedom:
@@ -357,7 +355,7 @@ Absorbed degrees of freedom:
 ----------------------------------------------------------+
 
 added macro:
-             e(mean_y) : "1.06"
+             e(mean_y) : "0.88"
 
 added macro:
             e(date_fe) : "Yes"
@@ -366,7 +364,7 @@ added macro:
    e(hour_create_time) : "Yes"
 
 added macro:
-               e(r2_a) : "0.015"
+               e(r2_a) : "0.017"
 
 added macro:
                   e(N) : "1208"
